@@ -111,8 +111,8 @@ public class GUI extends javax.swing.JFrame {
         double minVal=Operators.GetFunctionMinValue(f);
         double maxVal=Operators.GetFunctionMaxValue(f);
         for (int i=0;i<f.values.length-1;i++){
-            int absciss1=(int) (i*f.values.length)/jPanel1.getWidth();
-            int absciss2=(int) ((i+1)*f.values.length)/jPanel1.getWidth();
+            int absciss1=(int) (i*jPanel1.getWidth()/f.values.length);
+            int absciss2=(int) ((i+1)*jPanel1.getWidth()/f.values.length);
             int ordinate1=(int) ((jPanel1.getHeight()/(minVal-maxVal))*(f.values[i]-maxVal));
             int ordinate2=(int) (jPanel1.getHeight()/(minVal-maxVal)*(f.values[i+1]-maxVal));
             gp.drawLine(absciss1,ordinate1, absciss2,ordinate2);

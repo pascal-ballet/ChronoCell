@@ -43,7 +43,7 @@ public class Operators {
     public static double GetFunctionMinValue(FunctionStructure fct){
         double minVal=fct.values[0];
         for (int i=1;i<fct.values.length;i++){
-            if (fct.values[i]>minVal){
+            if (fct.values[i]<minVal){
                 minVal=fct.values[i];
             }
         }
