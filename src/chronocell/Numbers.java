@@ -19,4 +19,17 @@ public class Numbers {
     public static double CGN(double number){
         return ClosestGridNumber(number);
     }
+    
+    public static double LeastCommonStep(double step1,double step2){
+        double lStep=Math.min(step1,step2);
+        double gStep=Math.max(step1, step2);
+        double lcs=lStep;
+        for (int i=1;true;i++){
+            if (Math.abs(i*lStep % gStep) <= 0.0000000001){
+                lcs=gStep/i;
+                break;
+            }
+        }
+        return CGN(lcs);
+    }
 }
