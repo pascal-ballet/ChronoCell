@@ -57,5 +57,19 @@ public class Operators {
         }
         System.err.println("");
     } 
+     public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
+        double sum=0.0;
+        int start=(int) ((Math.max(inf, fct.min)-fct.min)/fct.step);
+        int end=(int) ((Math.min(sup, fct.max)-fct.min)/fct.step);
+//        System.err.println(start);
+//        System.err.println(end);
+        for (int i=start;i<=end-1;i++){
+            // rectangles
+//            sum+=fct.values[i]*fct.step;
+            // trapèzes
+            sum+=(fct.values[i]+fct.values[i+1])/2*fct.step;
+        }
+        return sum;
+    }          
              
 }

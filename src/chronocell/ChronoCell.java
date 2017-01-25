@@ -16,14 +16,15 @@ public class ChronoCell {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        Numbers.minStep=0.001;
-        FunctionStructure fct=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(6.28),Numbers.CGN(0.1));
+        Numbers.minStep=0.00001;
+        FunctionStructure fct=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2*Math.PI),Numbers.CGN(0.001));
         Operators.FillFunctionValues(fct);
-        Operators.PrintFunction(fct);
+//        Operators.PrintFunction(fct);
         // Display Function
-        GUI win1 =new GUI();
-        win1.SetFunction(fct);
-        win1.setVisible(true);
+//        GUI win1 =new GUI();
+//        win1.SetFunction(fct);
+//        win1.setVisible(true);
+        System.err.println(Operators.IntegrateFunction(fct, 0.0, Math.PI/2));
 
     }
     
