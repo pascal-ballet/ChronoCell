@@ -39,11 +39,11 @@ public class GUI extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 282, Short.MAX_VALUE)
+            .addGap(0, 519, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 191, Short.MAX_VALUE)
+            .addGap(0, 348, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -53,12 +53,12 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(49, 49, 49)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(56, Short.MAX_VALUE)
+                .addContainerGap(60, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(53, 53, 53))
         );
@@ -110,11 +110,11 @@ public class GUI extends javax.swing.JFrame {
         Graphics gp=jPanel1.getGraphics();
         double minVal=Operators.GetFunctionMinValue(f);
         double maxVal=Operators.GetFunctionMaxValue(f);
-        for (int i=0;i<f.values.length-1;i++){
-            int absciss1=(int) (i*jPanel1.getWidth()/f.values.length);
-            int absciss2=(int) ((i+1)*jPanel1.getWidth()/f.values.length);
-            int ordinate1=(int) ((jPanel1.getHeight()/(minVal-maxVal))*(f.values[i]-maxVal));
-            int ordinate2=(int) (jPanel1.getHeight()/(minVal-maxVal)*(f.values[i+1]-maxVal));
+        for (int i=f.minIndex;i<=f.maxIndex-1;i++){
+            int absciss1=(int) Math.round((i-f.minIndex)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+1));
+            int absciss2=(int) Math.round((i-f.minIndex+1)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+1));
+            int ordinate1=(int) Math.round((jPanel1.getHeight()/(minVal-maxVal))*(f.values[i]-maxVal));
+            int ordinate2=(int) Math.round(jPanel1.getHeight()/(minVal-maxVal)*(f.values[i+1]-maxVal));
             gp.drawLine(absciss1,ordinate1, absciss2,ordinate2);
         }
     }

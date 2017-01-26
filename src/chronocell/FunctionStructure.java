@@ -5,11 +5,15 @@
  */
 package chronocell;
 
+
 /**
  *
  * @author goby
  */
 public class FunctionStructure {
     double min=0.0,max=0.0,step=1.0;
+    int minIndex=0,maxIndex=0;
     double[] values=null;    
 }
+
+

@@ -18,17 +18,23 @@ public class ChronoCell {
         // TODO code application logic here
         Numbers.minStep=0.00001;
         // Tests des operateurs
-        FunctionStructure fct1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01));
-        FunctionStructure fct2=Operators.createFunction(Numbers.CGN(0.5),Numbers.CGN(1.0),Numbers.CGN(0.02));
-        Operators.MapFunctionValues(fct1,Operators.initialDensityG1); 
-        Operators.MapFunctionValues(fct2,Operators.transitionProbability);
-//        fct2=Operators.TranslateFunction(2.5, Operators.AffineFunctionTransformation(-1, 0, fct2));
-        FunctionStructure fct3=Operators.AddFunctions(fct1, fct2);
+        FunctionStructure initialDensityG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.001));
+        Operators.MapFunctionValues(initialDensityG1,Operators.sinPeriodOne);
+        FunctionStructure transitionProbability=Operators.createFunction(Numbers.CGN(0.5),Numbers.CGN(1.0),Numbers.CGN(0.01)); 
+        Operators.MapFunctionValues(transitionProbability,Operators.constant);
+        transitionProbability=Operators.AffineFunctionTransformation(1/Operators.IntegrateFunction(transitionProbability, transitionProbability.min, transitionProbability.max),0, transitionProbability);
+        FunctionStructure solution=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01));
+        Operators.MapFunctionValues(solution,Operators.sinPeriodOne);
+//        Operators.PrintFunction(solution);
+        for (int i=0;i<500;i++){            
+//            System.err.println("+++++++++++++++++++++++++++++++++\n");
+//        Operators.PrintFunction(solution);
+            Operators.ComputeSolutionNextValue(solution, transitionProbability);
+        }
         // Display Function
         GUI win1 =new GUI();
-        win1.SetFunction(fct3);
+        win1.SetFunction(solution);
         win1.setVisible(true);
-        System.err.format("Intégrale = %f\n",Operators.IntegrateFunction(fct3, fct3.min, fct3.max));
-//        Operators.PrintFunction(fct1);
+        Operators.PrintFunction(solution);
     }
 }

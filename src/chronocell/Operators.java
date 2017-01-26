@@ -17,40 +17,48 @@ public class Operators {
         fct.min=Numbers.CGN(min);
         fct.max=Numbers.CGN(max);
         fct.step=Numbers.CGN(step);
-        int size=(int) (1+(max-min)/step);
+        int size=(int) Math.round(1+(max-min)/step);
+//        System.err.format("\n dans creation max=%f, min=%f,step=%f \n",max,min,step);
+//        System.err.format("\n dans creation max-min=%f, \n",max-min);
+//        System.err.format("\n dans creation 1+(max-min)/step=%d, \n", (int) (1+(max-min)/step));
+//        System.err.format("\n dans creation 1+(max-min)/step=%.50g, \n", 1+(max-min)/step);
+//        System.err.format("\n dans creation size =%d \n",size);
         fct.values=new double[size];
         for (int i=0;i<size;i++){
             fct.values[i]=0.0;
         }
+        fct.minIndex=0;
+        fct.maxIndex=size-1;
         return fct;
     }
     
+       
     public static void FillFunctionValues(FunctionStructure fct){
-        for (int i=0;i<fct.values.length;i++){
+        for (int i=fct.minIndex; i<=fct.maxIndex;i++){
             fct.values[i]=Math.sin(i*fct.step+fct.min);
         }
     }
     
-    /// Lambda part
+    /// Lambda part, create a new package ?
     
     public interface FunctionInterface {
         public double op(double x);
     }
     
-    public static FunctionInterface transitionProbability = new FunctionInterface(){
+    public static FunctionInterface constant = new FunctionInterface(){
       public double op(double x){
           return 1;
       }  
     };
     
-    public static FunctionInterface initialDensityG1 = new FunctionInterface(){
+    public static FunctionInterface sinPeriodOne = new FunctionInterface(){
       public double op(double x){
           return Math.sin(x*Math.PI);
       }  
     };
     
     public static void MapFunctionValues(FunctionStructure fct,FunctionInterface g){
-        for (int i=0;i<fct.values.length;i++){
+        for (int i=fct.minIndex;i<=fct.maxIndex;i++){
             fct.values[i]=g.op(i*fct.step+fct.min);
         }
     }
@@ -59,14 +67,21 @@ public class Operators {
     public static double GetFunctionValue(FunctionStructure fct,double x){
         double y=0.0;
         if ((x>=fct.min) && (x<=fct.max)){
-            y=fct.values[(int) ((x-fct.min)/fct.step)];
+//            PrintFunction(fct);
+//            System.err.format("x=%f\n",x);
+//            System.err.format("index=%d\n",fct.minIndex+ (int) (((x-fct.min)/fct.step)));
+
+//////// switch cast (int) to Math.round
+//            y=fct.values[fct.minIndex+ (int) (((x-fct.min)/fct.step))];
+            y=fct.values[fct.minIndex+ (int) (Math.round((x-fct.min)/fct.step))];
             }
         return y;
     }
-        
+    
+         
     public static double GetFunctionMaxValue(FunctionStructure fct){
-        double maxVal=fct.values[0];
-        for (int i=1;i<fct.values.length;i++){
+        double maxVal=fct.values[fct.minIndex];
+        for (int i=fct.minIndex+1;i<=fct.maxIndex;i++){
             if (fct.values[i]>maxVal){
                 maxVal=fct.values[i];
             }
@@ -74,8 +89,8 @@ public class Operators {
         return maxVal;
     }
     public static double GetFunctionMinValue(FunctionStructure fct){
-        double minVal=fct.values[0];
-        for (int i=1;i<fct.values.length;i++){
+        double minVal=fct.values[fct.minIndex];
+        for (int i=fct.minIndex+1;i<=fct.maxIndex;i++){
             if (fct.values[i]<minVal){
                 minVal=fct.values[i];
             }
@@ -84,16 +99,24 @@ public class Operators {
     }
     
     public static void PrintFunction(FunctionStructure fct){
-        System.err.format("min=%f, max=%f\n",fct.min,fct.max);
-        for (int i=0;i<fct.values.length;i++){
-            System.err.format("**** f(%f)=%f\n",fct.min+i*fct.step,fct.values[i]);
-        }
         System.err.println("");
+        System.err.format("min=%f, max=%f\n",fct.min,fct.max);
+        System.err.format("values length=%d\n",fct.values.length);
+        System.err.format("minIndex=%d, maxIndex=%d\n",fct.minIndex,fct.maxIndex);
+        System.err.format("step=%f\n",fct.step);
+//        for (int i=fct.minIndex;i<=fct.maxIndex;i++){
+//            System.err.format("**** f(%f)=%f\n",fct.min+(i-fct.minIndex)*fct.step,fct.values[i]);
+//        }
     } 
      public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
         double sum=0.0;
-        int start=(int) ((Math.max(inf, fct.min)-fct.min)/fct.step);
-        int end=(int) ((Math.min(sup, fct.max)-fct.min)/fct.step);
+//        int start=(int) (fct.minIndex+(Math.max(inf, fct.min)-fct.min)/fct.step);
+//        int end=(int) (fct.minIndex+(Math.min(sup, fct.max)-fct.min)/fct.step);
+        
+//////// switch cast (int) to Math.round
+        int start=(int) (Math.round(fct.minIndex+(Math.max(inf, fct.min)-fct.min)/fct.step));
+        int end=(int)  (Math.round(fct.minIndex+(Math.min(sup, fct.max)-fct.min)/fct.step));
+        
 //        System.err.println(start);
 //        System.err.println(end);
         for (int i=start;i<=end-1;i++){
@@ -107,34 +130,60 @@ public class Operators {
      
     public static FunctionStructure MultiplyFunctions(FunctionStructure fct1,FunctionStructure fct2){
         FunctionStructure prod=Operators.createFunction(Math.max(fct1.min, fct2.min), Math.min(fct1.max, fct2.max), Numbers.LeastCommonStep(fct1.step,fct2.step));
-        for (int i=0;i<prod.values.length;i++){
+        for (int i=prod.minIndex;i<=prod.maxIndex;i++){
+//            System.err.format("fct1 et 2 appelées en %f \n",prod.min+i*prod.step);
             prod.values[i]=GetFunctionValue(fct1, prod.min+i*prod.step)*GetFunctionValue(fct2, prod.min+i*prod.step);
         }
     return prod;
     }  
     
+    
     public static FunctionStructure AddFunctions(FunctionStructure fct1,FunctionStructure fct2){
         FunctionStructure sum=Operators.createFunction(Math.min(fct1.min, fct2.min), Math.max(fct1.max, fct2.max), Numbers.LeastCommonStep(fct1.step,fct2.step));
-        for (int i=0;i<sum.values.length;i++){
+        for (int i=sum.minIndex;i<=sum.maxIndex;i++){
             sum.values[i]=GetFunctionValue(fct1, sum.min+i*sum.step)+GetFunctionValue(fct2, sum.min+i*sum.step);
         }
     return sum;
     } 
     
     public static FunctionStructure AffineFunctionTransformation(double a, double b, FunctionStructure fct){
-        FunctionStructure trans=Operators.createFunction(fct.min, fct.max, fct.step);
-        for (int i=0;i<trans.values.length;i++){
-            trans.values[i]=fct.values[i]*a+b;
+        FunctionStructure transf=Operators.createFunction(fct.min, fct.max, fct.step);
+        for (int i=transf.minIndex;i<=transf.maxIndex;i++){
+            transf.values[i]=fct.values[i]*a+b;
         }
-    return trans;
+    return transf;
     } 
     
     public static FunctionStructure TranslateFunction(double t, FunctionStructure fct){
+//        PrintFunction(fct);
         FunctionStructure transl=Operators.createFunction(fct.min+t, fct.max+t, fct.step);
-        for (int i=0;i<transl.values.length;i++){
+//        System.err.format("translation de %f\n",t);
+//        PrintFunction(transl);
+        for (int i=transl.minIndex;i<=transl.maxIndex;i++){
             transl.values[i]=fct.values[i];
         }
     return transl;
     } 
     
+    public static void ComputeSolutionNextValue(FunctionStructure sol, FunctionStructure prob){
+        // If solutions' support is filled, increase the size of array sol.values
+        if (sol.minIndex==0){
+            double[] newVal= new double[2*sol.values.length];
+            for (int i=0;i<sol.values.length;i++){
+                newVal[i]=0.0;
+            }
+            for (int i=sol.values.length;i<newVal.length;i++){
+                newVal[i]=sol.values[i-sol.values.length];
+            }
+            sol.minIndex=sol.values.length;
+            sol.maxIndex=2*sol.values.length-1;
+            sol.values=newVal;
+        }
+        FunctionStructure tempProb=TranslateFunction(sol.min, prob);
+//        PrintFunction(tempProb);
+//        PrintFunction(sol);
+        sol.values[sol.minIndex-1]=IntegrateFunction(MultiplyFunctions(sol,tempProb),tempProb.min,tempProb.max);
+        sol.min=sol.min-sol.step;
+        sol.minIndex-=1;
+    } 
 }
