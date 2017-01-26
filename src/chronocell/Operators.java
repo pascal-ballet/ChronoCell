@@ -31,6 +31,31 @@ public class Operators {
         }
     }
     
+    /// Lambda part
+    
+    public interface FunctionInterface {
+        public double op(double x);
+    }
+    
+    public static FunctionInterface transitionProbability = new FunctionInterface(){
+      public double op(double x){
+          return 1;
+      }  
+    };
+    
+    public static FunctionInterface initialDensityG1 = new FunctionInterface(){
+      public double op(double x){
+          return Math.sin(x*Math.PI);
+      }  
+    };
+    
+    public static void MapFunctionValues(FunctionStructure fct,FunctionInterface g){
+        for (int i=0;i<fct.values.length;i++){
+            fct.values[i]=g.op(i*fct.step+fct.min);
+        }
+    }
+    
+     
     public static double GetFunctionValue(FunctionStructure fct,double x){
         double y=0.0;
         if ((x>=fct.min) && (x<=fct.max)){
@@ -111,4 +136,5 @@ public class Operators {
         }
     return transl;
     } 
+    
 }
