@@ -31,6 +31,13 @@ public class Operators {
         fct.maxIndex=size-1;
         return fct;
     }
+ 
+    public static AgeDistributionsStructure createAgeDistributionStructure(int phaseNb){
+        AgeDistributionsStructure dst= new AgeDistributionsStructure();
+        dst.ageDistribution= new FunctionStructure[phaseNb];
+        dst.transitionProbabilities= new FunctionStructure[phaseNb];
+        return dst;
+    }
     
        
     public static void FillFunctionValues(FunctionStructure fct){
@@ -165,25 +172,56 @@ public class Operators {
     return transl;
     } 
     
-    public static void ComputeSolutionNextValue(FunctionStructure sol, FunctionStructure prob){
-        // If solutions' support is filled, increase the size of array sol.values
-        if (sol.minIndex==0){
-            double[] newVal= new double[2*sol.values.length];
-            for (int i=0;i<sol.values.length;i++){
-                newVal[i]=0.0;
-            }
-            for (int i=sol.values.length;i<newVal.length;i++){
-                newVal[i]=sol.values[i-sol.values.length];
-            }
-            sol.minIndex=sol.values.length;
-            sol.maxIndex=2*sol.values.length-1;
-            sol.values=newVal;
+    public static void DoubleArraySizeToLeft(FunctionStructure fct){
+        double[] newVal= new double[2*fct.values.length];
+        for (int i=0;i<fct.values.length;i++){
+            newVal[i]=0.0;
         }
-        FunctionStructure tempProb=TranslateFunction(sol.min, prob);
+        for (int i=fct.values.length;i<newVal.length;i++){
+            newVal[i]=fct.values[i-fct.values.length];
+        }
+        fct.minIndex=fct.values.length;
+        fct.maxIndex=2*fct.values.length-1;
+        fct.values=newVal;
+    }
+    
+    
+    public static void ComputeSolutionNextValue(AgeDistributionsStructure dst){
+        // If solutions' support is filled, increase the size of array sol.values
+        for (int i=0;i<dst.ageDistribution.length;i++){
+            if (dst.ageDistribution[i].minIndex==0){
+                DoubleArraySizeToLeft(dst.ageDistribution[i]);
+            }
+        } 
+        double[] nextVal= new double[dst.ageDistribution.length];
+        for (int i=0;i<dst.ageDistribution.length;i++){
+            FunctionStructure tempProb=TranslateFunction(dst.ageDistribution[i].min, dst.transitionProbabilities[i]);
+            nextVal[i]=IntegrateFunction(MultiplyFunctions(dst.ageDistribution[i],tempProb),tempProb.min,tempProb.max);
+        }
+        for (int i=0;i<dst.ageDistribution.length;i++){
+            int j=(i+1) % dst.ageDistribution.length;
+            dst.ageDistribution[j].min=dst.ageDistribution[j].min-dst.ageDistribution[j].step;
+            dst.ageDistribution[j].minIndex-=1;
+//            System.err.format("i = %d et i+1 mod %d = %d \n",i,dst.ageDistribution.length,(i+1) % dst.ageDistribution.length);
+            dst.ageDistribution[j].values[dst.ageDistribution[j].minIndex]=nextVal[i];
+        }
+//        if (sol.minIndex==0){
+//            double[] newVal= new double[2*sol.values.length];
+//            for (int i=0;i<sol.values.length;i++){
+//                newVal[i]=0.0;
+//            }
+//            for (int i=sol.values.length;i<newVal.length;i++){
+//                newVal[i]=sol.values[i-sol.values.length];
+//            }
+//            sol.minIndex=sol.values.length;
+//            sol.maxIndex=2*sol.values.length-1;
+//            sol.values=newVal;
+//        }
+//        FunctionStructure tempProb=TranslateFunction(sol.min, prob);
 //        PrintFunction(tempProb);
 //        PrintFunction(sol);
-        sol.values[sol.minIndex-1]=IntegrateFunction(MultiplyFunctions(sol,tempProb),tempProb.min,tempProb.max);
-        sol.min=sol.min-sol.step;
-        sol.minIndex-=1;
+//        sol.values[sol.minIndex-1]=IntegrateFunction(MultiplyFunctions(sol,tempProb),tempProb.min,tempProb.max);
+//        sol.min=sol.min-sol.step;
+//        sol.minIndex-=1;
     } 
 }
