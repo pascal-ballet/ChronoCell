@@ -64,6 +64,7 @@ public class Operators {
       }  
     };
     
+      
     public static void MapFunctionValues(FunctionStructure fct,FunctionInterface g){
         for (int i=fct.minIndex;i<=fct.maxIndex;i++){
             fct.values[i]=g.op(i*fct.step+fct.min);
@@ -128,19 +129,26 @@ public class Operators {
 //        System.err.println(end);
         for (int i=start;i<=end-1;i++){
             // rectangles
-//            sum+=fct.values[i]*fct.step;
+            sum+=fct.values[i]*fct.step;
             // trapèzes
-            sum+=(fct.values[i]+fct.values[i+1])/2*fct.step;
+//            sum+=(fct.values[i]+fct.values[i+1])/2*fct.step;
         }
         return sum;
     }          
      
     public static FunctionStructure MultiplyFunctions(FunctionStructure fct1,FunctionStructure fct2){
-        FunctionStructure prod=Operators.createFunction(Math.max(fct1.min, fct2.min), Math.min(fct1.max, fct2.max), Numbers.LeastCommonStep(fct1.step,fct2.step));
-        for (int i=prod.minIndex;i<=prod.maxIndex;i++){
-//            System.err.format("fct1 et 2 appelées en %f \n",prod.min+i*prod.step);
-            prod.values[i]=GetFunctionValue(fct1, prod.min+i*prod.step)*GetFunctionValue(fct2, prod.min+i*prod.step);
+        FunctionStructure prod=new FunctionStructure();
+        if ((fct1.min-fct2.max)*(fct2.min-fct1.max)<0) {
+            prod=Operators.createFunction(0,0,1);
         }
+        else{
+            prod=Operators.createFunction(Math.max(fct1.min, fct2.min), Math.min(fct1.max, fct2.max), Numbers.LeastCommonStep(fct1.step,fct2.step));
+            for (int i=prod.minIndex;i<=prod.maxIndex;i++){
+//            System.err.format("fct1 et 2 appelées en %f \n",prod.min+i*prod.step);
+                prod.values[i]=GetFunctionValue(fct1, prod.min+i*prod.step)*GetFunctionValue(fct2, prod.min+i*prod.step);
+            }
+        }
+        
     return prod;
     }  
     

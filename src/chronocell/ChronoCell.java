@@ -20,23 +20,24 @@ public class ChronoCell {
         // Parameters
         AgeDistributionsStructure dst=Operators.createAgeDistributionStructure(2);
             ///// Initial conditions phase G1/S
-            dst.ageDistribution[0]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.02));
-            Operators.MapFunctionValues(dst.ageDistribution[0],Operators.sinPeriodOne);
-            ///// Initial conditions phase G2/M 
-            dst.ageDistribution[1]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.02));
-            Operators.MapFunctionValues(dst.ageDistribution[1],Operators.sinPeriodOne);
+            dst.ageDistribution[0]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(0.5),Numbers.CGN(0.01));
+            Operators.MapFunctionValues(dst.ageDistribution[0],Operators.constant);
             ///// Transition function first checkpoint
             dst.transitionProbabilities[0]=Operators.createFunction(Numbers.CGN(0.5),Numbers.CGN(1.0),Numbers.CGN(0.01)); 
-            Operators.MapFunctionValues(dst.transitionProbabilities[0],Operators.constant);
+            Operators.MapFunctionValues(dst.transitionProbabilities[0],Operators.sinPeriodOne);
             dst.transitionProbabilities[0]=Operators.AffineFunctionTransformation(1/Operators.IntegrateFunction(dst.transitionProbabilities[0], dst.transitionProbabilities[0].min, dst.transitionProbabilities[0].max),0, dst.transitionProbabilities[0]);
+            ///// Initial conditions phase G2/M 
+            dst.ageDistribution[1]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01));
+            Operators.MapFunctionValues(dst.ageDistribution[1],Operators.constant);
             ///// Transition function first checkpoint
-            dst.transitionProbabilities[1]=Operators.createFunction(Numbers.CGN(0.5),Numbers.CGN(1.0),Numbers.CGN(0.01)); 
+            dst.transitionProbabilities[1]=Operators.createFunction(Numbers.CGN(0.99),Numbers.CGN(1.0),Numbers.CGN(0.01)); 
             Operators.MapFunctionValues(dst.transitionProbabilities[1],Operators.constant);
-            dst.transitionProbabilities[1]=Operators.AffineFunctionTransformation(1/Operators.IntegrateFunction(dst.transitionProbabilities[1], dst.transitionProbabilities[1].min, dst.transitionProbabilities[1].max),0, dst.transitionProbabilities[1]);
+            dst.transitionProbabilities[1]=Operators.AffineFunctionTransformation(2/Operators.IntegrateFunction(dst.transitionProbabilities[1], dst.transitionProbabilities[1].min, dst.transitionProbabilities[1].max),0, dst.transitionProbabilities[1]);
             // Simulation
-        for (int i=0;i<100;i++){            
+        for (int i=0;i<1000;i++){            
             Operators.ComputeSolutionNextValue(dst);
 //            Operators.PrintFunction(dst.ageDistribution[0]);
+//            System.err.format("intégrale = %f \n",Operators.IntegrateFunction(dst.ageDistribution[0], dst.ageDistribution[0].min, dst.ageDistribution[0].min+1.0));
         }
 //         Display Function
         GUI win1 =new GUI();
@@ -46,6 +47,6 @@ public class ChronoCell {
         GUI win2 =new GUI();
         win2.SetFunction(dst.ageDistribution[1]);
         win2.setVisible(true);
-        Operators.PrintFunction(dst.ageDistribution[1]);
+//        Operators.PrintFunction(dst.ageDistribution[1]);
     }
 }
