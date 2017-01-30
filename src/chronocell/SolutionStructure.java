@@ -13,7 +13,9 @@ import chronocell.FunctionStructure;
  *
  * @author goby
  */
-public class AgeDistributionsStructure {
-    FunctionStructure[] ageDistribution=null;
-    FunctionStructure[] transitionProbabilities=null;            
+public class SolutionStructure {
+    String[] phaseName=null;
+    FunctionStructure[] theta=null;
+    FunctionStructure[] transitionProbabilities=null;
+    FunctionStructure[] cumulativeFunctions=null;
 }

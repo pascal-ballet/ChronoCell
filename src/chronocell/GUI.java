@@ -30,6 +30,10 @@ public class GUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        lblXMin = new javax.swing.JLabel();
+        lblXMax = new javax.swing.JLabel();
+        lblYMax = new javax.swing.JLabel();
+        lblYMin = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,21 +50,46 @@ public class GUI extends javax.swing.JFrame {
             .addGap(0, 348, Short.MAX_VALUE)
         );
 
+        lblXMin.setText("jLabel1");
+
+        lblXMax.setText("jLabel2");
+
+        lblYMax.setText("jLabel3");
+
+        lblYMin.setText("jLabel4");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblYMax)
+                    .addComponent(lblYMin))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblXMin)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblXMax))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(146, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(60, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblYMax)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblYMin)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblXMin)
+                    .addComponent(lblXMax))
+                .addGap(32, 32, 32))
         );
 
         pack();
@@ -108,7 +137,8 @@ public class GUI extends javax.swing.JFrame {
     public void paint(Graphics g){
         super.paint(g);
         Graphics gp=jPanel1.getGraphics();
-        double minVal=Operators.GetFunctionMinValue(f);
+//        double minVal=Operators.GetFunctionMinValue(f);
+        double minVal=0;
         double maxVal=Operators.GetFunctionMaxValue(f);
         for (int i=f.minIndex;i<=f.maxIndex-1;i++){
             int absciss1=(int) Math.round((i-f.minIndex)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+1));
@@ -117,9 +147,17 @@ public class GUI extends javax.swing.JFrame {
             int ordinate2=(int) Math.round(jPanel1.getHeight()/(minVal-maxVal)*(f.values[i+1]-maxVal));
             gp.drawLine(absciss1,ordinate1, absciss2,ordinate2);
         }
+        lblXMin.setText((new Double(f.min)).toString());
+        lblXMax.setText((new Double(f.max)).toString());
+        lblYMin.setText((new Double(minVal)).toString());
+        lblYMax.setText((new Double(maxVal)).toString());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblXMax;
+    private javax.swing.JLabel lblXMin;
+    private javax.swing.JLabel lblYMax;
+    private javax.swing.JLabel lblYMin;
     // End of variables declaration//GEN-END:variables
 }
