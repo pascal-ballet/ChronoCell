@@ -166,9 +166,9 @@ public class GUISolution extends javax.swing.JFrame {
     public void paint(Graphics g){
         super.paint(g);
         Graphics gp=jPanel1.getGraphics();        
-        FunctionStructure tempFunction =Operators.MultiplyFunctionRaw(Operators.AffineFunctionTransformation(-1.0, 1.0, f.cumulativeFunctions[0]),f.theta[0]);
-//        FunctionStructure tempFunction =Operators.MultiplyFunctionRaw(Operators.AffineFunctionTransformation(-1.0, 1.0, f.cumulativeFunctions[0]),Operators.TranslateFunction(jSlider1.getValue()*f.theta[0].step,f.theta[0]));
-        Operators.PrintFunction(tempFunction);
+        FunctionStructure tempFunction =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[0],Operators.TranslateFunction(jSlider1.getValue()*f.theta[0].step,f.theta[0]));
+//        Operators.PrintFunction("tempInGuiSOl",tempFunction);
+        System.err.format("translation de: %f\n",jSlider1.getValue()*f.theta[0].step);
 //        double minVal=Operators.GetFunctionMinValue(tempFunction);
         double minVal=0;
         double maxVal=Operators.GetFunctionMaxValue(tempFunction);

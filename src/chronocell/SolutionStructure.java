@@ -17,5 +17,5 @@ public class SolutionStructure {
     String[] phaseName=null;
     FunctionStructure[] theta=null;
     FunctionStructure[] transitionProbabilities=null;
-    FunctionStructure[] cumulativeFunctions=null;
+    FunctionStructure[] oneMinusCumulativeFunctions=null;
 }
