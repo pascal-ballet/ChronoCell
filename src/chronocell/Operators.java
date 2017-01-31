@@ -31,6 +31,20 @@ public class Operators {
         fct.maxIndex=size-1;
         return fct;
     }
+    
+    public static FunctionStructure copyFunction(FunctionStructure fct){
+        FunctionStructure cpy=new FunctionStructure();
+        cpy.min=Numbers.CGN(fct.min);
+        cpy.max=Numbers.CGN(fct.max);
+        cpy.step=Numbers.CGN(fct.step);
+        cpy.minIndex=fct.minIndex;
+        cpy.maxIndex=fct.maxIndex;
+        cpy.values=new double[fct.values.length];
+        for (int i=0;i<cpy.values.length;i++){
+            cpy.values[i]=fct.values[i];
+        }
+        return cpy;
+    }
  
     public static SolutionStructure createSolutionStructure(int phaseNb){
         SolutionStructure sol= new SolutionStructure();
@@ -191,12 +205,9 @@ public class Operators {
     
     public static FunctionStructure TranslateFunction(double t, FunctionStructure fct){
 //        PrintFunction(fct);
-        FunctionStructure transl=Operators.createFunction(fct.min+t, fct.max+t, fct.step);
-//        System.err.format("translation de %f\n",t);
-//        PrintFunction(transl);
-        for (int i=transl.minIndex;i<=transl.maxIndex;i++){
-            transl.values[i]=fct.values[i];
-        }
+        FunctionStructure transl=copyFunction(fct);
+        transl.min+=t;
+        transl.max+=t;
     return transl;
     } 
     
@@ -232,7 +243,7 @@ public class Operators {
             sol.theta[j].minIndex-=1;
 //            System.err.format("i = %d et i+1 mod %d = %d \n",i,dst.ageDistribution.length,(i+1) % dst.ageDistribution.length);
             if (j==0){
-               sol.theta[j].values[sol.theta[j].minIndex]=1*nextVal[i]; 
+               sol.theta[j].values[sol.theta[j].minIndex]=2*nextVal[i]; 
             }
             else{
                 sol.theta[j].values[sol.theta[j].minIndex]=nextVal[i];
