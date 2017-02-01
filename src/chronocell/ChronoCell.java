@@ -25,7 +25,7 @@ public class ChronoCell {
             Operators.MapFunctionValues(sol.theta[0],0.5,1.0,Operators.constant);
             ///// Transition function first checkpoint
             sol.transitionProbabilities[0]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01)); 
-            Operators.MapFunctionValues(sol.transitionProbabilities[0],0.99,1.0,Operators.constant);
+            Operators.MapFunctionValues(sol.transitionProbabilities[0],0.9,1.0,Operators.constant);
             sol.transitionProbabilities[0]=Operators.AffineFunctionTransformation(1/Operators.IntegrateFunction(sol.transitionProbabilities[0], sol.transitionProbabilities[0].min, sol.transitionProbabilities[0].max),0, sol.transitionProbabilities[0]);
         ///// Cumulative function first checkpoint
             sol.oneMinusCumulativeFunctions[0]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(sol.transitionProbabilities[0]));
@@ -39,7 +39,7 @@ public class ChronoCell {
         ///// Cumulative function first checkpoint
             sol.oneMinusCumulativeFunctions[1]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(sol.transitionProbabilities[1]));
          // Simulation
-        for (int i=0;i<10000;i++){            
+        for (int i=0;i<5000;i++){            
             Operators.ComputeSolutionNextValue(sol);
 //            Operators.PrintFunction(dst.ageDistribution[0]);
 //            System.err.format("intégrale = %f \n",Operators.IntegrateFunction(dst.ageDistribution[0], dst.ageDistribution[0].min, dst.ageDistribution[0].min+1.0));

@@ -201,7 +201,7 @@ public class GUISolution extends javax.swing.JFrame {
         super.paint(g);
         Graphics gp1=jPanel1.getGraphics();
         FunctionStructure tempFunction1 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[0],Operators.TranslateFunction(jSlider1.getValue()*f.theta[0].step,f.theta[0]));
-        System.err.format("translation de: %f\n",jSlider1.getValue()*f.theta[0].step);
+//        System.err.format("translation de: %f\n",jSlider1.getValue()*f.theta[0].step);
         double minVal1=0;
         double maxVal1=Math.max(1, Operators.GetFunctionMaxValue(tempFunction1));
         for (int i=tempFunction1.minIndex;i<=tempFunction1.maxIndex-1;i++){
@@ -214,7 +214,7 @@ public class GUISolution extends javax.swing.JFrame {
         
         Graphics gp2=jPanel2.getGraphics();
         FunctionStructure tempFunction2 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[1],Operators.TranslateFunction(jSlider1.getValue()*f.theta[1].step,f.theta[1]));
-        System.err.format("translation de: %f\n",jSlider1.getValue()*f.theta[1].step);
+//        System.err.format("translation de: %f\n",jSlider1.getValue()*f.theta[1].step);
         double minVal2=0;
         double maxVal2=Operators.GetFunctionMaxValue(tempFunction2);
         for (int i=tempFunction2.minIndex;i<=tempFunction2.maxIndex-1;i++){
