@@ -17,27 +17,51 @@ public class ChronoCell {
     public static void main(String[] args) {
         Numbers.minStep=0.00001;
         // Parameters
-            SolutionStructure sol=Operators.createSolutionStructure(2);
-            sol.phaseName[0]="G1/S";
-            sol.phaseName[1]="G2/M";
-        ///// Initial conditions phase G1/S
-            sol.theta[0]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01));
-            Operators.MapFunctionValues(sol.theta[0],0.5,1.0,Operators.constant);
-            ///// Transition function first checkpoint
-            sol.transitionProbabilities[0]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01)); 
-            Operators.MapFunctionValues(sol.transitionProbabilities[0],0.9,1.0,Operators.constant);
-            sol.transitionProbabilities[0]=Operators.AffineFunctionTransformation(1/Operators.IntegrateFunction(sol.transitionProbabilities[0], sol.transitionProbabilities[0].min, sol.transitionProbabilities[0].max),0, sol.transitionProbabilities[0]);
-        ///// Cumulative function first checkpoint
-            sol.oneMinusCumulativeFunctions[0]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(sol.transitionProbabilities[0]));
-        ///// Initial conditions phase G2/M 
-            sol.theta[1]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01));
-            Operators.MapFunctionValues(sol.theta[1],0.0,0.0,Operators.constant);
-            ///// Transition function first checkpoint
-            sol.transitionProbabilities[1]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01)); 
-            Operators.MapFunctionValues(sol.transitionProbabilities[1],0.6,1.0,Operators.sinPeriodOne);
-            sol.transitionProbabilities[1]=Operators.AffineFunctionTransformation(1/Operators.IntegrateFunction(sol.transitionProbabilities[1], sol.transitionProbabilities[1].min, sol.transitionProbabilities[1].max),0, sol.transitionProbabilities[1]);
-        ///// Cumulative function first checkpoint
-            sol.oneMinusCumulativeFunctions[1]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(sol.transitionProbabilities[1]));
+            SolutionStructure sol=Operators.createSolutionStructure(4);
+            sol.phaseName[0]="G1";
+            sol.phaseName[1]="S";
+            sol.phaseName[2]="G2";
+            sol.phaseName[3]="M";
+        /// Phase G1
+            ///// Initial conditions
+                sol.theta[0]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01));
+                Operators.MapFunctionValues(sol.theta[0],0.5,1.0,Operators.constant);
+                ///// Transition
+                sol.transitionProbabilities[0]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01)); 
+                Operators.MapFunctionValues(sol.transitionProbabilities[0],0.99,1.0,Operators.constant);
+                sol.transitionProbabilities[0]=Operators.AffineFunctionTransformation(1/Operators.IntegrateFunction(sol.transitionProbabilities[0], sol.transitionProbabilities[0].min, sol.transitionProbabilities[0].max),0, sol.transitionProbabilities[0]);
+            ///// Cumulative
+                sol.oneMinusCumulativeFunctions[0]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(sol.transitionProbabilities[0]));
+        /// Phase S
+            ///// Initial conditions
+                sol.theta[1]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01));
+                Operators.MapFunctionValues(sol.theta[1],0.0,0.0,Operators.constant);
+                ///// Transition
+                sol.transitionProbabilities[1]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01)); 
+                Operators.MapFunctionValues(sol.transitionProbabilities[1],0.6,1.0,Operators.sinPeriodOne);
+                sol.transitionProbabilities[1]=Operators.AffineFunctionTransformation(1/Operators.IntegrateFunction(sol.transitionProbabilities[1], sol.transitionProbabilities[1].min, sol.transitionProbabilities[1].max),0, sol.transitionProbabilities[1]);
+            ///// Cumulative function
+                sol.oneMinusCumulativeFunctions[1]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(sol.transitionProbabilities[1]));
+        /// Phase G2
+            ///// Initial conditions
+                sol.theta[2]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01));
+                Operators.MapFunctionValues(sol.theta[2],0.2,0.5,Operators.constant);
+                ///// Transition
+                sol.transitionProbabilities[2]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01)); 
+                Operators.MapFunctionValues(sol.transitionProbabilities[2],0.99,1.0,Operators.constant);
+                sol.transitionProbabilities[2]=Operators.AffineFunctionTransformation(1/Operators.IntegrateFunction(sol.transitionProbabilities[2], sol.transitionProbabilities[2].min, sol.transitionProbabilities[2].max),0, sol.transitionProbabilities[2]);
+            ///// Cumulative function
+                sol.oneMinusCumulativeFunctions[2]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(sol.transitionProbabilities[2]));
+        /// Phase M
+            ///// Initial conditions
+                sol.theta[3]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01));
+                Operators.MapFunctionValues(sol.theta[3],0.0,0.0,Operators.sinPeriodOne);
+                ///// Transition
+                sol.transitionProbabilities[3]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(1.0),Numbers.CGN(0.01)); 
+                Operators.MapFunctionValues(sol.transitionProbabilities[3],0.0,1.0,Operators.sinPeriodOne);
+                sol.transitionProbabilities[3]=Operators.AffineFunctionTransformation(1/Operators.IntegrateFunction(sol.transitionProbabilities[3], sol.transitionProbabilities[3].min, sol.transitionProbabilities[3].max),0, sol.transitionProbabilities[3]);
+            ///// Cumulative function
+                sol.oneMinusCumulativeFunctions[3]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(sol.transitionProbabilities[3]));
          // Simulation
         for (int i=0;i<5000;i++){            
             Operators.ComputeSolutionNextValue(sol);

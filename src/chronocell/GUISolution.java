@@ -31,14 +31,25 @@ public class GUISolution extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jSlider1 = new javax.swing.JSlider();
-        lblYMax = new javax.swing.JLabel();
-        lblPhaseName = new javax.swing.JLabel();
-        lblXMin = new javax.swing.JLabel();
-        lblXMax = new javax.swing.JLabel();
+        lblYMax1 = new javax.swing.JLabel();
+        lblPhaseName1 = new javax.swing.JLabel();
+        lblXMin1 = new javax.swing.JLabel();
+        lblXMax1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblYMax2 = new javax.swing.JLabel();
+        lblXMax2 = new javax.swing.JLabel();
+        lblXMin2 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        lblPhaseName2 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        lblYMax3 = new javax.swing.JLabel();
+        lblPhaseName3 = new javax.swing.JLabel();
+        lblXMin3 = new javax.swing.JLabel();
+        lblXMax3 = new javax.swing.JLabel();
+        lblYMax4 = new javax.swing.JLabel();
+        lblPhaseName4 = new javax.swing.JLabel();
+        lblXMin4 = new javax.swing.JLabel();
+        lblXMax4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -52,7 +63,7 @@ public class GUISolution extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 398, Short.MAX_VALUE)
+            .addGap(0, 422, Short.MAX_VALUE)
         );
 
         jSlider1.setMaximum(1000);
@@ -63,13 +74,13 @@ public class GUISolution extends javax.swing.JFrame {
             }
         });
 
-        lblYMax.setText("jLabel1");
+        lblYMax1.setText("jLabel1");
 
-        lblPhaseName.setText("jLabel5");
+        lblPhaseName1.setText("jLabel5");
 
-        lblXMin.setText("jLabel3");
+        lblXMin1.setText("jLabel3");
 
-        lblXMax.setText("jLabel4");
+        lblXMax1.setText("jLabel4");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -77,18 +88,62 @@ public class GUISolution extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 625, Short.MAX_VALUE)
+            .addGap(0, 673, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 422, Short.MAX_VALUE)
+        );
+
+        lblYMax2.setText("jLabel1");
+
+        lblXMax2.setText("jLabel2");
+
+        lblXMin2.setText("jLabel3");
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 619, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        jLabel1.setText("jLabel1");
+        lblPhaseName2.setText("jLabel4");
 
-        jLabel2.setText("jLabel2");
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel3.setText("jLabel3");
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 649, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 446, Short.MAX_VALUE)
+        );
+
+        lblYMax3.setText("jLabel1");
+
+        lblPhaseName3.setText("jLabel5");
+
+        lblXMin3.setText("jLabel3");
+
+        lblXMax3.setText("jLabel4");
+
+        lblYMax4.setText("jLabel1");
+
+        lblPhaseName4.setText("jLabel5");
+
+        lblXMin4.setText("jLabel3");
+
+        lblXMax4.setText("jLabel4");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -97,55 +152,110 @@ public class GUISolution extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(lblXMin)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblXMax))
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblYMax)
-                        .addGap(178, 178, 178)
-                        .addComponent(lblPhaseName, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(49, 49, 49)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
+                                .addComponent(lblXMin3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2))
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 37, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblXMax3)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblXMin4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblXMax4))
+                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(lblXMin1)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblXMax1))
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblYMax1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(234, 234, 234)
+                                .addComponent(lblPhaseName1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(49, 49, 49)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblYMax2)
+                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(lblXMin2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(lblXMax2))
+                                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblPhaseName2)
+                                .addGap(316, 316, 316))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblYMax3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblYMax4)
+                        .addGap(632, 632, 632))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(405, 405, 405)
                 .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(371, 371, 371))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(237, 237, 237)
+                .addComponent(lblPhaseName3, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblPhaseName4, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(181, 181, 181))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPhaseName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblYMax)
-                    .addComponent(jLabel1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblPhaseName2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblPhaseName1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblYMax1)
+                    .addComponent(lblYMax2))
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblXMax)
-                    .addComponent(lblXMin)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(lblXMax1)
+                    .addComponent(lblXMin1)
+                    .addComponent(lblXMax2)
+                    .addComponent(lblXMin2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPhaseName3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblPhaseName4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblYMax4)
+                    .addComponent(lblYMax3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblXMin3)
+                    .addComponent(lblXMax3)
+                    .addComponent(lblXMin4)
+                    .addComponent(lblXMax4))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -201,7 +311,6 @@ public class GUISolution extends javax.swing.JFrame {
         super.paint(g);
         Graphics gp1=jPanel1.getGraphics();
         FunctionStructure tempFunction1 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[0],Operators.TranslateFunction(jSlider1.getValue()*f.theta[0].step,f.theta[0]));
-//        System.err.format("translation de: %f\n",jSlider1.getValue()*f.theta[0].step);
         double minVal1=0;
         double maxVal1=Math.max(1, Operators.GetFunctionMaxValue(tempFunction1));
         for (int i=tempFunction1.minIndex;i<=tempFunction1.maxIndex-1;i++){
@@ -212,34 +321,82 @@ public class GUISolution extends javax.swing.JFrame {
             gp1.drawLine(absciss11,ordinate11, absciss12,ordinate12);
         }    
         
+        lblXMin1.setText((new Double(tempFunction1.min)).toString());
+        lblXMax1.setText((new Double(tempFunction1.max)).toString());
+        lblYMax1.setText((new Double(maxVal1)).toString());
+        lblPhaseName1.setText(f.phaseName[0]);
+        
         Graphics gp2=jPanel2.getGraphics();
         FunctionStructure tempFunction2 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[1],Operators.TranslateFunction(jSlider1.getValue()*f.theta[1].step,f.theta[1]));
-//        System.err.format("translation de: %f\n",jSlider1.getValue()*f.theta[1].step);
         double minVal2=0;
         double maxVal2=Operators.GetFunctionMaxValue(tempFunction2);
         for (int i=tempFunction2.minIndex;i<=tempFunction2.maxIndex-1;i++){
-            int absciss1=(int) Math.round((i-tempFunction2.minIndex)*jPanel1.getWidth()/(tempFunction2.maxIndex-tempFunction2.minIndex+1));
-            int absciss2=(int) Math.round((i-tempFunction2.minIndex+1)*jPanel1.getWidth()/(tempFunction2.maxIndex-tempFunction2.minIndex+1));
-            int ordinate1=(int) Math.round((jPanel1.getHeight()/(minVal2-maxVal2))*(tempFunction2.values[i]-maxVal2));
-            int ordinate2=(int) Math.round(jPanel1.getHeight()/(minVal2-maxVal2)*(tempFunction2.values[i+1]-maxVal2));
+            int absciss1=(int) Math.round((i-tempFunction2.minIndex)*jPanel2.getWidth()/(tempFunction2.maxIndex-tempFunction2.minIndex+1));
+            int absciss2=(int) Math.round((i-tempFunction2.minIndex+1)*jPanel2.getWidth()/(tempFunction2.maxIndex-tempFunction2.minIndex+1));
+            int ordinate1=(int) Math.round((jPanel2.getHeight()/(minVal2-maxVal2))*(tempFunction2.values[i]-maxVal2));
+            int ordinate2=(int) Math.round(jPanel2.getHeight()/(minVal2-maxVal2)*(tempFunction2.values[i+1]-maxVal2));
             gp2.drawLine(absciss1,ordinate1, absciss2,ordinate2);
         }
-        lblXMin.setText((new Double(tempFunction1.min)).toString());
-        lblXMax.setText((new Double(tempFunction1.max)).toString());
-        lblYMax.setText((new Double(maxVal1)).toString());
-        lblPhaseName.setText(f.phaseName[0]);
+        lblXMin2.setText((new Double(tempFunction2.min)).toString());
+        lblXMax2.setText((new Double(tempFunction2.max)).toString());
+        lblYMax2.setText((new Double(maxVal2)).toString());
+        lblPhaseName2.setText(f.phaseName[1]);
+        
+        
+        Graphics gp3=jPanel3.getGraphics();
+        FunctionStructure tempFunction3 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[2],Operators.TranslateFunction(jSlider1.getValue()*f.theta[2].step,f.theta[2]));
+        double minVal3=0;
+        double maxVal3=Operators.GetFunctionMaxValue(tempFunction3);
+        for (int i=tempFunction3.minIndex;i<=tempFunction3.maxIndex-1;i++){
+            int absciss1=(int) Math.round((i-tempFunction3.minIndex)*jPanel3.getWidth()/(tempFunction3.maxIndex-tempFunction3.minIndex+1));
+            int absciss2=(int) Math.round((i-tempFunction3.minIndex+1)*jPanel3.getWidth()/(tempFunction3.maxIndex-tempFunction3.minIndex+1));
+            int ordinate1=(int) Math.round((jPanel3.getHeight()/(minVal3-maxVal3))*(tempFunction3.values[i]-maxVal3));
+            int ordinate2=(int) Math.round(jPanel3.getHeight()/(minVal3-maxVal3)*(tempFunction3.values[i+1]-maxVal3));
+            gp3.drawLine(absciss1,ordinate1, absciss2,ordinate2);
+        }
+        lblXMin3.setText((new Double(tempFunction3.min)).toString());
+        lblXMax3.setText((new Double(tempFunction3.max)).toString());
+        lblYMax3.setText((new Double(maxVal3)).toString());
+        lblPhaseName3.setText(f.phaseName[2]);
+        
+        Graphics gp4=jPanel4.getGraphics();
+        FunctionStructure tempFunction4 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[3],Operators.TranslateFunction(jSlider1.getValue()*f.theta[3].step,f.theta[3]));
+        double minVal4=0;
+        double maxVal4=Operators.GetFunctionMaxValue(tempFunction4);
+        for (int i=tempFunction4.minIndex;i<=tempFunction4.maxIndex-1;i++){
+            int absciss1=(int) Math.round((i-tempFunction4.minIndex)*jPanel4.getWidth()/(tempFunction4.maxIndex-tempFunction4.minIndex+1));
+            int absciss2=(int) Math.round((i-tempFunction4.minIndex+1)*jPanel4.getWidth()/(tempFunction4.maxIndex-tempFunction4.minIndex+1));
+            int ordinate1=(int) Math.round((jPanel4.getHeight()/(minVal4-maxVal4))*(tempFunction4.values[i]-maxVal4));
+            int ordinate2=(int) Math.round(jPanel4.getHeight()/(minVal4-maxVal4)*(tempFunction4.values[i+1]-maxVal4));
+            gp4.drawLine(absciss1,ordinate1, absciss2,ordinate2);
+        }
+        lblXMin4.setText((new Double(tempFunction4.min)).toString());
+        lblXMax4.setText((new Double(tempFunction4.max)).toString());
+        lblYMax4.setText((new Double(maxVal4)).toString());
+        lblPhaseName4.setText(f.phaseName[3]);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JSlider jSlider1;
-    private javax.swing.JLabel lblPhaseName;
-    private javax.swing.JLabel lblXMax;
-    private javax.swing.JLabel lblXMin;
-    private javax.swing.JLabel lblYMax;
+    private javax.swing.JLabel lblPhaseName1;
+    private javax.swing.JLabel lblPhaseName2;
+    private javax.swing.JLabel lblPhaseName3;
+    private javax.swing.JLabel lblPhaseName4;
+    private javax.swing.JLabel lblXMax1;
+    private javax.swing.JLabel lblXMax2;
+    private javax.swing.JLabel lblXMax3;
+    private javax.swing.JLabel lblXMax4;
+    private javax.swing.JLabel lblXMin1;
+    private javax.swing.JLabel lblXMin2;
+    private javax.swing.JLabel lblXMin3;
+    private javax.swing.JLabel lblXMin4;
+    private javax.swing.JLabel lblYMax1;
+    private javax.swing.JLabel lblYMax2;
+    private javax.swing.JLabel lblYMax3;
+    private javax.swing.JLabel lblYMax4;
     // End of variables declaration//GEN-END:variables
 }
