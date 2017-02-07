@@ -5,7 +5,10 @@
  */
 package chronocell;
 
+import java.awt.Component;
 import java.awt.Graphics;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  *
@@ -29,234 +32,235 @@ public class GUISolution extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel5 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jSlider1 = new javax.swing.JSlider();
-        lblYMax1 = new javax.swing.JLabel();
-        lblPhaseName1 = new javax.swing.JLabel();
         lblXMin1 = new javax.swing.JLabel();
         lblXMax1 = new javax.swing.JLabel();
+        lblYMax1 = new javax.swing.JLabel();
+        lblPhaseName1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        lblYMax2 = new javax.swing.JLabel();
-        lblXMax2 = new javax.swing.JLabel();
         lblXMin2 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
+        lblXMax2 = new javax.swing.JLabel();
+        lblYMax2 = new javax.swing.JLabel();
         lblPhaseName2 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
-        lblYMax3 = new javax.swing.JLabel();
-        lblPhaseName3 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
         lblXMin3 = new javax.swing.JLabel();
         lblXMax3 = new javax.swing.JLabel();
-        lblYMax4 = new javax.swing.JLabel();
-        lblPhaseName4 = new javax.swing.JLabel();
+        lblYMax3 = new javax.swing.JLabel();
+        lblPhaseName3 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
         lblXMin4 = new javax.swing.JLabel();
         lblXMax4 = new javax.swing.JLabel();
+        lblYMax4 = new javax.swing.JLabel();
+        lblPhaseName4 = new javax.swing.JLabel();
+        jSlider1 = new javax.swing.JSlider();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(204, 255, 204));
+        setPreferredSize(new java.awt.Dimension(800, 600));
+
+        jPanel5.setLayout(new java.awt.GridLayout(2, 2, 4, 4));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        jPanel1.setForeground(new java.awt.Color(153, 153, 153));
+        jPanel1.setPreferredSize(new java.awt.Dimension(100, 100));
+
+        lblXMin1.setText("X min");
+        lblXMin1.setToolTipText("X min");
+
+        lblXMax1.setText("X MAX");
+        lblXMax1.setToolTipText("X MAX");
+
+        lblYMax1.setText("Y MAX");
+        lblYMax1.setToolTipText("Y MAX");
+
+        lblPhaseName1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblPhaseName1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblPhaseName1.setText("PHASE");
+        lblPhaseName1.setToolTipText("PHASE");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 619, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(lblYMax1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
+                .addComponent(lblPhaseName1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(lblXMin1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblXMax1))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 422, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblYMax1)
+                    .addComponent(lblPhaseName1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblXMin1)
+                    .addComponent(lblXMax1)))
         );
 
-        jSlider1.setMaximum(1000);
-        jSlider1.setValue(0);
-        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSlider1StateChanged(evt);
-            }
-        });
-
-        lblYMax1.setText("jLabel1");
-
-        lblPhaseName1.setText("jLabel5");
-
-        lblXMin1.setText("jLabel3");
-
-        lblXMax1.setText("jLabel4");
+        jPanel5.add(jPanel1);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        jPanel2.setPreferredSize(new java.awt.Dimension(100, 100));
+
+        lblXMin2.setText("X min");
+        lblXMin2.setToolTipText("X min");
+
+        lblXMax2.setText("X MAX");
+        lblXMax2.setToolTipText("X MAX");
+
+        lblYMax2.setText("Y MAX");
+        lblYMax2.setToolTipText("Y MAX");
+
+        lblPhaseName2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblPhaseName2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblPhaseName2.setText("PHASE");
+        lblPhaseName2.setToolTipText("PHASE");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 673, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(lblXMin2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblXMax2))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(lblYMax2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 259, Short.MAX_VALUE)
+                .addComponent(lblPhaseName2, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 422, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblYMax2)
+                    .addComponent(lblPhaseName2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblXMin2)
+                    .addComponent(lblXMax2)))
         );
 
-        lblYMax2.setText("jLabel1");
-
-        lblXMax2.setText("jLabel2");
-
-        lblXMin2.setText("jLabel3");
+        jPanel5.add(jPanel2);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        jPanel3.setPreferredSize(new java.awt.Dimension(100, 100));
+
+        lblXMin3.setText("X min");
+        lblXMin3.setToolTipText("X min");
+
+        lblXMax3.setText("X MAX");
+        lblXMax3.setToolTipText("X MAX");
+
+        lblYMax3.setText("Y MAX");
+        lblYMax3.setToolTipText("Y MAX");
+
+        lblPhaseName3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblPhaseName3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblPhaseName3.setText("PHASE");
+        lblPhaseName3.setToolTipText("PHASE");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 619, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(lblYMax3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
+                .addComponent(lblPhaseName3, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(lblXMin3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblXMax3))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblYMax3)
+                    .addComponent(lblPhaseName3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblXMin3)
+                    .addComponent(lblXMax3)))
         );
 
-        lblPhaseName2.setText("jLabel4");
+        jPanel5.add(jPanel3);
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        jPanel4.setPreferredSize(new java.awt.Dimension(100, 100));
+
+        lblXMin4.setText("X min");
+        lblXMin4.setToolTipText("X min");
+
+        lblXMax4.setText("X MAX");
+        lblXMax4.setToolTipText("X MAX");
+
+        lblYMax4.setText("Y MAX");
+        lblYMax4.setToolTipText("Y MAX");
+
+        lblPhaseName4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblPhaseName4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblPhaseName4.setText("PHASE");
+        lblPhaseName4.setToolTipText("PHASE");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 649, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(lblYMax4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
+                .addComponent(lblPhaseName4, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(lblXMin4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblXMax4))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 446, Short.MAX_VALUE)
-        );
-
-        lblYMax3.setText("jLabel1");
-
-        lblPhaseName3.setText("jLabel5");
-
-        lblXMin3.setText("jLabel3");
-
-        lblXMax3.setText("jLabel4");
-
-        lblYMax4.setText("jLabel1");
-
-        lblPhaseName4.setText("jLabel5");
-
-        lblXMin4.setText("jLabel3");
-
-        lblXMax4.setText("jLabel4");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblXMin3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblXMax3)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblXMin4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblXMax4))
-                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(32, 32, 32))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(lblXMin1)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblXMax1))
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblYMax1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(234, 234, 234)
-                                .addComponent(lblPhaseName1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(49, 49, 49)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblYMax2)
-                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(lblXMin2)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(lblXMax2))
-                                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblPhaseName2)
-                                .addGap(316, 316, 316))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblYMax3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblYMax4)
-                        .addGap(632, 632, 632))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(405, 405, 405)
-                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(237, 237, 237)
-                .addComponent(lblPhaseName3, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblPhaseName4, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(181, 181, 181))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblPhaseName2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblPhaseName1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblYMax1)
-                    .addComponent(lblYMax2))
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblXMax1)
-                    .addComponent(lblXMin1)
-                    .addComponent(lblXMax2)
-                    .addComponent(lblXMin2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPhaseName3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblPhaseName4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblYMax4)
-                    .addComponent(lblYMax3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblXMin3)
-                    .addComponent(lblXMax3)
+                    .addComponent(lblPhaseName4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblXMin4)
-                    .addComponent(lblXMax4))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblXMax4)))
         );
+
+        jPanel5.add(jPanel4);
+
+        getContentPane().add(jPanel5, java.awt.BorderLayout.CENTER);
+
+        jSlider1.setBackground(new java.awt.Color(204, 255, 204));
+        jSlider1.setMaximum(1000);
+        jSlider1.setValue(0);
+        jSlider1.setPreferredSize(new java.awt.Dimension(128, 32));
+        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider1StateChanged(evt);
+            }
+        });
+        getContentPane().add(jSlider1, java.awt.BorderLayout.PAGE_END);
+
+        jLabel1.setBackground(new java.awt.Color(204, 255, 204));
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Chrono-Cell");
+        getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -309,78 +313,59 @@ public class GUISolution extends javax.swing.JFrame {
     @Override
     public void paint(Graphics g){
         super.paint(g);
-        Graphics gp1=jPanel1.getGraphics();
         FunctionStructure tempFunction1 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[0],Operators.TranslateFunction(jSlider1.getValue()*f.theta[0].step,f.theta[0]));
-        double minVal1=0;
-        double maxVal1=Math.max(1, Operators.GetFunctionMaxValue(tempFunction1));
-        for (int i=tempFunction1.minIndex;i<=tempFunction1.maxIndex-1;i++){
-            int absciss11=(int) Math.round((i-tempFunction1.minIndex)*jPanel1.getWidth()/(tempFunction1.maxIndex-tempFunction1.minIndex+1));
-            int absciss12=(int) Math.round((i-tempFunction1.minIndex+1)*jPanel1.getWidth()/(tempFunction1.maxIndex-tempFunction1.minIndex+1));
-            int ordinate11=(int) Math.round((jPanel1.getHeight()/(minVal1-maxVal1))*(tempFunction1.values[i]-maxVal1));
-            int ordinate12=(int) Math.round(jPanel1.getHeight()/(minVal1-maxVal1)*(tempFunction1.values[i+1]-maxVal1));
-            gp1.drawLine(absciss11,ordinate11, absciss12,ordinate12);
-        }    
-        
-        lblXMin1.setText((new Double(tempFunction1.min)).toString());
-        lblXMax1.setText((new Double(tempFunction1.max)).toString());
-        lblYMax1.setText((new Double(maxVal1)).toString());
-        lblPhaseName1.setText(f.phaseName[0]);
-        
-        Graphics gp2=jPanel2.getGraphics();
         FunctionStructure tempFunction2 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[1],Operators.TranslateFunction(jSlider1.getValue()*f.theta[1].step,f.theta[1]));
-        double minVal2=0;
-        double maxVal2=Operators.GetFunctionMaxValue(tempFunction2);
-        for (int i=tempFunction2.minIndex;i<=tempFunction2.maxIndex-1;i++){
-            int absciss1=(int) Math.round((i-tempFunction2.minIndex)*jPanel2.getWidth()/(tempFunction2.maxIndex-tempFunction2.minIndex+1));
-            int absciss2=(int) Math.round((i-tempFunction2.minIndex+1)*jPanel2.getWidth()/(tempFunction2.maxIndex-tempFunction2.minIndex+1));
-            int ordinate1=(int) Math.round((jPanel2.getHeight()/(minVal2-maxVal2))*(tempFunction2.values[i]-maxVal2));
-            int ordinate2=(int) Math.round(jPanel2.getHeight()/(minVal2-maxVal2)*(tempFunction2.values[i+1]-maxVal2));
-            gp2.drawLine(absciss1,ordinate1, absciss2,ordinate2);
-        }
-        lblXMin2.setText((new Double(tempFunction2.min)).toString());
-        lblXMax2.setText((new Double(tempFunction2.max)).toString());
-        lblYMax2.setText((new Double(maxVal2)).toString());
-        lblPhaseName2.setText(f.phaseName[1]);
-        
-        
-        Graphics gp3=jPanel3.getGraphics();
         FunctionStructure tempFunction3 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[2],Operators.TranslateFunction(jSlider1.getValue()*f.theta[2].step,f.theta[2]));
-        double minVal3=0;
-        double maxVal3=Operators.GetFunctionMaxValue(tempFunction3);
-        for (int i=tempFunction3.minIndex;i<=tempFunction3.maxIndex-1;i++){
-            int absciss1=(int) Math.round((i-tempFunction3.minIndex)*jPanel3.getWidth()/(tempFunction3.maxIndex-tempFunction3.minIndex+1));
-            int absciss2=(int) Math.round((i-tempFunction3.minIndex+1)*jPanel3.getWidth()/(tempFunction3.maxIndex-tempFunction3.minIndex+1));
-            int ordinate1=(int) Math.round((jPanel3.getHeight()/(minVal3-maxVal3))*(tempFunction3.values[i]-maxVal3));
-            int ordinate2=(int) Math.round(jPanel3.getHeight()/(minVal3-maxVal3)*(tempFunction3.values[i+1]-maxVal3));
-            gp3.drawLine(absciss1,ordinate1, absciss2,ordinate2);
-        }
-        lblXMin3.setText((new Double(tempFunction3.min)).toString());
-        lblXMax3.setText((new Double(tempFunction3.max)).toString());
-        lblYMax3.setText((new Double(maxVal3)).toString());
-        lblPhaseName3.setText(f.phaseName[2]);
-        
-        Graphics gp4=jPanel4.getGraphics();
         FunctionStructure tempFunction4 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[3],Operators.TranslateFunction(jSlider1.getValue()*f.theta[3].step,f.theta[3]));
-        double minVal4=0;
-        double maxVal4=Operators.GetFunctionMaxValue(tempFunction4);
-        for (int i=tempFunction4.minIndex;i<=tempFunction4.maxIndex-1;i++){
-            int absciss1=(int) Math.round((i-tempFunction4.minIndex)*jPanel4.getWidth()/(tempFunction4.maxIndex-tempFunction4.minIndex+1));
-            int absciss2=(int) Math.round((i-tempFunction4.minIndex+1)*jPanel4.getWidth()/(tempFunction4.maxIndex-tempFunction4.minIndex+1));
-            int ordinate1=(int) Math.round((jPanel4.getHeight()/(minVal4-maxVal4))*(tempFunction4.values[i]-maxVal4));
-            int ordinate2=(int) Math.round(jPanel4.getHeight()/(minVal4-maxVal4)*(tempFunction4.values[i+1]-maxVal4));
-            gp4.drawLine(absciss1,ordinate1, absciss2,ordinate2);
-        }
-        lblXMin4.setText((new Double(tempFunction4.min)).toString());
-        lblXMax4.setText((new Double(tempFunction4.max)).toString());
-        lblYMax4.setText((new Double(maxVal4)).toString());
-        lblPhaseName4.setText(f.phaseName[3]);
+
+        FillPanelFunction(tempFunction1, 0);
+        FillPanelFunction(tempFunction2, 1);
+        FillPanelFunction(tempFunction3, 2);
+        FillPanelFunction(tempFunction4, 3);
     }
 
+    private void FillPanelFunction(FunctionStructure fun, int pos) {
+        JPanel jp = null;
+        if(pos == 0) jp = jPanel1;
+        if(pos == 1) jp = jPanel2;
+        if(pos == 2) jp = jPanel3;
+        if(pos == 3) jp = jPanel4;
+        Graphics gp = jp.getGraphics();
+        double minVal1=0;
+        double maxVal1=Math.max(1, Operators.GetFunctionMaxValue(fun));
+        for (int i=fun.minIndex;i<=fun.maxIndex-1;i++){
+            int absciss11=(int) Math.round((i-fun.minIndex)*jPanel1.getWidth()/(fun.maxIndex-fun.minIndex+1));
+            int absciss12=(int) Math.round((i-fun.minIndex+1)*jPanel1.getWidth()/(fun.maxIndex-fun.minIndex+1));
+            int ordinate11=(int) Math.round((jPanel1.getHeight()/(minVal1-maxVal1))*(fun.values[i]-maxVal1));
+            int ordinate12=(int) Math.round(jPanel1.getHeight()/(minVal1-maxVal1)*(fun.values[i+1]-maxVal1));
+            gp.drawLine(absciss11,ordinate11, absciss12,ordinate12);
+        }    
+        
+        GetLabelFromItsTollTipText(jp, "X min").setText((new Double(fun.min)).toString()); // X min
+        GetLabelFromItsTollTipText(jp, "X MAX").setText((new Double(fun.max)).toString()); // X MAX
+        GetLabelFromItsTollTipText(jp, "Y MAX").setText((new Double(maxVal1)).toString()); // Y MAX
+        GetLabelFromItsTollTipText(jp, "PHASE").setText(f.phaseName[pos] + " "); // PHASE
+    }
+    
+    private JLabel GetLabelFromItsTollTipText(JPanel p, String txt) {
+        for(int i=0; i<p.getComponentCount(); i++) {
+            Component c = p.getComponents()[i];
+            if(c instanceof JLabel) {
+                if(((JLabel)c).getToolTipText().equals(txt)) {
+                    return (JLabel)c;
+                }
+            }
+        }
+        return null;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JSlider jSlider1;
     private javax.swing.JLabel lblPhaseName1;
     private javax.swing.JLabel lblPhaseName2;
