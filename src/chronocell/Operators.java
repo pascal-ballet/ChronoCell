@@ -72,6 +72,32 @@ public class Operators {
       }  
     };
     
+    public static FunctionInterface continuousGeometricDistribution1 = new FunctionInterface(){
+      public double op(double x){
+          double C=1.0, B=0.075, M=26.3, pO2=60.0;
+          double p=C*Math.exp(-Math.exp(-B*(pO2-M))),d=15;
+          if (x>d){
+          return 1-Math.pow(1-p,x-d) ;
+          }
+          else {
+              return 0;
+          }
+      }  
+    };
+    
+    public static FunctionInterface continuousGeometricDistribution2 = new FunctionInterface(){
+      public double op(double x){
+          double C=1.0, B=0.075, M=26.3, pO2=60.0;
+          double p=C*Math.exp(-Math.exp(-B*(pO2-M))),d=3;
+          if (x>d){
+          return 1-Math.pow(1-p,x-d) ;
+          }
+          else {
+              return 0;
+          }
+      }  
+    };
+  
       
     public static void MapFunctionValues(FunctionStructure fct,double min, double max,FunctionInterface g){
         for (int i=(int) Math.round(min/fct.step);i<=(int) Math.round(max/fct.step);i++){
