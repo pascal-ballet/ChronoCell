@@ -62,7 +62,8 @@ public class Operators {
     
     public static FunctionInterface constant = new FunctionInterface(){
       public double op(double x,double ... p){
-          return 1;
+//          System.err.format("p=%f",p[0]);
+          return p[0];
       }  
     };
     
@@ -86,9 +87,11 @@ public class Operators {
           //p=[shift,pO2,C,B,M]
           // double C=1.0, B=0.075, M=26.3, pO2=60.0;
           double[] parameterGompertz=new double[]{p[2],p[3],p[4]};
-          double prob=gompertz.op(p[2],parameterGompertz);
+          double prob=gompertz.op(p[1],parameterGompertz);
+          
+          
           if (x>p[0]){
-          return 1-Math.pow(1-prob,x-p[0]) ;
+          return -Math.log(1-prob)*Math.pow(1-prob,x-p[0]);
           }
           else {
               return 0;
@@ -191,6 +194,16 @@ public class Operators {
         return cum;
     } 
      
+    
+    public static FunctionStructure PowerOfFunction(FunctionStructure fct1,double pow){
+        FunctionStructure power=copyFunction(fct1);
+        for (int i=power.minIndex;i<=power.maxIndex;i++){
+                power.values[i]=Math.pow(fct1.values[i],pow);
+        }
+        
+    return power;
+    }  
+    
     public static FunctionStructure MultiplyFunctions(FunctionStructure fct1,FunctionStructure fct2){
         FunctionStructure prod=new FunctionStructure();
         if ((fct1.min-fct2.max)*(fct2.min-fct1.max)<0) {
