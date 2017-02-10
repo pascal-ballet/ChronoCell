@@ -29,8 +29,8 @@ public class ChronoCell {
                 sol.theta[0]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(30.0),Numbers.CGN(0.01));
                 Operators.MapFunctionValues(sol.theta[0],0.0,30.0,Operators.constant);
                 ///// Transition
-                sol.transitionProbabilities[0]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(30.0),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(sol.transitionProbabilities[0],15.0,30.0,Operators.continuousGeometricDistribution1);
+                sol.transitionProbabilities[0]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(50.0),Numbers.CGN(0.01)); 
+                Operators.MapFunctionValues(sol.transitionProbabilities[0],15.0,50.0,Operators.continuousGeometricDistribution,15.0,60.0,1.0,0.075,26.3);
                 sol.transitionProbabilities[0]=Operators.AffineFunctionTransformation(1/Operators.IntegrateFunction(sol.transitionProbabilities[0], sol.transitionProbabilities[0].min, sol.transitionProbabilities[0].max),0, sol.transitionProbabilities[0]);
             ///// Cumulative
                 sol.oneMinusCumulativeFunctions[0]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(sol.transitionProbabilities[0]));
@@ -49,8 +49,8 @@ public class ChronoCell {
                 sol.theta[2]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(18.0),Numbers.CGN(0.01));
                 Operators.MapFunctionValues(sol.theta[2],0.0,18.0,Operators.constant);
                 ///// Transition
-                sol.transitionProbabilities[2]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(18.0),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(sol.transitionProbabilities[2],3.0,18.0,Operators.continuousGeometricDistribution2);
+                sol.transitionProbabilities[2]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(38.0),Numbers.CGN(0.01)); 
+                Operators.MapFunctionValues(sol.transitionProbabilities[2],3.0,38.0,Operators.continuousGeometricDistribution,3.0,60.0,1.0,0.075,26.3);
                 sol.transitionProbabilities[2]=Operators.AffineFunctionTransformation(1/Operators.IntegrateFunction(sol.transitionProbabilities[2], sol.transitionProbabilities[2].min, sol.transitionProbabilities[2].max),0, sol.transitionProbabilities[2]);
             ///// Cumulative function
                 sol.oneMinusCumulativeFunctions[2]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(sol.transitionProbabilities[2]));

@@ -57,27 +57,38 @@ public class Operators {
     
     /// Lambda part, create a new package ?
     public interface FunctionInterface {
-        public double op(double x);
+        public double op(double x,double ... p);
     }
     
     public static FunctionInterface constant = new FunctionInterface(){
-      public double op(double x){
+      public double op(double x,double ... p){
           return 1;
       }  
     };
     
     public static FunctionInterface sinPeriodOne = new FunctionInterface(){
-      public double op(double x){
+      public double op(double x,double ... p){
           return Math.sin(x*Math.PI);
       }  
     };
     
-    public static FunctionInterface continuousGeometricDistribution1 = new FunctionInterface(){
-      public double op(double x){
-          double C=1.0, B=0.075, M=26.3, pO2=60.0;
-          double p=C*Math.exp(-Math.exp(-B*(pO2-M))),d=15;
-          if (x>d){
-          return 1-Math.pow(1-p,x-d) ;
+    public static FunctionInterface gompertz = new FunctionInterface(){
+      public double op(double x,double ... p){
+          //p=[C,B,M]
+          //x=pO2
+          // double C=1.0, B=0.075, M=26.3, pO2=60.0;
+          return p[0]*Math.exp(-Math.exp(-p[1]*(x-p[2])));
+          }  
+    };
+    
+    public static FunctionInterface continuousGeometricDistribution = new FunctionInterface(){
+      public double op(double x,double ... p){
+          //p=[shift,pO2,C,B,M]
+          // double C=1.0, B=0.075, M=26.3, pO2=60.0;
+          double[] parameterGompertz=new double[]{p[2],p[3],p[4]};
+          double prob=gompertz.op(p[2],parameterGompertz);
+          if (x>p[0]){
+          return 1-Math.pow(1-prob,x-p[0]) ;
           }
           else {
               return 0;
@@ -85,23 +96,23 @@ public class Operators {
       }  
     };
     
-    public static FunctionInterface continuousGeometricDistribution2 = new FunctionInterface(){
-      public double op(double x){
-          double C=1.0, B=0.075, M=26.3, pO2=60.0;
-          double p=C*Math.exp(-Math.exp(-B*(pO2-M))),d=3;
-          if (x>d){
-          return 1-Math.pow(1-p,x-d) ;
-          }
-          else {
-              return 0;
-          }
-      }  
-    };
+//    public static FunctionInterface continuousGeometricDistribution2 = new FunctionInterface(){
+//      public double op(double x){
+//          double C=1.0, B=0.075, M=26.3, pO2=60.0;
+//          double p=C*Math.exp(-Math.exp(-B*(pO2-M))),d=3;
+//          if (x>d){
+//          return 1-Math.pow(1-p,x-d) ;
+//          }
+//          else {
+//              return 0;
+//          }
+//      }  
+//    };
   
       
-    public static void MapFunctionValues(FunctionStructure fct,double min, double max,FunctionInterface g){
+    public static void MapFunctionValues(FunctionStructure fct,double min, double max,FunctionInterface g,double ... p){
         for (int i=(int) Math.round(min/fct.step);i<=(int) Math.round(max/fct.step);i++){
-            fct.values[i]=g.op(i*fct.step+fct.min);
+            fct.values[i]=g.op(i*fct.step+fct.min,p);
         }
     }
     
