@@ -18,9 +18,10 @@ public class ChronoCell {
         Numbers.minStep=0.00001;
         // Parameters
             SimulationStructure simulation=new SimulationStructure();
+            simulation.timeStep=0.01;
             simulation.treat= new TreatmentStructure();
-            simulation.treat.times= new double[]{25.0,Double.NaN};
-            simulation.treat.doses= new double[]{5.0,0.0};
+            simulation.treat.times= new double[]{100.0,Double.NaN};
+            simulation.treat.doses= new double[]{0.5,0.0};
             simulation.solution= new SolutionStructure[2];
             simulation.solution[0]=Operators.createSolutionStructure(4);
             simulation.solution[0].phaseName[0]="G1";
@@ -29,6 +30,7 @@ public class ChronoCell {
             simulation.solution[0].phaseName[3]="M";
             
             double support0=20.0,support2=18.0;
+            // uitliser le timeStep de simulationStructure
             double step=0.01;
             double pO2=20.0,C=1.0,B=0.075,M=26.3;
             
@@ -78,23 +80,22 @@ public class ChronoCell {
 //                }
          // Simulation
         
-//         Display Function
-//        GUI win1 =new GUI();    
-//        win1.SetFunction(simulation.solution[0].oneMinusCumulativeFunctions[0]);
-//        win1.setVisible(true);
-//        Operators.PrintFunction("1-F", simulation.solution[0].oneMinusCumulativeFunctions[0]);
-//        GUI win2 =new GUI();
-//        win2.SetFunction(simulation.solution[0].theta[0]);
-//        win2.setVisible(true);
 
-        for (int i=0;i<50000;i++){            
+        for (int i=0;i<20000;i++){            
             Operators.ComputeSimulationNextValue(simulation);
         }
-        GUISolution win3 =new GUISolution();
-        win3.SetFunction(simulation.solution[0]);
-        win3.setVisible(true);
-        GUISolution win4 =new GUISolution();
-        win4.SetFunction(simulation.solution[1]);
+//         Display Function
+        GUI win1 =new GUI();    
+        win1.SetFunction(simulation.solution[1].theta[0]);
+        win1.setVisible(true);
+//        GUI win2 =new GUI();
+//        win2.SetFunction(simulation.solution[1].theta[0]);
+//        win2.setVisible(true);
+//        GUISolution win3 =new GUISolution();
+//        win3.SetFunction(simulation.solution[0]);
+//        win3.setVisible(true);
+        GUISimulation win4 =new GUISimulation();
+        win4.SetFunction(simulation);
         win4.setVisible(true);
     }
 }
