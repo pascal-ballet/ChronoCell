@@ -328,7 +328,7 @@ public class GUISimulation extends javax.swing.JFrame {
     public void SetFunction(SimulationStructure simulation){
         sim=simulation;
         jSlider1.setMaximum((int) (Math.round(sim.currentTime/sim.timeStep)));
-        System.err.format("slider max %d\n", (int) (Math.round(sim.currentTime/sim.timeStep)));
+//        System.err.format("slider max %d\n", (int) (Math.round(sim.currentTime/sim.timeStep)));
     }
     @Override
     public void paint(Graphics g){

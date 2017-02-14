@@ -85,9 +85,9 @@ public class ChronoCell {
             Operators.ComputeSimulationNextValue(simulation);
         }
 //         Display Function
-        GUI win1 =new GUI();    
-        win1.SetFunction(simulation.solution[1].theta[0]);
-        win1.setVisible(true);
+//        GUI win1 =new GUI();    
+//        win1.SetFunction(simulation.solution[1].theta[0]);
+//        win1.setVisible(true);
 //        GUI win2 =new GUI();
 //        win2.SetFunction(simulation.solution[1].theta[0]);
 //        win2.setVisible(true);
