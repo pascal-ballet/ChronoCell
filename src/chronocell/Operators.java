@@ -98,19 +98,13 @@ public class Operators {
           }
       }  
     };
+
+    public static FunctionInterface survivalProbability = new FunctionInterface(){
+      public double op(double x,double ... p){
+          return 0.5;
+          }  
+    };
     
-//    public static FunctionInterface continuousGeometricDistribution2 = new FunctionInterface(){
-//      public double op(double x){
-//          double C=1.0, B=0.075, M=26.3, pO2=60.0;
-//          double p=C*Math.exp(-Math.exp(-B*(pO2-M))),d=3;
-//          if (x>d){
-//          return 1-Math.pow(1-p,x-d) ;
-//          }
-//          else {
-//              return 0;
-//          }
-//      }  
-//    };
   
       
     public static void MapFunctionValues(FunctionStructure fct,double min, double max,FunctionInterface g,double ... p){
@@ -148,19 +142,22 @@ public class Operators {
         return minVal;
     }
     
-    public static void PrintFunction(String name, FunctionStructure fct){
+    public static void PrintFunction(String name, FunctionStructure fct,boolean displayValues){
         System.err.format("\n Function :%s \n",name);
         System.err.format("step=%f\n",fct.step);
         System.err.format("min=%f, max=%f\n",fct.min,fct.max);
 //        System.err.format("values length=%d\n",fct.values.length);
         System.err.format("minIndex=%d, maxIndex=%d\n",fct.minIndex,fct.maxIndex);
-//        for (int i=fct.minIndex;i<=fct.maxIndex;i++){
+//       for (int i=0;i<fct.values.length;i++){
 //            System.err.format("**** f(%f)=%f\n",fct.min+(i-fct.minIndex)*fct.step,fct.values[i]);
 //        }
-        for (int i=0;i<fct.values.length;i++){
-            System.err.format("**** f(%f)=%f\n",fct.min+(i-fct.minIndex)*fct.step,fct.values[i]);
-        }
         System.err.format("**** Integral =%f\n",IntegrateFunction(fct, fct.min, fct.max));
+        if (displayValues==true){
+            for (int i=fct.minIndex;i<=fct.maxIndex;i++){
+                System.err.format("**** f(%f)=%f\n",fct.min+(i-fct.minIndex)*fct.step,fct.values[i]);
+            }
+ 
+        }
     } 
     
      public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
@@ -300,5 +297,33 @@ public class Operators {
             }
             
         }
-    } 
+    }
+    
+    public static void ApplyTreatment(int treatNb,SimulationStructure simulation){
+        System.err.format("traitement %d\n", treatNb);
+        simulation.solution[simulation.currentSolution+1]=createSolutionStructure(simulation.solution[simulation.currentSolution].phaseName.length);
+        simulation.solution[simulation.currentSolution+1].phaseName=simulation.solution[simulation.currentSolution].phaseName;
+        simulation.solution[simulation.currentSolution+1].transitionProbabilities=simulation.solution[simulation.currentSolution].transitionProbabilities;
+        simulation.solution[simulation.currentSolution+1].oneMinusCumulativeFunctions=simulation.solution[simulation.currentSolution].oneMinusCumulativeFunctions;
+        simulation.currentSolution+=1;
+        for (int i=0;i<simulation.solution[simulation.currentSolution].phaseName.length;i++){
+            simulation.solution[simulation.currentSolution].theta[i]=createFunction(simulation.solution[simulation.currentSolution].transitionProbabilities[i].min,simulation.solution[treatNb].transitionProbabilities[i].max, simulation.solution[treatNb].transitionProbabilities[i].step);
+            simulation.solution[simulation.currentSolution].theta[i].min=simulation.solution[simulation.currentSolution-1].theta[i].min;
+            simulation.solution[simulation.currentSolution].theta[i].max=simulation.solution[treatNb].theta[i].min+simulation.solution[simulation.currentSolution].theta[i].max;                    
+            for (int j=0;j<simulation.solution[simulation.currentSolution].theta[i].values.length;j++){
+               simulation.solution[simulation.currentSolution].theta[i].values[j]=simulation.solution[simulation.currentSolution-1].theta[i].values[simulation.solution[simulation.currentSolution-1].theta[i].minIndex+j]*survivalProbability.op(simulation.treat.doses[treatNb]);
+            }
+        }
+    }
+    
+    public static void ComputeSimulationNextValue(SimulationStructure simulation){
+//            System.err.format("current.time= %f, treatTime= %f \n",simulation.currentTime, simulation.treat.times[simulation.currentTreatment]);
+            if (simulation.currentTime>simulation.treat.times[simulation.currentTreatment]){
+                ApplyTreatment(simulation.currentTreatment,simulation);
+                simulation.currentTreatment+=1;
+            }
+        ComputeSolutionNextValue(simulation.solution[simulation.currentTreatment]);
+        // unifier les step entre toutes les phases
+        simulation.currentTime+=simulation.solution[simulation.currentTreatment].theta[0].step;
+    }
 }

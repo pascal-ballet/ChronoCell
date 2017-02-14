@@ -14,6 +14,7 @@ import chronocell.FunctionStructure;
  * @author goby
  */
 public class SolutionStructure {
+    /// faire remonter phaseName, transitionProba et oneMinusCum dans simulation Structure
     String[] phaseName=null;
     FunctionStructure[] theta=null;
     FunctionStructure[] transitionProbabilities=null;

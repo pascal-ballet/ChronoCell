@@ -10,6 +10,10 @@ package chronocell;
  * @author goby
  */
 public class SimulationStructure {
+    double currentTime=0.0;
+    int currentTreatment=0;
+    // superflu mais pratique pôur coder
+    int currentSolution=0;
     TreatmentStructure treat=null;
     SolutionStructure[] solution=null;
     private double G(int phase, double T, double s){
