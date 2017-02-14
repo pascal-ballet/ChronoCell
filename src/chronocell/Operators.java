@@ -101,8 +101,14 @@ public class Operators {
 
     public static FunctionInterface survivalProbability = new FunctionInterface(){
       public double op(double x,double ... p){
-          return 0.5;
-          }  
+          //p[0]=phase
+          if (p[0]==2){
+              return 0.2;
+          }
+          else{
+              return 0.8;
+          }
+        }  
     };
     
   
@@ -312,7 +318,7 @@ public class Operators {
             simulation.solution[simulation.currentSolution].theta[i].max=simulation.solution[treatNb].theta[i].min+simulation.solution[simulation.currentSolution].theta[i].max;  
 //            PrintFunction("theta",simulation.solution[simulation.currentSolution].theta[i] , false);
             for (int j=simulation.solution[simulation.currentSolution].theta[i].minIndex;j<simulation.solution[simulation.currentSolution].theta[i].maxIndex;j++){
-               simulation.solution[simulation.currentSolution].theta[i].values[j]=simulation.solution[simulation.currentSolution-1].theta[i].values[simulation.solution[simulation.currentSolution-1].theta[i].minIndex+j]*survivalProbability.op(simulation.treat.doses[treatNb]);
+               simulation.solution[simulation.currentSolution].theta[i].values[j]=simulation.solution[simulation.currentSolution-1].theta[i].values[simulation.solution[simulation.currentSolution-1].theta[i].minIndex+j]*survivalProbability.op(simulation.treat.doses[treatNb],i);
             }
         }
     }

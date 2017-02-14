@@ -333,6 +333,7 @@ public class GUISimulation extends javax.swing.JFrame {
     @Override
     public void paint(Graphics g){
         super.paint(g);
+        jLabel4.setText(String.format("%f", jSlider1.getValue()*sim.timeStep));
         FunctionStructure[] tempFunction=new FunctionStructure[4];
         for (int phase=0;phase<4;phase++){
             tempFunction[phase] =Operators.createFunction(0.0,sim.solution[0].transitionProbabilities[phase].max,sim.timeStep);

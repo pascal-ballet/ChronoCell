@@ -20,9 +20,9 @@ public class ChronoCell {
             SimulationStructure simulation=new SimulationStructure();
             simulation.timeStep=0.01;
             simulation.treat= new TreatmentStructure();
-            simulation.treat.times= new double[]{100.0,Double.NaN};
-            simulation.treat.doses= new double[]{0.5,0.0};
-            simulation.solution= new SolutionStructure[2];
+            simulation.treat.times= new double[]{100.0,200.0,Double.NaN};
+            simulation.treat.doses= new double[]{0.5,0.5,0.0};
+            simulation.solution= new SolutionStructure[simulation.treat.times.length];
             simulation.solution[0]=Operators.createSolutionStructure(4);
             simulation.solution[0].phaseName[0]="G1";
             simulation.solution[0].phaseName[1]="S";
@@ -81,7 +81,7 @@ public class ChronoCell {
          // Simulation
         
 
-        for (int i=0;i<20000;i++){            
+        for (int i=0;i<30000;i++){            
             Operators.ComputeSimulationNextValue(simulation);
         }
 //         Display Function
