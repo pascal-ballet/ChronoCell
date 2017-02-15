@@ -50,8 +50,8 @@ public class Operators {
         SolutionStructure sol= new SolutionStructure();
         sol.phaseName= new String[phaseNb];
         sol.theta= new FunctionStructure[phaseNb];
-        sol.transitionProbabilities= new FunctionStructure[phaseNb];
-        sol.oneMinusCumulativeFunctions= new FunctionStructure[phaseNb];
+        sol.transitionProbabilities= new FunctionStructure[phaseNb+1];
+        sol.oneMinusCumulativeFunctions= new FunctionStructure[phaseNb+1];
         return sol;
     }
     
