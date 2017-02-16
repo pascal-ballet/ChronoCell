@@ -50,11 +50,11 @@ public class ChronoCell {
                 ///// Cumulative to S
                 simulation.solution[0].oneMinusCumulativeFunctions[0]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[0]));
                 ///// Transition to G0
-                simulation.solution[0].transitionProbabilities[6]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[6],0.0,support0,Operators.constant,1.0);
-                simulation.solution[0].transitionProbabilities[6]=Operators.AffineFunctionTransformation(0.05/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[6], simulation.solution[0].transitionProbabilities[6].min, simulation.solution[0].transitionProbabilities[6].max),0, simulation.solution[0].transitionProbabilities[6]);
+                simulation.solution[0].transitionProbabilities[5]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01)); 
+                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[5],0.0,support0,Operators.constant,1.0);
+                simulation.solution[0].transitionProbabilities[5]=Operators.AffineFunctionTransformation(0.05/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[5], simulation.solution[0].transitionProbabilities[5].min, simulation.solution[0].transitionProbabilities[5].max),0, simulation.solution[0].transitionProbabilities[5]);
             ///// Cumulative to G0
-                simulation.solution[0].oneMinusCumulativeFunctions[6]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[6]));
+                simulation.solution[0].oneMinusCumulativeFunctions[5]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[5]));
         /// Phase S
             ///// Initial conditions
                 simulation.solution[0].theta[1]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(step));

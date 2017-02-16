@@ -284,25 +284,30 @@ public class Operators {
             if (sol.theta[i].minIndex==0){
                 DoubleArraySizeToLeft(sol.theta[i]);
             }
+            sol.theta[i].min=sol.theta[i].min-sol.theta[i].step;
+            sol.theta[i].minIndex-=1;
         } 
-        double[] nextVal= new double[sol.theta.length];
-        for (int i=0;i<sol.theta.length;i++){
-            FunctionStructure tempProb=TranslateFunction(sol.theta[i].min, sol.transitionProbabilities[i]);
-            nextVal[i]=IntegrateFunction(MultiplyFunctions(sol.theta[i],tempProb),tempProb.min,tempProb.max);
+        double nextVal= 0.0;
+        FunctionStructure tempProb= new FunctionStructure();
+        // phases S,G2,M
+        for (int i=1;i<4;i++){
+            tempProb=TranslateFunction(sol.theta[0].min, sol.transitionProbabilities[0]);
+            nextVal=IntegrateFunction(MultiplyFunctions(sol.theta[0],tempProb),tempProb.min,tempProb.max);
+            sol.theta[i].values[sol.theta[i].minIndex]=nextVal;
         }
-        for (int i=0;i<sol.theta.length;i++){
-            int j=(i+1) % sol.theta.length;
-            sol.theta[j].min=sol.theta[j].min-sol.theta[j].step;
-            sol.theta[j].minIndex-=1;
-//            System.err.format("i = %d et i+1 mod %d = %d \n",i,dst.ageDistribution.length,(i+1) % dst.ageDistribution.length);
-            if (j==0){
-               sol.theta[j].values[sol.theta[j].minIndex]=2*nextVal[i]; 
-            }
-            else{
-                sol.theta[j].values[sol.theta[j].minIndex]=nextVal[i];
-            }
-            
-        }
+        // phase G1
+            FunctionStructure tempCumul= new FunctionStructure();
+            tempProb=TranslateFunction(sol.theta[3].min, sol.transitionProbabilities[3]);
+            tempCumul=TranslateFunction(sol.theta[4].min, sol.oneMinusCumulativeFunctions[4]);
+            nextVal=2*IntegrateFunction(MultiplyFunctions(tempCumul, MultiplyFunctions(sol.theta[3],tempProb)),tempProb.min,tempProb.max);
+            tempProb=TranslateFunction(sol.theta[4].min, sol.transitionProbabilities[4]);
+            tempCumul=TranslateFunction(sol.theta[3].min, sol.oneMinusCumulativeFunctions[3]);
+            nextVal+=IntegrateFunction(MultiplyFunctionRaw(tempCumul,MultiplyFunctions(sol.theta[4],tempProb)),tempProb.min,tempProb.max);
+        // phase G0
+           tempProb=TranslateFunction(sol.theta[0].min, sol.transitionProbabilities[5]);
+           nextVal=IntegrateFunction(MultiplyFunctions(sol.theta[0],tempProb),tempProb.min,tempProb.max);
+           sol.theta[0].values[sol.theta[0].minIndex]=nextVal; 
+        
     }
     
     public static void ApplyTreatment(int treatNb,SimulationStructure simulation){
@@ -342,11 +347,21 @@ public class Operators {
             }
         }
 //        System.err.format("lasttreat=%d \n", solNumber);
-        if (T<= simulation.treat.times[solNumber]+simulation.solution[solNumber].transitionProbabilities[phase].max){
-            return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T);
+        if (phase!=0){
+            if (T<= simulation.treat.times[solNumber]+simulation.solution[solNumber].transitionProbabilities[phase].max){
+                return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T);
+            }
+            else{
+                return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T)*Operators.GetFunctionValue(simulation.solution[solNumber].oneMinusCumulativeFunctions[phase], s);
+            }
         }
         else{
-            return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T)*Operators.GetFunctionValue(simulation.solution[solNumber].oneMinusCumulativeFunctions[phase], s);
+            if (T<= simulation.treat.times[solNumber]+simulation.solution[solNumber].transitionProbabilities[phase].max){
+                return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T);
+            }
+            else{
+                return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T)*Operators.GetFunctionValue(simulation.solution[solNumber].oneMinusCumulativeFunctions[phase], s)*Operators.GetFunctionValue(simulation.solution[solNumber].oneMinusCumulativeFunctions[5], s);
+            }
         }
     };
 }
