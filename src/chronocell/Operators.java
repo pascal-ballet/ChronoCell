@@ -291,22 +291,23 @@ public class Operators {
         FunctionStructure tempProb= new FunctionStructure();
         // phases S,G2,M
         for (int i=1;i<4;i++){
-            tempProb=TranslateFunction(sol.theta[0].min, sol.transitionProbabilities[0]);
-            nextVal=IntegrateFunction(MultiplyFunctions(sol.theta[0],tempProb),tempProb.min,tempProb.max);
+            tempProb=TranslateFunction(sol.theta[i-1].min, sol.transitionProbabilities[i-1]);
+            nextVal=IntegrateFunction(MultiplyFunctions(sol.theta[i-1],tempProb),tempProb.min,tempProb.max);
             sol.theta[i].values[sol.theta[i].minIndex]=nextVal;
         }
         // phase G1
             FunctionStructure tempCumul= new FunctionStructure();
             tempProb=TranslateFunction(sol.theta[3].min, sol.transitionProbabilities[3]);
             tempCumul=TranslateFunction(sol.theta[4].min, sol.oneMinusCumulativeFunctions[4]);
-            nextVal=2*IntegrateFunction(MultiplyFunctions(tempCumul, MultiplyFunctions(sol.theta[3],tempProb)),tempProb.min,tempProb.max);
+            nextVal=IntegrateFunction(MultiplyFunctions(tempCumul, MultiplyFunctions(sol.theta[3],tempProb)),tempProb.min,tempProb.max);
             tempProb=TranslateFunction(sol.theta[4].min, sol.transitionProbabilities[4]);
             tempCumul=TranslateFunction(sol.theta[3].min, sol.oneMinusCumulativeFunctions[3]);
             nextVal+=IntegrateFunction(MultiplyFunctionRaw(tempCumul,MultiplyFunctions(sol.theta[4],tempProb)),tempProb.min,tempProb.max);
+            sol.theta[0].values[sol.theta[0].minIndex]=nextVal;
         // phase G0
            tempProb=TranslateFunction(sol.theta[0].min, sol.transitionProbabilities[5]);
            nextVal=IntegrateFunction(MultiplyFunctions(sol.theta[0],tempProb),tempProb.min,tempProb.max);
-           sol.theta[0].values[sol.theta[0].minIndex]=nextVal; 
+           sol.theta[4].values[sol.theta[4].minIndex]=nextVal; 
         
     }
     
