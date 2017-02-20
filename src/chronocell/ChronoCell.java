@@ -6,7 +6,9 @@
 
 
 // Todo :   *  write properly solutions for initial condition to solve thes shift of time between bifurcations
+//          * solve the problem of cell death
 //          * improve to transition probabilities that can evolve along time and depend on pO2
+//          * implement population size calculus
 package chronocell;
 
 /**
@@ -45,13 +47,13 @@ public class ChronoCell {
                 Operators.MapFunctionValues(simulation.solution[0].theta[0],0.0,10.0,Operators.constant,1.0);
                 ///// Transition to S
                 simulation.solution[0].transitionProbabilities[0]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[0],15.0,support0,Operators.continuousGeometricDistribution,15.0,pO2,C,B,M);
+                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[0],14.0,support0,Operators.gaussian,16.0,1.0);
                 simulation.solution[0].transitionProbabilities[0]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[0], simulation.solution[0].transitionProbabilities[0].min, simulation.solution[0].transitionProbabilities[0].max),0, simulation.solution[0].transitionProbabilities[0]);
                 ///// Cumulative to S
                 simulation.solution[0].oneMinusCumulativeFunctions[0]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[0]));
                 ///// Transition to G0
                 simulation.solution[0].transitionProbabilities[5]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[5],0.0,support0,Operators.constant,1.0);
+                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[5],0.0,support0,Operators.gaussian,9.0,5.0);
                 simulation.solution[0].transitionProbabilities[5]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[5], simulation.solution[0].transitionProbabilities[5].min, simulation.solution[0].transitionProbabilities[5].max),0, simulation.solution[0].transitionProbabilities[5]);
                 ///// Cumulative to G0
                 simulation.solution[0].oneMinusCumulativeFunctions[5]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[5]));
@@ -91,8 +93,8 @@ public class ChronoCell {
                 Operators.MapFunctionValues(simulation.solution[0].theta[4],0.0,8.0,Operators.constant,0.0);
                 ///// Transition
                 simulation.solution[0].transitionProbabilities[4]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[4],0.0,8.0,Operators.constant,1.0);
-                simulation.solution[0].transitionProbabilities[4]=Operators.AffineFunctionTransformation(0.85/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[4], simulation.solution[0].transitionProbabilities[4].min, simulation.solution[0].transitionProbabilities[4].max),0, simulation.solution[0].transitionProbabilities[4]);
+                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[4],0.0,8.0,Operators.gaussian,2.0,1.0);
+                simulation.solution[0].transitionProbabilities[4]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[4], simulation.solution[0].transitionProbabilities[4].min, simulation.solution[0].transitionProbabilities[4].max),0, simulation.solution[0].transitionProbabilities[4]);
             ///// Cumulative function
                 simulation.solution[0].oneMinusCumulativeFunctions[4]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[4]));
                  
@@ -102,13 +104,13 @@ public class ChronoCell {
          // Simulation
         
 
-        for (int i=0;i<20000;i++){            
+        for (int i=0;i<200;i++){            
             Operators.ComputeSimulationNextValue(simulation);
         }
 //         Display Function
-//        GUI win1 =new GUI();    
-//        win1.SetFunction(simulation.solution[0].theta[4]);
-//        win1.setVisible(true);
+        GUI win1 =new GUI();    
+        win1.SetFunction(simulation.solution[0].transitionProbabilities[4]);
+        win1.setVisible(true);
 //        GUI win2 =new GUI();
 //        win2.SetFunction(simulation.solution[1].theta[0]);
 //        win2.setVisible(true);

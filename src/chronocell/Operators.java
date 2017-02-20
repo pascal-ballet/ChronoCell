@@ -82,6 +82,13 @@ public class Operators {
           }  
     };
     
+    public static FunctionInterface gaussian = new FunctionInterface(){
+      public double op(double x,double ... p){
+          //p=[mu,sigma^2]
+          return Math.pow(p[1]*Math.PI*2.0,-0.5)*Math.exp(-0.5*Math.pow(x-p[0],2)/p[1]);
+          }  
+    };
+    
     public static FunctionInterface continuousGeometricDistribution = new FunctionInterface(){
       public double op(double x,double ... p){
           //p=[shift,pO2,C,B,M]
