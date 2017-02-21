@@ -338,7 +338,7 @@ public class GUISimulation extends javax.swing.JFrame {
         for (int phase=0;phase<4;phase++){
             tempFunction[phase] =Operators.createFunction(0.0,sim.solution[0].transitionProbabilities[phase+1].max,sim.timeStep);
             for (int i=0;i<tempFunction[phase].maxIndex;i++){
-                tempFunction[phase].values[i]=Operators.GetSimulationValue(sim, phase, jSlider1.getValue()*tempFunction[phase].step,i*tempFunction[phase].step);
+                tempFunction[phase].values[i]=Operators.GetSimulationValue(sim, phase+1, jSlider1.getValue()*tempFunction[phase].step,i*tempFunction[phase].step);
             }
             FillPanelFunction(tempFunction[phase], phase+1);
         }

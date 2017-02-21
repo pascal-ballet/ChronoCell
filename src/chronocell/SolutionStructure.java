@@ -19,4 +19,6 @@ public class SolutionStructure {
     FunctionStructure[] theta=null;
     FunctionStructure[] transitionProbabilities=null;
     FunctionStructure[] oneMinusCumulativeFunctions=null;
+    double probaDeathBeforeG1=0.0;
+    double probaSBeforeG0=0.0;
 }
