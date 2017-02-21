@@ -308,15 +308,15 @@ public class GUISolution extends javax.swing.JFrame {
     SolutionStructure f;
     public void SetFunction(SolutionStructure sol){
         f=sol;
-        jSlider1.setMaximum(f.theta[0].maxIndex-f.theta[0].minIndex-f.transitionProbabilities[0].values.length);
+        jSlider1.setMaximum(f.theta[1].maxIndex-f.theta[1].minIndex-f.transitionProbabilities[1].values.length);
     }
     @Override
     public void paint(Graphics g){
         super.paint(g);
-        FunctionStructure tempFunction1 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[0],Operators.TranslateFunction(jSlider1.getValue()*f.theta[0].step,f.theta[0]));
-        FunctionStructure tempFunction2 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[1],Operators.TranslateFunction(jSlider1.getValue()*f.theta[1].step,f.theta[1]));
-        FunctionStructure tempFunction3 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[2],Operators.TranslateFunction(jSlider1.getValue()*f.theta[2].step,f.theta[2]));
-        FunctionStructure tempFunction4 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[3],Operators.TranslateFunction(jSlider1.getValue()*f.theta[3].step,f.theta[3]));
+        FunctionStructure tempFunction1 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[1],Operators.TranslateFunction(jSlider1.getValue()*f.theta[1].step,f.theta[1]));
+        FunctionStructure tempFunction2 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[2],Operators.TranslateFunction(jSlider1.getValue()*f.theta[2].step,f.theta[2]));
+        FunctionStructure tempFunction3 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[3],Operators.TranslateFunction(jSlider1.getValue()*f.theta[3].step,f.theta[3]));
+        FunctionStructure tempFunction4 =Operators.MultiplyFunctionRaw(f.oneMinusCumulativeFunctions[4],Operators.TranslateFunction(jSlider1.getValue()*f.theta[4].step,f.theta[4]));
 
         FillPanelFunction(tempFunction1, 0);
         FillPanelFunction(tempFunction2, 1);
@@ -344,7 +344,7 @@ public class GUISolution extends javax.swing.JFrame {
         GetLabelFromItsTollTipText(jp, "X min").setText((new Double(fun.min)).toString()); // X min
         GetLabelFromItsTollTipText(jp, "X MAX").setText((new Double(fun.max)).toString()); // X MAX
         GetLabelFromItsTollTipText(jp, "Y MAX").setText((new Double(maxVal1)).toString()); // Y MAX
-        GetLabelFromItsTollTipText(jp, "PHASE").setText(f.phaseName[pos] + " "); // PHASE
+        GetLabelFromItsTollTipText(jp, "PHASE").setText(f.phaseName[pos+1] + " "); // PHASE
     }
     
     private JLabel GetLabelFromItsTollTipText(JPanel p, String txt) {

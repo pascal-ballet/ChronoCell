@@ -335,7 +335,7 @@ public class GUISimulation extends javax.swing.JFrame {
         super.paint(g);
         jLabel4.setText(String.format("%f", jSlider1.getValue()*sim.timeStep));
         FunctionStructure[] tempFunction=new FunctionStructure[4];
-        for (int phase=0;phase<4;phase++){
+        for (int phase=1;phase<5;phase++){
             tempFunction[phase] =Operators.createFunction(0.0,sim.solution[0].transitionProbabilities[phase].max,sim.timeStep);
             for (int i=0;i<tempFunction[phase].maxIndex;i++){
                 tempFunction[phase].values[i]=Operators.GetSimulationValue(sim, phase, jSlider1.getValue()*tempFunction[phase].step,i*tempFunction[phase].step);
@@ -356,10 +356,10 @@ public class GUISimulation extends javax.swing.JFrame {
 
     private void FillPanelFunction(FunctionStructure fun, int pos) {
         JPanel jp = null;
-        if(pos == 0) jp = jPanel1;
-        if(pos == 1) jp = jPanel2;
-        if(pos == 2) jp = jPanel3;
-        if(pos == 3) jp = jPanel4;
+        if(pos == 1) jp = jPanel1;
+        if(pos == 2) jp = jPanel2;
+        if(pos == 3) jp = jPanel3;
+        if(pos == 4) jp = jPanel4;
         Graphics gp = jp.getGraphics();
         double minVal1=0;
         double maxVal1=Math.max(1, Operators.GetFunctionMaxValue(fun));
