@@ -11,6 +11,11 @@
 //          * implement population size calculus
 package chronocell;
 
+import static chronocell.Operators.IntegrateFunction;
+import static chronocell.Operators.MultiplyFunctions;
+import static chronocell.Operators.PowerOfFunction;
+import static chronocell.Operators.TranslateFunction;
+
 /**
  *
  * @author pascal
@@ -117,18 +122,25 @@ public class ChronoCell {
             ///// Cumulative function
                 simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
 
-        for (int i=0;i<1000;i++){            
+        for (int i=0;i<2000;i++){            
             Operators.ComputeSimulationNextValue(simulation);
         }
         System.err.format("DeathBG1 = %f \n", simulation.solution[0].probaDeathBeforeG1);
         System.err.format("SBG2 = %f \n", simulation.solution[0].probaSBeforeG0);
-//         Display Function
-        GUI win1 =new GUI();    
-        win1.SetFunction(simulation.solution[0].transitionProbabilities[2]);
-        win1.setVisible(true);
-        GUI win2 =new GUI();
-        win2.SetFunction(simulation.solution[0].transitionProbabilities[3]);
-        win2.setVisible(true);
+//        FunctionStructure tempProb=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].transitionProbabilities[3]);
+//        FunctionStructure     tempCumul=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].oneMinusCumulativeFunctions[3]);
+//        FunctionStructure    tempCumulComp=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].oneMinusCumulativeFunctions[2]);
+//        FunctionStructure temp=MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,simulation.solution[0].probaSBeforeG0),tempProb),PowerOfFunction(tempCumul, -simulation.solution[0].probaDeathBeforeG1));
+//        double nextVal=IntegrateFunction( MultiplyFunctions( simulation.solution[0].theta[1], MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,simulation.solution[0].probaSBeforeG0),tempProb),PowerOfFunction(tempCumul, -simulation.solution[0].probaDeathBeforeG1))),tempProb.min,tempProb.max);
+//           
+//        System.err.format("nextVal = %f \n", nextVal);
+////         Display Function
+//        GUI win1 =new GUI();    
+//        win1.SetFunction(temp);
+//        win1.setVisible(true);
+//        GUI win2 =new GUI();
+//        win2.SetFunction(simulation.solution[0].theta[1]);
+//        win2.setVisible(true);
 //        GUISolution win3 =new GUISolution();
 //        win3.SetFunction(simulation.solution[0]);
 //        win3.setVisible(true);

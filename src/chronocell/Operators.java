@@ -320,6 +320,7 @@ public class Operators {
             tempProb=TranslateFunction(sol.theta[1].min, sol.transitionProbabilities[3]);
             tempCumul=TranslateFunction(sol.theta[1].min, sol.oneMinusCumulativeFunctions[3]);
             tempCumulComp=TranslateFunction(sol.theta[1].min, sol.oneMinusCumulativeFunctions[2]);
+            FunctionStructure temp=MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,sol.probaSBeforeG0),tempProb),PowerOfFunction(tempCumul, -sol.probaDeathBeforeG1));
             nextVal=IntegrateFunction( MultiplyFunctions( sol.theta[1], MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,sol.probaSBeforeG0),tempProb),PowerOfFunction(tempCumul, -sol.probaDeathBeforeG1))),tempProb.min,tempProb.max);
             sol.theta[2].values[sol.theta[2].minIndex]=nextVal;
         
