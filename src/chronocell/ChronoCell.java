@@ -27,6 +27,10 @@ public class ChronoCell {
      */
     public static void main(String[] args) {
         Numbers.minStep=0.00001;
+        
+        
+        
+        
         // Parameters
             SimulationStructure simulation=new SimulationStructure();
             simulation.timeStep=0.01;
@@ -46,6 +50,46 @@ public class ChronoCell {
             double step=0.01;
             double pO2=20.0,C=1.0,B=0.075,M=26.3;
             int indice=0;
+    //Network creation
+    Network net = new Network();
+        // G0->Death
+        FunctionStructure G0ToDeath=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.01)); 
+        Operators.MapFunctionValues(G0ToDeath,0.0,8.0,Operators.gaussian,2.0,1.0);
+        G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G0ToDeath, G0ToDeath.min, G0ToDeath.max),0, G0ToDeath);
+        net.G0.density.put("Death", G0ToDeath);
+        // G0->G1
+        FunctionStructure G0ToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.01));  
+        Operators.MapFunctionValues(G0ToG1,0.0,8.0,Operators.gaussian,2.0,1.0);;
+        G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G0ToG1, G0ToG1.min, G0ToG1.max),0, G0ToG1);
+        net.G0.density.put("G1", G0ToG1);
+        // G1->G0
+        FunctionStructure G1ToG0=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01)); 
+        Operators.MapFunctionValues(G1ToG0,0.0,support0,Operators.gaussian,15.0,5.0);
+        G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G1ToG0, G1ToG0.min, G1ToG0.max),0, G1ToG0);
+        net.G1.density.put("G0", G1ToG0);
+        // G1->S
+        FunctionStructure G1ToS=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01));
+        Operators.MapFunctionValues(G1ToS,14.0,support0,Operators.gaussian,16.0,1.0);
+        G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G1ToS, G1ToS.min, G1ToS.max),0, G1ToS);
+        net.G1.density.put("S", G1ToS);
+        // S->G2
+        FunctionStructure SToG2=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.01)); 
+        Operators.MapFunctionValues(SToG2,7.99,8.0,Operators.constant,1.0);
+        G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(SToG2, SToG2.min, SToG2.max),0, SToG2);
+        net.S.density.put("G2", SToG2);
+        // G2->M
+        FunctionStructure G2ToM=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support2),Numbers.CGN(0.01)); 
+        Operators.MapFunctionValues(G2ToM,3.0,support2,Operators.continuousGeometricDistribution,3.0,pO2,C,B,M);
+        G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G2ToM, G2ToM.min, G2ToM.max),0, G2ToM);
+        net.G2.density.put("M", G2ToM);
+        // M->G1
+        FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),Numbers.CGN(0.01)); 
+        Operators.MapFunctionValues(MToG1,1.99,2.0,Operators.constant,1.0);
+        G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(MToG1, MToG1.min, MToG1.max),0, MToG1);
+        net.M.density.put("G1", MToG1);    
+            
+            
+            
         /// Phase G0
             ///// Initial conditions
                 simulation.solution[0].theta[0]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(step));
