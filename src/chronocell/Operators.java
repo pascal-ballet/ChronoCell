@@ -89,6 +89,14 @@ public class Operators {
           }  
     };
     
+        
+    public static FunctionInterface exp = new FunctionInterface(){
+      public double op(double x,double ... p){
+          // p[0] coefficient
+          return Math.exp(p[0]*x);
+          }  
+    };
+    
     public static FunctionInterface continuousGeometricDistribution = new FunctionInterface(){
       public double op(double x,double ... p){
           //p=[shift,pO2,C,B,M]
@@ -124,6 +132,14 @@ public class Operators {
         for (int i=(int) Math.round(min/fct.step);i<=(int) Math.round(max/fct.step);i++){
             fct.values[i]=g.op(i*fct.step+fct.min,p);
         }
+    }
+    
+    public static FunctionStructure ComposeFunctionInterfaceFunctionStructure(FunctionStructure fct,FunctionInterface g,double ... p){
+        FunctionStructure comp = copyFunction(fct);
+        for (int i=comp.minIndex;i<=comp.maxIndex;i++){
+            comp.values[i]=g.op(fct.values[i],p);
+        }
+        return comp;
     }
     
      
