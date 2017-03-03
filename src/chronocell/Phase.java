@@ -12,10 +12,10 @@ import java.util.Hashtable;
  * @author goby
  */
 public class Phase {
-    Hashtable<String,FunctionStructure> density = null;
-    Hashtable<String,FunctionStructure> Cumul = null;
-    Hashtable<String,FunctionStructure> oneMinCumul = null;
-    Hashtable<String,FunctionStructure> alpha = null;
-    FunctionStructure thetaFilter = null;
-    Hashtable<String,Double> weight = null;
+    Hashtable<String,FunctionStructure> density = new Hashtable<String,FunctionStructure>();
+    Hashtable<String,FunctionStructure> cumul = new Hashtable<String,FunctionStructure>();
+    Hashtable<String,FunctionStructure> oneMinCumul = new Hashtable<String,FunctionStructure>();
+    Hashtable<String,FunctionStructure> alpha = new Hashtable<String,FunctionStructure>();
+    FunctionStructure thetaFilter = new FunctionStructure();
+    Hashtable<String,Double> weight = new Hashtable<String,Double>();
 }

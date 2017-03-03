@@ -11,10 +11,10 @@ import java.util.Hashtable;
  *
  * @author goby
  */
-public class Network {
-    Phase G0= null;
-    Phase G1= null;
-    Phase S= null;
-    Phase G2= null;
-    Phase M= null;
+public class CellCycle {
+    Phase G0= new Phase();
+    Phase G1= new Phase();
+    Phase S= new Phase();
+    Phase G2= new Phase();
+    Phase M= new Phase();
 }

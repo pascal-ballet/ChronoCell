@@ -51,14 +51,14 @@ public class ChronoCell {
             double pO2=20.0,C=1.0,B=0.075,M=26.3;
             int indice=0;
     //Network creation
-    Network net = new Network();
+    CellCycle net = new CellCycle();
         // G0->Death
-        FunctionStructure G0ToDeath=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.01)); 
-        Operators.MapFunctionValues(G0ToDeath,0.0,8.0,Operators.gaussian,2.0,1.0);
+        FunctionStructure G0ToDeath=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.001)); 
+        Operators.MapFunctionValues(G0ToDeath,0.0,8.0,Operators.gaussian,3.0,1.0);
         G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G0ToDeath, G0ToDeath.min, G0ToDeath.max),0, G0ToDeath);
         net.G0.density.put("Death", G0ToDeath);
         // G0->G1
-        FunctionStructure G0ToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.01));  
+        FunctionStructure G0ToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.001));  
         Operators.MapFunctionValues(G0ToG1,0.0,8.0,Operators.gaussian,2.0,1.0);;
         G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G0ToG1, G0ToG1.min, G0ToG1.max),0, G0ToG1);
         net.G0.density.put("G1", G0ToG1);
@@ -88,7 +88,7 @@ public class ChronoCell {
         G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(MToG1, MToG1.min, MToG1.max),0, MToG1);
         net.M.density.put("G1", MToG1);    
             
-            
+        CellCycleOperators.PhaseFilling(net);
             
         /// Phase G0
             ///// Initial conditions
@@ -166,11 +166,11 @@ public class ChronoCell {
             ///// Cumulative function
                 simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
 
-        for (int i=0;i<2000;i++){            
-            Operators.ComputeSimulationNextValue(simulation);
-        }
-        System.err.format("DeathBG1 = %f \n", simulation.solution[0].probaDeathBeforeG1);
-        System.err.format("SBG2 = %f \n", simulation.solution[0].probaSBeforeG0);
+//        for (int i=0;i<2000;i++){            
+//            Operators.ComputeSimulationNextValue(simulation);
+//        }
+//        System.err.format("DeathBG1 = %f \n", simulation.solution[0].probaDeathBeforeG1);
+//        System.err.format("SBG2 = %f \n", simulation.solution[0].probaSBeforeG0);
 //        FunctionStructure tempProb=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].transitionProbabilities[3]);
 //        FunctionStructure     tempCumul=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].oneMinusCumulativeFunctions[3]);
 //        FunctionStructure    tempCumulComp=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].oneMinusCumulativeFunctions[2]);
@@ -179,17 +179,17 @@ public class ChronoCell {
 //           
 //        System.err.format("nextVal = %f \n", nextVal);
 ////         Display Function
-//        GUI win1 =new GUI();    
-//        win1.SetFunction(temp);
-//        win1.setVisible(true);
+        GUI win1 =new GUI();    
+        win1.SetFunction(net.G0.thetaFilter);
+        win1.setVisible(true);
 //        GUI win2 =new GUI();
 //        win2.SetFunction(simulation.solution[0].theta[1]);
 //        win2.setVisible(true);
 //        GUISolution win3 =new GUISolution();
 //        win3.SetFunction(simulation.solution[0]);
 //        win3.setVisible(true);
-        GUISimulation win4 =new GUISimulation();
-        win4.SetFunction(simulation);
-        win4.setVisible(true);
+//        GUISimulation win4 =new GUISimulation();
+//        win4.SetFunction(simulation);
+//        win4.setVisible(true);
     }
 }
