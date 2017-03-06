@@ -5,16 +5,12 @@
  */
 package chronocell;
 
-import java.util.Hashtable;
-
 /**
  *
  * @author goby
  */
-public class CellCycle {
-    Phase G0= new Phase();
-    Phase G1= new Phase();
-    Phase S= new Phase();
-    Phase G2= new Phase();
-    Phase M= new Phase();
+public class ThetaStructure {
+    CellDynamics dyn=null;
+    FunctionStructure G0,G1,S,G2,M = new FunctionStructure();
+    FunctionStructure[] tab={G0,G1,S,G2,M};
 }

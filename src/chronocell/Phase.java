@@ -16,6 +16,7 @@ public class Phase {
     Hashtable<String,FunctionStructure> cumul = new Hashtable<String,FunctionStructure>();
     Hashtable<String,FunctionStructure> oneMinCumul = new Hashtable<String,FunctionStructure>();
     Hashtable<String,FunctionStructure> alpha = new Hashtable<String,FunctionStructure>();
-    FunctionStructure thetaFilter = new FunctionStructure();
+    FunctionStructure SolutionFilter = new FunctionStructure();
+    FunctionStructure ThetaConvolution = new FunctionStructure();
     Hashtable<String,Double> weight = new Hashtable<String,Double>();
 }

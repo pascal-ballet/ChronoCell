@@ -180,7 +180,7 @@ public class ChronoCell {
 //        System.err.format("nextVal = %f \n", nextVal);
 ////         Display Function
         GUI win1 =new GUI();    
-        win1.SetFunction(net.G0.thetaFilter);
+        win1.SetFunction(net.G0.SolutionFilter);
         win1.setVisible(true);
 //        GUI win2 =new GUI();
 //        win2.SetFunction(simulation.solution[0].theta[1]);
