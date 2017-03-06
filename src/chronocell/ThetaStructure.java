@@ -10,7 +10,7 @@ package chronocell;
  * @author goby
  */
 public class ThetaStructure {
-    CellDynamics dyn=null;
+    CellDynamics dyn= new CellDynamics();
     FunctionStructure G0,G1,S,G2,M = new FunctionStructure();
     FunctionStructure[] tab={G0,G1,S,G2,M};
 }

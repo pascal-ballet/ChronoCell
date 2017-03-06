@@ -26,43 +26,36 @@ public class ThetaStructureOperators {
             theta.tab[i].minIndex-=1;
         } 
         double nextVal= 0.0;
-        FunctionStructure tempProb= new FunctionStructure();
-        FunctionStructure tempCumul= new FunctionStructure();
+        FunctionStructure tempConvolution= new FunctionStructure();
+        FunctionStructure tempDensity= new FunctionStructure();
         FunctionStructure tempCumulComp= new FunctionStructure();
         // phase G0
-            tempProb=TranslateFunction(sol.theta[1].min, sol.transitionProbabilities[2]);
-            tempCumul=TranslateFunction(sol.theta[1].min, sol.oneMinusCumulativeFunctions[2]);
-            tempCumulComp=TranslateFunction(sol.theta[1].min, sol.oneMinusCumulativeFunctions[3]);
-            nextVal=IntegrateFunction( MultiplyFunctions( sol.theta[1], MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,1.0-sol.probaSBeforeG0),tempProb),PowerOfFunction(tempCumul, sol.probaSBeforeG0-1))),tempProb.min,tempProb.max);
-           sol.theta[0].values[sol.theta[0].minIndex]=nextVal;
+            tempConvolution=TranslateFunction(theta.G0.min, theta.dyn.G0.ThetaConvolution);
+            nextVal=theta.dyn.G1.weight.get("G0")*IntegrateFunction(MultiplyFunctions(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
+            theta.G0.values[theta.G0.minIndex]=nextVal;
             
         // phase G1
             // from G0
-            tempProb=TranslateFunction(sol.theta[0].min, sol.transitionProbabilities[1]);
-            tempCumul=TranslateFunction(sol.theta[0].min, sol.oneMinusCumulativeFunctions[1]);
-            tempCumulComp=TranslateFunction(sol.theta[0].min, sol.oneMinusCumulativeFunctions[0]);
-            nextVal=IntegrateFunction( MultiplyFunctions( sol.theta[0], MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,1.0-sol.probaDeathBeforeG1),tempProb),PowerOfFunction(tempCumul, sol.probaDeathBeforeG1-1))),tempProb.min,tempProb.max);
+            tempConvolution=TranslateFunction(theta.G1.min, theta.dyn.G1.ThetaConvolution);
+            nextVal=theta.dyn.G0.weight.get("G1")*IntegrateFunction(MultiplyFunctions(theta.G0,tempConvolution),tempConvolution.min,tempConvolution.max);
             // from M
-            tempProb=TranslateFunction(sol.theta[4].min, sol.transitionProbabilities[6]);
-            nextVal+=2*IntegrateFunction(MultiplyFunctions(sol.theta[4],tempProb),tempProb.min,tempProb.max);
-            sol.theta[1].values[sol.theta[1].minIndex]=nextVal;  
+            tempConvolution=TranslateFunction(theta.G1.min, theta.dyn.M.density.get("G1"));
+            nextVal+=2*IntegrateFunction(MultiplyFunctions(theta.M,tempConvolution),tempConvolution.min,tempConvolution.max);
+            theta.G1.values[theta.G1.minIndex]=nextVal;
             
         // phase S
-            tempProb=TranslateFunction(sol.theta[1].min, sol.transitionProbabilities[3]);
-            tempCumul=TranslateFunction(sol.theta[1].min, sol.oneMinusCumulativeFunctions[3]);
-            tempCumulComp=TranslateFunction(sol.theta[1].min, sol.oneMinusCumulativeFunctions[2]);
-            FunctionStructure temp=MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,sol.probaSBeforeG0),tempProb),PowerOfFunction(tempCumul, -sol.probaDeathBeforeG1));
-            nextVal=IntegrateFunction( MultiplyFunctions( sol.theta[1], MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,sol.probaSBeforeG0),tempProb),PowerOfFunction(tempCumul, -sol.probaDeathBeforeG1))),tempProb.min,tempProb.max);
-            sol.theta[2].values[sol.theta[2].minIndex]=nextVal;
-        
+            tempConvolution=TranslateFunction(theta.S.min, theta.dyn.S.ThetaConvolution);
+            nextVal=theta.dyn.G1.weight.get("S")*IntegrateFunction(MultiplyFunctions(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
+            theta.S.values[theta.S.minIndex]=nextVal;
+            
         // phase G2
-           tempProb=TranslateFunction(theta.G2.min, theta.dyn.S.density.get("G2"));
-           nextVal=IntegrateFunction(MultiplyFunctions(theta.S,tempProb),tempProb.min,tempProb.max);
-           theta.S.values[theta.S.minIndex]=nextVal;
+           tempConvolution=TranslateFunction(theta.G2.min, theta.dyn.S.density.get("G2"));
+            nextVal=IntegrateFunction(MultiplyFunctions(theta.S,tempConvolution),tempConvolution.min,tempConvolution.max);
+            theta.G2.values[theta.G2.minIndex]=nextVal;
            
         // phase M
-           tempProb=TranslateFunction(theta.M.min, theta.dyn.G2.density.get("M"));
-           nextVal=IntegrateFunction(MultiplyFunctions(theta.G2,tempProb),tempProb.min,tempProb.max);
+           tempConvolution=TranslateFunction(theta.M.min, theta.dyn.G2.density.get("M"));
+           nextVal=IntegrateFunction(MultiplyFunctions(theta.G2,tempConvolution),tempConvolution.min,tempConvolution.max);
            theta.M.values[theta.M.minIndex]=nextVal;
     }
 }
