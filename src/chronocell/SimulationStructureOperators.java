@@ -55,7 +55,8 @@ public class SimulationStructureOperators {
                 ApplyTreatment(simulation.nextTreatment,simulation);
                 simulation.nextTreatment+=1;
             }
-        ComputeSolutionNextValue(simulation.solution[simulation.nextTreatment]);
+//        ComputeSolutionNextValue(simulation.solution[simulation.nextTreatment]);
+        ThetaStructureOperators.ComputeThetaNextValues(simulation.theta[simulation.nextTreatment]);
         // unifier les step entre toutes les phases
         simulation.currentTime+=simulation.timeStep;
     }

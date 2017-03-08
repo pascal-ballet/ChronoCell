@@ -184,9 +184,9 @@ public class ChronoCell {
             ///// Cumulative function
                 simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
 
-//        for (int i=0;i<2000;i++){            
-//            Operators.ComputeSimulationNextValue(simulation);
-//        }
+        for (int i=0;i<1;i++){            
+            SimulationStructureOperators.ComputeSimulationNextValue(simulation);
+        }
 //        System.err.format("DeathBG1 = %f \n", simulation.solution[0].probaDeathBeforeG1);
 //        System.err.format("SBG2 = %f \n", simulation.solution[0].probaSBeforeG0);
 //        FunctionStructure tempProb=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].transitionProbabilities[3]);
