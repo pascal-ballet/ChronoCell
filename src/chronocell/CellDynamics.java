@@ -12,10 +12,21 @@ import java.util.Hashtable;
  * @author goby
  */
 public class CellDynamics {
-    Phase G0= new Phase();
-    Phase G1= new Phase();
-    Phase S= new Phase();
-    Phase G2= new Phase();
-    Phase M= new Phase();
-    Phase phases[]={G0,G1,S,G2,M};
+    Phase G0= PhaseOperators.createPhase("G0");
+    Phase G1= PhaseOperators.createPhase("G1");
+    Phase S= PhaseOperators.createPhase("S");
+    Phase G2= PhaseOperators.createPhase("G2");
+    Phase M= PhaseOperators.createPhase("M");
+//    Phase phases[]={G0,G1,S,G2,M};
+    
+    public Phase getPhase(int i){
+        switch(i){
+            case  0: return G0;
+            case  1: return G1;
+            case  2: return S;
+            case  3: return G2;
+            case  4: return M;
+        }
+        return null;
+    }
 }

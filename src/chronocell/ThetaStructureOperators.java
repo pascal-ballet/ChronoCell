@@ -18,12 +18,12 @@ import static chronocell.Operators.TranslateFunction;
 public class ThetaStructureOperators {
     public static void ComputeThetaNextValues(ThetaStructure theta){
         // If solutions' support is filled, increase the size of array sol.values
-        for (int i=0;i<theta.tab.length;i++){
-            if (theta.tab[i].minIndex==0){
-                DoubleArraySizeToLeft(theta.tab[i]);
+        for (int i=0;i<theta.phaseNb;i++){
+            if (theta.getPhase(i).minIndex==0){
+                DoubleArraySizeToLeft(theta.getPhase(i));
             }
-            theta.tab[i].min=theta.tab[i].min-theta.tab[i].step;
-            theta.tab[i].minIndex-=1;
+            theta.getPhase(i).min=theta.getPhase(i).min-theta.getPhase(i).step;
+            theta.getPhase(i).minIndex-=1;
         } 
         double nextVal= 0.0;
         FunctionStructure tempConvolution= new FunctionStructure();

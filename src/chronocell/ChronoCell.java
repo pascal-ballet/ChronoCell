@@ -38,18 +38,17 @@ public class ChronoCell {
             simulation.treat= new TreatmentStructure();
             simulation.treat.times= new double[]{Double.NaN};
             simulation.treat.doses= new double[]{0.0};
-            simulation.solution= new SolutionStructure[simulation.treat.times.length];
+//            simulation.solution= new SolutionStructure[simulation.treat.times.length];
             simulation.theta= new ThetaStructure[simulation.treat.times.length];
             for (int i=0;i<simulation.treat.times.length;i++){
                 simulation.theta[i] = new ThetaStructure();
             }
-            
-            simulation.solution[0]=Operators.createSolutionStructure(5);
-            simulation.solution[0].phaseName[0]="G0";
-            simulation.solution[0].phaseName[1]="G1";
-            simulation.solution[0].phaseName[2]="S";
-            simulation.solution[0].phaseName[3]="G2";
-            simulation.solution[0].phaseName[4]="M";
+//            simulation.solution[0]=Operators.createSolutionStructure(5);
+//            simulation.solution[0].phaseName[0]="G0";
+//            simulation.solution[0].phaseName[1]="G1";
+//            simulation.solution[0].phaseName[2]="S";
+//            simulation.solution[0].phaseName[3]="G2";
+//            simulation.solution[0].phaseName[4]="M";
             
             double support0=20.0,support2=18.0;
             // uitliser le timeStep de simulationStructure
@@ -96,7 +95,7 @@ public class ChronoCell {
         CellDynamicsOperators.PhaseFilling(simulation.theta[0].dyn);
             ///// Initial conditions
         /// Phase G0
-        simulation.theta[0].G0= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(step));
+        simulation.theta[0].G0 = Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(step));        
         Operators.MapFunctionValues(simulation.theta[0].G0,0.0,8.0,Operators.constant,0.0);
         /// Phase G1
         simulation.theta[0].G1= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(step));
@@ -109,82 +108,85 @@ public class ChronoCell {
         Operators.MapFunctionValues(simulation.theta[0].G2,0.0,support2,Operators.constant,0.0);
         /// Phase M
         simulation.theta[0].M= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),Numbers.CGN(step));
-        Operators.MapFunctionValues(simulation.theta[0].M,0.0,2.0,Operators.constant,0.0);        
+        Operators.MapFunctionValues(simulation.theta[0].M,0.0,2.0,Operators.constant,0.0);       
+        
+        for (int i=0;i<simulation.theta[0].phaseNb;i++){
+            simulation.theta[0].setPhase(i,Operators.MultiplyFunctions(simulation.theta[0].getPhase(i),Operators.PowerOfFunction(simulation.theta[0].dyn.getPhase(i).SolutionFilter, -1.0) ));
+        }        
                 
-                
-            ///// Transition to death
-                indice=0;
-                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],0.0,8.0,Operators.gaussian,2.0,1.0);
-                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
-                ///// Cumulative function
-                simulation.solution[0].oneMinusCumulativeFunctions[0]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
-            ///// Transition to G1
-                indice=1;
-                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],0.0,8.0,Operators.gaussian,2.0,1.0);
-                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
-                ///// Cumulative function
-                simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
-            //// comparison
-                simulation.solution[0].probaDeathBeforeG1=Operators.IntegrateFunction(Operators.MultiplyFunctions(simulation.solution[0].transitionProbabilities[0], simulation.solution[0].oneMinusCumulativeFunctions[1]), simulation.solution[0].transitionProbabilities[0].min,simulation.solution[0].transitionProbabilities[0].max);
-        /// Phase G1
-            ///// Initial conditions
-                simulation.solution[0].theta[1]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(step));
-                Operators.MapFunctionValues(simulation.solution[0].theta[1],0.0,10.0,Operators.constant,1.0);
-            ///// Transition to G0
-                indice=2;
-                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],0.0,support0,Operators.gaussian,15.0,5.0);
-                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(0.2/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
-                ///// Cumulative to G0
-                simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
-            ///// Transition to S
-                indice=3;
-                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],14.0,support0,Operators.gaussian,16.0,1.0);
-                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(0.8/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
-                ///// Cumulative to S
-                simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
-                
-            //// comparison
-                simulation.solution[0].probaSBeforeG0=Operators.IntegrateFunction(Operators.MultiplyFunctions(simulation.solution[0].transitionProbabilities[3], simulation.solution[0].oneMinusCumulativeFunctions[2]), simulation.solution[0].transitionProbabilities[3].min,simulation.solution[0].transitionProbabilities[3].max);
-        /// Phase S
-            ///// Initial conditions
-                simulation.solution[0].theta[2]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(step));
-                Operators.MapFunctionValues(simulation.solution[0].theta[2],0.0,8.0,Operators.constant,0.0);
-                ///// Transition
-                indice=4;
-                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],7.99,8.0,Operators.constant,1.0);
-                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
-            ///// Cumulative function
-                simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
-        /// Phase G2
-            ///// Initial conditions
-                simulation.solution[0].theta[3]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support2),Numbers.CGN(step));
-                Operators.MapFunctionValues(simulation.solution[0].theta[3],0.0,support2,Operators.constant,0.0);
-                ///// Transition
-                indice=5;
-                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support2),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],3.0,support2,Operators.continuousGeometricDistribution,3.0,pO2,C,B,M);
-                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
-            ///// Cumulative function
-                simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
-                
-        /// Phase M
-            ///// Initial conditions
-                simulation.solution[0].theta[4]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),Numbers.CGN(step));
-                Operators.MapFunctionValues(simulation.solution[0].theta[4],0.0,2.0,Operators.constant,0.0);
-                ///// Transition
-                indice=6;
-                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),Numbers.CGN(0.01)); 
-                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],1.99,2.0,Operators.constant,1.0);
-                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
-            ///// Cumulative function
-                simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
+//            ///// Transition to death
+//                indice=0;
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.01)); 
+//                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],0.0,8.0,Operators.gaussian,2.0,1.0);
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
+//                ///// Cumulative function
+//                simulation.solution[0].oneMinusCumulativeFunctions[0]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
+//            ///// Transition to G1
+//                indice=1;
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.01)); 
+//                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],0.0,8.0,Operators.gaussian,2.0,1.0);
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
+//                ///// Cumulative function
+//                simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
+//            //// comparison
+//                simulation.solution[0].probaDeathBeforeG1=Operators.IntegrateFunction(Operators.MultiplyFunctions(simulation.solution[0].transitionProbabilities[0], simulation.solution[0].oneMinusCumulativeFunctions[1]), simulation.solution[0].transitionProbabilities[0].min,simulation.solution[0].transitionProbabilities[0].max);
+//        /// Phase G1
+//            ///// Initial conditions
+//                simulation.solution[0].theta[1]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(step));
+//                Operators.MapFunctionValues(simulation.solution[0].theta[1],0.0,10.0,Operators.constant,1.0);
+//            ///// Transition to G0
+//                indice=2;
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01)); 
+//                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],0.0,support0,Operators.gaussian,15.0,5.0);
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(0.2/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
+//                ///// Cumulative to G0
+//                simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
+//            ///// Transition to S
+//                indice=3;
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01)); 
+//                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],14.0,support0,Operators.gaussian,16.0,1.0);
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(0.8/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
+//                ///// Cumulative to S
+//                simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
+//                
+//            //// comparison
+//                simulation.solution[0].probaSBeforeG0=Operators.IntegrateFunction(Operators.MultiplyFunctions(simulation.solution[0].transitionProbabilities[3], simulation.solution[0].oneMinusCumulativeFunctions[2]), simulation.solution[0].transitionProbabilities[3].min,simulation.solution[0].transitionProbabilities[3].max);
+//        /// Phase S
+//            ///// Initial conditions
+//                simulation.solution[0].theta[2]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(step));
+//                Operators.MapFunctionValues(simulation.solution[0].theta[2],0.0,8.0,Operators.constant,0.0);
+//                ///// Transition
+//                indice=4;
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.01)); 
+//                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],7.99,8.0,Operators.constant,1.0);
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
+//            ///// Cumulative function
+//                simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
+//        /// Phase G2
+//            ///// Initial conditions
+//                simulation.solution[0].theta[3]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support2),Numbers.CGN(step));
+//                Operators.MapFunctionValues(simulation.solution[0].theta[3],0.0,support2,Operators.constant,0.0);
+//                ///// Transition
+//                indice=5;
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support2),Numbers.CGN(0.01)); 
+//                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],3.0,support2,Operators.continuousGeometricDistribution,3.0,pO2,C,B,M);
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
+//            ///// Cumulative function
+//                simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
+//                
+//        /// Phase M
+//            ///// Initial conditions
+//                simulation.solution[0].theta[4]= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),Numbers.CGN(step));
+//                Operators.MapFunctionValues(simulation.solution[0].theta[4],0.0,2.0,Operators.constant,0.0);
+//                ///// Transition
+//                indice=6;
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),Numbers.CGN(0.01)); 
+//                Operators.MapFunctionValues(simulation.solution[0].transitionProbabilities[indice],1.99,2.0,Operators.constant,1.0);
+//                simulation.solution[0].transitionProbabilities[indice]=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(simulation.solution[0].transitionProbabilities[indice], simulation.solution[0].transitionProbabilities[indice].min, simulation.solution[0].transitionProbabilities[indice].max),0, simulation.solution[0].transitionProbabilities[indice]);
+//            ///// Cumulative function
+//                simulation.solution[0].oneMinusCumulativeFunctions[indice]=Operators.AffineFunctionTransformation(-1.0, 1.0,Operators.CumulativeFunction(simulation.solution[0].transitionProbabilities[indice]));
 
-        for (int i=0;i<1;i++){            
+        for (int i=0;i<10000;i++){            
             SimulationStructureOperators.ComputeSimulationNextValue(simulation);
         }
 //        System.err.format("DeathBG1 = %f \n", simulation.solution[0].probaDeathBeforeG1);
@@ -197,17 +199,17 @@ public class ChronoCell {
 //           
 //        System.err.format("nextVal = %f \n", nextVal);
 ////         Display Function
-        GUI win1 =new GUI();    
-        win1.SetFunction(simulation.theta[0].dyn.S.ThetaConvolution);
-        win1.setVisible(true);
+//        GUI win1 =new GUI();    
+//        win1.SetFunction(simulation.theta[0].G1);
+//        win1.setVisible(true);
 //        GUI win2 =new GUI();
 //        win2.SetFunction(simulation.solution[0].theta[1]);
 //        win2.setVisible(true);
 //        GUISolution win3 =new GUISolution();
 //        win3.SetFunction(simulation.solution[0]);
 //        win3.setVisible(true);
-//        GUISimulation win4 =new GUISimulation();
-//        win4.SetFunction(simulation);
-//        win4.setVisible(true);
+        GUISimulation win4 =new GUISimulation();
+        win4.SetFunction(simulation);
+        win4.setVisible(true);
     }
 }
