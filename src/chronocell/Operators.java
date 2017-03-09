@@ -46,14 +46,7 @@ public class Operators {
         return cpy;
     }
  
-    public static SolutionStructure createSolutionStructure(int phaseNb){
-        SolutionStructure sol= new SolutionStructure();
-        sol.phaseName= new String[phaseNb];
-        sol.theta= new FunctionStructure[phaseNb];
-        sol.transitionProbabilities= new FunctionStructure[phaseNb+2];
-        sol.oneMinusCumulativeFunctions= new FunctionStructure[phaseNb+2];
-        return sol;
-    }
+
     
     /// Lambda part, create a new package ?
     public interface FunctionInterface {
@@ -188,6 +181,12 @@ public class Operators {
  
         }
     } 
+    public static void plotFunction(FunctionStructure fct){
+        GUI win =new GUI();
+        win.SetFunction(fct);
+        win.setVisible(true);
+    }
+    
     
      public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
         double sum=0.0;
@@ -204,19 +203,10 @@ public class Operators {
      
     public static FunctionStructure CumulativeFunction(FunctionStructure fct){
         // increase fct's support
-        FunctionStructure temp=createFunction(0, fct.max, fct.step);
-        int indexDiff=(int) (Math.round(fct.min/fct.step));
-//        temp.minIndex= fct.minIndex+ indexDiff;
-        for (int i=temp.minIndex+ indexDiff;i<=temp.maxIndex;i++){
-            temp.values[i]=fct.values[i-indexDiff]*temp.step;
+        FunctionStructure cum=createFunction(0, fct.max, fct.step);
+        for (int i =cum.minIndex+1;i<=cum.maxIndex;i++){
+            cum.values[i]=cum.values[i-1]+GetFunctionValue(fct, (i-1)*fct.step)*cum.step;
         }
-//        PrintFunction(fct);
-//        PrintFunction(temp);
-        FunctionStructure cum=createFunction(0, temp.max, temp.step);
-        for (int i=cum.minIndex+1;i<=cum.maxIndex;i++){
-            cum.values[i]=cum.values[i-1]+temp.values[i];
-        }
-//        PrintFunction(cum);
         return cum;
     } 
      
@@ -301,110 +291,5 @@ public class Operators {
     }
     
     
-    public static void ComputeSolutionNextValue(SolutionStructure sol){
-        // If solutions' support is filled, increase the size of array sol.values
-        for (int i=0;i<sol.theta.length;i++){
-            if (sol.theta[i].minIndex==0){
-                DoubleArraySizeToLeft(sol.theta[i]);
-            }
-            sol.theta[i].min=sol.theta[i].min-sol.theta[i].step;
-            sol.theta[i].minIndex-=1;
-        } 
-        double nextVal= 0.0;
-        FunctionStructure tempProb= new FunctionStructure();
-        FunctionStructure tempCumul= new FunctionStructure();
-        FunctionStructure tempCumulComp= new FunctionStructure();
-        // phase G0
-            tempProb=TranslateFunction(sol.theta[1].min, sol.transitionProbabilities[2]);
-            tempCumul=TranslateFunction(sol.theta[1].min, sol.oneMinusCumulativeFunctions[2]);
-            tempCumulComp=TranslateFunction(sol.theta[1].min, sol.oneMinusCumulativeFunctions[3]);
-            nextVal=IntegrateFunction( MultiplyFunctions( sol.theta[1], MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,1.0-sol.probaSBeforeG0),tempProb),PowerOfFunction(tempCumul, sol.probaSBeforeG0-1))),tempProb.min,tempProb.max);
-           sol.theta[0].values[sol.theta[0].minIndex]=nextVal;
-            
-        // phase G1
-            // from G0
-            tempProb=TranslateFunction(sol.theta[0].min, sol.transitionProbabilities[1]);
-            tempCumul=TranslateFunction(sol.theta[0].min, sol.oneMinusCumulativeFunctions[1]);
-            tempCumulComp=TranslateFunction(sol.theta[0].min, sol.oneMinusCumulativeFunctions[0]);
-            nextVal=IntegrateFunction( MultiplyFunctions( sol.theta[0], MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,1.0-sol.probaDeathBeforeG1),tempProb),PowerOfFunction(tempCumul, sol.probaDeathBeforeG1-1))),tempProb.min,tempProb.max);
-            // from M
-            tempProb=TranslateFunction(sol.theta[4].min, sol.transitionProbabilities[6]);
-            nextVal+=2*IntegrateFunction(MultiplyFunctions(sol.theta[4],tempProb),tempProb.min,tempProb.max);
-            sol.theta[1].values[sol.theta[1].minIndex]=nextVal;  
-            
-        // phase S
-            tempProb=TranslateFunction(sol.theta[1].min, sol.transitionProbabilities[3]);
-            tempCumul=TranslateFunction(sol.theta[1].min, sol.oneMinusCumulativeFunctions[3]);
-            tempCumulComp=TranslateFunction(sol.theta[1].min, sol.oneMinusCumulativeFunctions[2]);
-            FunctionStructure temp=MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,sol.probaSBeforeG0),tempProb),PowerOfFunction(tempCumul, -sol.probaDeathBeforeG1));
-            nextVal=IntegrateFunction( MultiplyFunctions( sol.theta[1], MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,sol.probaSBeforeG0),tempProb),PowerOfFunction(tempCumul, -sol.probaDeathBeforeG1))),tempProb.min,tempProb.max);
-            sol.theta[2].values[sol.theta[2].minIndex]=nextVal;
-        
-        // phase G2
-           tempProb=TranslateFunction(sol.theta[2].min, sol.transitionProbabilities[4]);
-           nextVal=IntegrateFunction(MultiplyFunctions(sol.theta[2],tempProb),tempProb.min,tempProb.max);
-           sol.theta[2].values[sol.theta[2].minIndex]=nextVal;
-           
-        // phase M
-           tempProb=TranslateFunction(sol.theta[3].min, sol.transitionProbabilities[5]);
-           nextVal=IntegrateFunction(MultiplyFunctions(sol.theta[3],tempProb),tempProb.min,tempProb.max);
-           sol.theta[3].values[sol.theta[3].minIndex]=nextVal;    
-    }
-    
-    public static void ApplyTreatment(int treatNb,SimulationStructure simulation){
-        System.err.format("traitement %d à %f h\n", treatNb,simulation.currentTime);
-        simulation.solution[simulation.currentSolution+1].probaDeathBeforeG1=simulation.solution[simulation.currentSolution].probaDeathBeforeG1;
-        simulation.solution[simulation.currentSolution+1].probaSBeforeG0=simulation.solution[simulation.currentSolution].probaSBeforeG0;
-        simulation.solution[simulation.currentSolution+1]=createSolutionStructure(simulation.solution[simulation.currentSolution].phaseName.length);
-        simulation.solution[simulation.currentSolution+1].phaseName=simulation.solution[simulation.currentSolution].phaseName;
-        simulation.solution[simulation.currentSolution+1].transitionProbabilities=simulation.solution[simulation.currentSolution].transitionProbabilities;
-        simulation.solution[simulation.currentSolution+1].oneMinusCumulativeFunctions=simulation.solution[simulation.currentSolution].oneMinusCumulativeFunctions;
-        simulation.currentSolution+=1;
-        for (int i=0;i<simulation.solution[simulation.currentSolution].phaseName.length;i++){
-            simulation.solution[simulation.currentSolution].theta[i]=createFunction(simulation.solution[simulation.currentSolution].transitionProbabilities[i].min,simulation.solution[treatNb].transitionProbabilities[i].max, simulation.solution[treatNb].transitionProbabilities[i].step);
-            simulation.solution[simulation.currentSolution].theta[i].min=simulation.solution[simulation.currentSolution-1].theta[i].min;
-            simulation.solution[simulation.currentSolution].theta[i].max=simulation.solution[treatNb].theta[i].min+simulation.solution[simulation.currentSolution].theta[i].max;  
-//            PrintFunction("theta",simulation.solution[simulation.currentSolution].theta[i] , false);
-            for (int j=simulation.solution[simulation.currentSolution].theta[i].minIndex;j<simulation.solution[simulation.currentSolution].theta[i].maxIndex;j++){
-               simulation.solution[simulation.currentSolution].theta[i].values[j]=simulation.solution[simulation.currentSolution-1].theta[i].values[simulation.solution[simulation.currentSolution-1].theta[i].minIndex+j]*survivalProbability.op(simulation.treat.doses[treatNb],i);
-            }
-        }
-    }
-    
-    public static void ComputeSimulationNextValue(SimulationStructure simulation){
-//            System.err.format("current.time= %f, treatTime= %f \n",simulation.currentTime, simulation.treat.times[simulation.nextTreatment]);
-            if (simulation.currentTime>=simulation.treat.times[simulation.nextTreatment]){
-                ApplyTreatment(simulation.nextTreatment,simulation);
-                simulation.nextTreatment+=1;
-            }
-        ComputeSolutionNextValue(simulation.solution[simulation.nextTreatment]);
-        // unifier les step entre toutes les phases
-        simulation.currentTime+=simulation.timeStep;
-    }
-    
-    public static double GetSimulationValue(SimulationStructure simulation, int phase, double T, double s){
-        int solNumber=0;
-        for (int i=0;i<simulation.currentSolution;i++){
-            if (T>=simulation.treat.times[i]){
-                solNumber+=1;
-            }
-        }
-//        System.err.format("lasttreat=%d \n", solNumber);
-        if (phase!=1){
-            if (T<= simulation.treat.times[solNumber]+simulation.solution[solNumber].transitionProbabilities[phase].max){
-                return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T);
-            }
-            else{
-                return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T)*Operators.GetFunctionValue(simulation.solution[solNumber].oneMinusCumulativeFunctions[phase], s);
-            }
-        }
-        else{
-            if (T<= simulation.treat.times[solNumber]+simulation.solution[solNumber].transitionProbabilities[phase].max){
-                return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T);
-            }
-            else{
-                return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T)*Operators.GetFunctionValue(simulation.solution[solNumber].oneMinusCumulativeFunctions[phase], s)*Operators.GetFunctionValue(simulation.solution[solNumber].oneMinusCumulativeFunctions[5], s);
-            }
-        }
-    };
+
 }

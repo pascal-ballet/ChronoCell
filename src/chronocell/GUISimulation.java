@@ -334,13 +334,13 @@ public class GUISimulation extends javax.swing.JFrame {
     public void paint(Graphics g){
         super.paint(g);
         jLabel4.setText(String.format("%f", jSlider1.getValue()*sim.timeStep));
-        FunctionStructure[] tempFunction=new FunctionStructure[4];
-        for (int phase=0;phase<4;phase++){
+        FunctionStructure[] tempFunction=new FunctionStructure[5];
+        for (int phase=1;phase<5;phase++){
             tempFunction[phase] =Operators.createFunction(0.0,sim.theta[sim.currentSolution].dyn.getPhase(phase).SolutionFilter.max,sim.timeStep);
             for (int i=0;i<tempFunction[phase].maxIndex;i++){
                 tempFunction[phase].values[i]=SimulationStructureOperators.GetSimulationValue(sim, phase, jSlider1.getValue()*tempFunction[phase].step,i*tempFunction[phase].step);
             }
-            FillPanelFunction(tempFunction[phase], phase+1);
+            FillPanelFunction(tempFunction[phase], phase);
         }
         
 //        Operators.PrintFunction("temp", tempFunction[0], false);

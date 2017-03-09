@@ -5,9 +5,7 @@
  */
 package chronocell;
 
-import static chronocell.Operators.ComputeSolutionNextValue;
 import static chronocell.Operators.createFunction;
-import static chronocell.Operators.createSolutionStructure;
 import static chronocell.Operators.survivalProbability;
 
 /**
@@ -29,24 +27,6 @@ public class SimulationStructureOperators {
                 simulation.theta[simulation.currentSolution].getPhase(i).values[j]*=survivalProbability.op(simulation.treat.doses[treatNb],i);
             }
         }
-        
-        
-//        simulation.solution[simulation.currentSolution+1].probaDeathBeforeG1=simulation.solution[simulation.currentSolution].probaDeathBeforeG1;
-//        simulation.solution[simulation.currentSolution+1].probaSBeforeG0=simulation.solution[simulation.currentSolution].probaSBeforeG0;
-//        simulation.solution[simulation.currentSolution+1]=createSolutionStructure(simulation.solution[simulation.currentSolution].phaseName.length);
-//        simulation.solution[simulation.currentSolution+1].phaseName=simulation.solution[simulation.currentSolution].phaseName;
-//        simulation.solution[simulation.currentSolution+1].transitionProbabilities=simulation.solution[simulation.currentSolution].transitionProbabilities;
-//        simulation.solution[simulation.currentSolution+1].oneMinusCumulativeFunctions=simulation.solution[simulation.currentSolution].oneMinusCumulativeFunctions;
-//        
-//        for (int i=0;i<simulation.solution[simulation.currentSolution].phaseName.length;i++){
-//            simulation.solution[simulation.currentSolution].theta[i]=createFunction(simulation.solution[simulation.currentSolution].transitionProbabilities[i].min,simulation.solution[treatNb].transitionProbabilities[i].max, simulation.solution[treatNb].transitionProbabilities[i].step);
-//            simulation.solution[simulation.currentSolution].theta[i].min=simulation.solution[simulation.currentSolution-1].theta[i].min;
-//            simulation.solution[simulation.currentSolution].theta[i].max=simulation.solution[treatNb].theta[i].min+simulation.solution[simulation.currentSolution].theta[i].max;  
-////            PrintFunction("theta",simulation.solution[simulation.currentSolution].theta[i] , false);
-//            for (int j=simulation.solution[simulation.currentSolution].theta[i].minIndex;j<simulation.solution[simulation.currentSolution].theta[i].maxIndex;j++){
-//               simulation.solution[simulation.currentSolution].theta[i].values[j]=simulation.solution[simulation.currentSolution-1].theta[i].values[simulation.solution[simulation.currentSolution-1].theta[i].minIndex+j]*survivalProbability.op(simulation.treat.doses[treatNb],i);
-//            }
-//        }
     }
     
     public static void ComputeSimulationNextValue(SimulationStructure simulation){
@@ -69,22 +49,5 @@ public class SimulationStructureOperators {
             }
         }
         return Operators.GetFunctionValue(simulation.theta[solNumber].getPhase(phase),s-T)*Operators.GetFunctionValue(simulation.theta[solNumber].dyn.getPhase(phase).SolutionFilter,s);
-////        System.err.format("lasttreat=%d \n", solNumber);
-//        if (phase!=1){
-//            if (T<= simulation.treat.times[solNumber]+simulation.solution[solNumber].transitionProbabilities[phase].max){
-//                return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T);
-//            }
-//            else{
-//                return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T)*Operators.GetFunctionValue(simulation.solution[solNumber].oneMinusCumulativeFunctions[phase], s);
-//            }
-//        }
-//        else{
-//            if (T<= simulation.treat.times[solNumber]+simulation.solution[solNumber].transitionProbabilities[phase].max){
-//                return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T);
-//            }
-//            else{
-//                return Operators.GetFunctionValue(simulation.solution[solNumber].theta[phase], s-T)*Operators.GetFunctionValue(simulation.solution[solNumber].oneMinusCumulativeFunctions[phase], s)*Operators.GetFunctionValue(simulation.solution[solNumber].oneMinusCumulativeFunctions[5], s);
-//            }
-//        }
     };
 }

@@ -16,6 +16,5 @@ public class SimulationStructure {
     // superflu mais pratique pôur coder
     int currentSolution=0;
     TreatmentStructure treat=null;
-    SolutionStructure[] solution=null;
     ThetaStructure[] theta=null;
 }
