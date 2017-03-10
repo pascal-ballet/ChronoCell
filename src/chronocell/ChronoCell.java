@@ -10,6 +10,7 @@
 //          * improve to transition probabilities that can evolve along time and depend on pO2
 //          * implement population size calculus
 //          * check oprators that copy functions or not
+//          * check every loop that involves <fct.maxIndex
 package chronocell;
 
 import static chronocell.Operators.IntegrateFunction;

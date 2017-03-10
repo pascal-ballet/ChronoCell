@@ -176,7 +176,7 @@ public class Operators {
         System.err.format("**** Integral =%f\n",IntegrateFunction(fct, fct.min, fct.max));
         if (displayValues==true){
             for (int i=fct.minIndex;i<=fct.maxIndex;i++){
-                System.err.format("**** f(%f)=%f\n",fct.min+(i-fct.minIndex)*fct.step,fct.values[i]);
+                System.err.format("**** f(%f)=%.20f\n",fct.min+(i-fct.minIndex)*fct.step,fct.values[i]);
             }
  
         }
@@ -187,6 +187,31 @@ public class Operators {
         win.setVisible(true);
     }
     
+    public static FunctionStructure FunctionSupport(FunctionStructure fct){
+        double min=fct.min;
+        for (int i=fct.minIndex;i<fct.maxIndex;i++){
+            if (Numbers.CGN(fct.values[i])==0.0){
+                min+=fct.step;
+            }
+            else {
+                break;
+            }
+        }
+        double max=fct.max;
+        for (int i=fct.maxIndex;i>=fct.minIndex;i--){
+            if (Numbers.CGN(fct.values[i])==0.0){
+                max-=fct.step;
+            }
+            else {
+                break;
+            }
+        }
+        FunctionStructure ind=createFunction(min, max, fct.step);
+        for (int i=ind.minIndex;i<=ind.maxIndex;i++){
+            ind.values[i]=1.0;
+        }
+        return ind;
+    }
     
      public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
         double sum=0.0;

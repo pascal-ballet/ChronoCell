@@ -43,24 +43,40 @@ public class CellDynamicsOperators {
         dyn.G0.weight.put("G1",dyn.G0.weight.get("G1")/x);
         
 //        System.out.println("p1 , p2="+dyn.G0.weight.get("Death")+dyn.G0.weight.get("G1"));
-        
-        temp=Operators.MultiplyFunctions(dyn.G0.density.get("Death"), dyn.G0.cumul.get("G1"));
-        temp=Operators.MultiplyFunctions(temp, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("Death"), -1.0));
-        GUI win1 =new GUI(); win1.SetFunction(dyn.G0.oneMinCumul.get("Death")); win1.setVisible(true);
-        temp=Operators.MultiplyFunctions(temp, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("G1"), -1.0));
+        FunctionStructure f,F,MF,MF2,ind;
+        f=dyn.G0.density.get("Death");
+        F=dyn.G0.cumul.get("G1");
+        temp=Operators.MultiplyFunctions(f,F);
+        ind=Operators.MultiplyFunctions(Operators.FunctionSupport(f),Operators.FunctionSupport(F));
+        MF=Operators.MultiplyFunctions(ind,dyn.G0.oneMinCumul.get("Death"));
+        MF=Operators.PowerOfFunction(MF,-1.0);
+        MF2=Operators.MultiplyFunctions(ind,dyn.G0.oneMinCumul.get("G1"));
+        MF2=Operators.PowerOfFunction(MF2,-1.0);
+        temp=Operators.MultiplyFunctions(temp, MF);
+        temp=Operators.MultiplyFunctions(temp, MF2);
         dyn.G0.alpha.put("Death", Operators.CumulativeFunction(temp));
-//// solve Nan pb here
-        Operators.plotFunction(Operators.MultiplyFunctions(Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("G1"), -1.0), Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("Death"), -1.0)));
         
+//        
+//        temp=Operators.MultiplyFunctions(dyn.G0.density.get("G1"), dyn.G0.cumul.get("Death"));
+//        temp=Operators.MultiplyFunctions(temp, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("Death"), -1.0));
+//        temp=Operators.MultiplyFunctions(temp, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("G1"), -1.0));
         
-        temp=Operators.MultiplyFunctions(dyn.G0.density.get("G1"), dyn.G0.cumul.get("Death"));
-        temp=Operators.MultiplyFunctions(temp, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("Death"), -1.0));
-        temp=Operators.MultiplyFunctions(temp, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("G1"), -1.0));
+        f=dyn.G0.density.get("G1");
+        F=dyn.G0.cumul.get("Death");
+        temp=Operators.MultiplyFunctions(f,F);
+        ind=Operators.MultiplyFunctions(Operators.FunctionSupport(f),Operators.FunctionSupport(F));
+        MF=Operators.MultiplyFunctions(ind,dyn.G0.oneMinCumul.get("Death"));
+        MF=Operators.PowerOfFunction(MF,-1.0);
+        MF2=Operators.MultiplyFunctions(ind,dyn.G0.oneMinCumul.get("G1"));
+        MF2=Operators.PowerOfFunction(MF2,-1.0);
+        temp=Operators.MultiplyFunctions(temp, MF);
+        temp=Operators.MultiplyFunctions(temp, MF2);       
         dyn.G0.alpha.put("G1", Operators.CumulativeFunction(temp));
         
         temp=Operators.ComposeFunctionInterfaceFunctionStructure(dyn.G0.alpha.get("Death"),Operators.exp,-1.0);
         temp=Operators.MultiplyFunctions(dyn.G0.oneMinCumul.get("Death"), temp);
         dyn.G0.SolutionFilter=Operators.PowerOfFunction(temp, dyn.G0.weight.get("Death"));
+        
         temp=Operators.ComposeFunctionInterfaceFunctionStructure(dyn.G0.alpha.get("G1"),Operators.exp,-1.0);
         temp=Operators.MultiplyFunctions(dyn.G0.oneMinCumul.get("G1"), temp);
         temp=Operators.PowerOfFunction(temp, dyn.G0.weight.get("G1"));
@@ -91,10 +107,24 @@ public class CellDynamicsOperators {
         
 //        System.out.printf("p1 + p2="+x+"\n");
         
-        temp=Operators.MultiplyFunctions(dyn.G1.density.get("G0"), dyn.G1.cumul.get("S"));
-        temp=Operators.MultiplyFunctions(temp, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("G0"), -1.0));
-        temp=Operators.MultiplyFunctions(temp, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"), -1.0));
+//        temp=Operators.MultiplyFunctions(dyn.G1.density.get("G0"), dyn.G1.cumul.get("S"));
+//        temp=Operators.MultiplyFunctions(temp, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("G0"), -1.0));
+//        temp=Operators.MultiplyFunctions(temp, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"), -1.0));
+        
+        f=dyn.G1.density.get("G0");
+        F=dyn.G1.cumul.get("S");
+        temp=Operators.MultiplyFunctions(f,F);
+//        Operators.plotFunction(F);
+//        Operators.plotFunction(Operators.FunctionSupport(F));
+        ind=Operators.MultiplyFunctions(Operators.FunctionSupport(f),Operators.FunctionSupport(F));
+        MF=Operators.MultiplyFunctions(ind,dyn.G1.oneMinCumul.get("G0"));
+        MF=Operators.PowerOfFunction(MF,-1.0);
+        MF2=Operators.MultiplyFunctions(ind,dyn.G1.oneMinCumul.get("S"));
+        MF2=Operators.PowerOfFunction(MF2,-1.0);
+        temp=Operators.MultiplyFunctions(temp, MF);
+        temp=Operators.MultiplyFunctions(temp, MF2);
         dyn.G1.alpha.put("G0", Operators.CumulativeFunction(temp));
+        
                         
         temp=Operators.MultiplyFunctions(dyn.G1.density.get("S"), dyn.G1.cumul.get("G0"));
         temp=Operators.MultiplyFunctions(temp, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("G0"), -1.0));
@@ -142,7 +172,6 @@ public class CellDynamicsOperators {
         dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"),1.0-dyn.G1.weight.get("S")));
         temp=Operators.copyFunction(dyn.G1.alpha.get("G0"));
         Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G1.weight.get("G0") );
-//        GUI win2 =new GUI(); win2.SetFunction(temp); win2.setVisible(true);
         dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, temp);
         temp=Operators.copyFunction(dyn.G1.alpha.get("S"));
         Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G1.weight.get("S") );
