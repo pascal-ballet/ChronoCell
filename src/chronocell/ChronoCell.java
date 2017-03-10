@@ -115,8 +115,10 @@ public class ChronoCell {
         for (int i=0;i<simulation.theta[0].phaseNb;i++){
             simulation.theta[0].setPhase(i,Operators.MultiplyFunctions(simulation.theta[0].getPhase(i),Operators.PowerOfFunction(simulation.theta[0].dyn.getPhase(i).SolutionFilter, -1.0) ));
         }        
-                
-        System.out.println("nom="+simulation.theta[0].dyn.getPhase(3).name);
+         
+        double x=Math.pow(0.0, 1.0);
+        System.out.println("0.0^1="+x);
+        
 //        GUI win1 =new GUI();    
 //        win1.SetFunction(simulation.theta[0].S);
 //        win1.setVisible(true);

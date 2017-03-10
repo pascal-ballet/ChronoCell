@@ -190,7 +190,8 @@ public class Operators {
     public static FunctionStructure FunctionSupport(FunctionStructure fct){
         double min=fct.min;
         for (int i=fct.minIndex;i<fct.maxIndex;i++){
-            if (Numbers.CGN(fct.values[i])==0.0){
+            /// arrondi à paramétrer
+            if (Math.abs(fct.values[i])<0.0000001){
                 min+=fct.step;
             }
             else {
@@ -199,7 +200,7 @@ public class Operators {
         }
         double max=fct.max;
         for (int i=fct.maxIndex;i>=fct.minIndex;i--){
-            if (Numbers.CGN(fct.values[i])==0.0){
+            if (Math.abs(fct.values[i])<0.0000001){
                 max-=fct.step;
             }
             else {
@@ -240,6 +241,11 @@ public class Operators {
         FunctionStructure power=copyFunction(fct1);
         for (int i=power.minIndex;i<=power.maxIndex;i++){
                 power.values[i]=Math.pow(fct1.values[i],pow);
+               
+//                System.out.println("fct"+fct1.values[i]+"pow"+power.values[i]);
+                if (fct1.values[i]<0.00000001){
+                    System.out.println(" fct="+fct1.values[i]+", pow="+pow+", fpow="+power.values[i]);
+                }
         }
         
     return power;
