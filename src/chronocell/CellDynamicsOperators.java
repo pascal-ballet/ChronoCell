@@ -135,7 +135,6 @@ public class CellDynamicsOperators {
         dyn.G1.SolutionFilter=Operators.MultiplyFunctions(dyn.G1.SolutionFilter, temp);
         
         
- 
 
 
         // S
@@ -164,18 +163,18 @@ public class CellDynamicsOperators {
 //      Intermediate function thetaConvolution
 //      G0
         dyn.G0.ThetaConvolution=Operators.copyFunction(dyn.G1.density.get("G0"));
-//        System.out.println("weight"+dyn.G1.weight.get("S"));
-        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"),1.0-dyn.G1.weight.get("S")));
-        Operators.PrintFunction("f",Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"),1.0-dyn.G1.weight.get("S")),true);
-        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("G0"),1.0-dyn.G1.weight.get("G0")));
-         temp=Operators.copyFunction(dyn.G1.alpha.get("G0"));
+        temp=Operators.copyFunction(dyn.G1.alpha.get("G0"));
         Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G1.weight.get("G0") );
         dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, temp);
         temp=Operators.copyFunction(dyn.G1.alpha.get("S"));
         Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G1.weight.get("S") );
         dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, temp);
-        
+        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"),1.0-dyn.G1.weight.get("S")));
+
+        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("G0"),1.0-dyn.G1.weight.get("G0")));
+
 //        G1
+
         // thetaConvolution only to be used with theta_0
         dyn.G1.ThetaConvolution=Operators.copyFunction(dyn.G0.density.get("G1"));
         dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.ThetaConvolution, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("G1"),1.0-dyn.G0.weight.get("G1")));

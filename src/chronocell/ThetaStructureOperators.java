@@ -45,6 +45,8 @@ public class ThetaStructureOperators {
             
         // phase S
             tempConvolution=TranslateFunction(theta.S.min, theta.dyn.S.ThetaConvolution);
+            Operators.plotFunction(tempConvolution);
+            Operators.PrintFunction("f", tempConvolution, false);
             nextVal=theta.dyn.G1.weight.get("S")*IntegrateFunction(MultiplyFunctions(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
             theta.S.values[theta.S.minIndex]=nextVal;
             

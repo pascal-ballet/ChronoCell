@@ -58,8 +58,9 @@ public class ChronoCell {
             int indice=0;
     //Network creation
         // G0->Death
-        FunctionStructure G0ToDeath=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(0.001)); 
-        Operators.MapFunctionValues(G0ToDeath,0.0,8.0,Operators.gaussian,7.0,1.0);
+        FunctionStructure G0ToDeath=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(30.0),Numbers.CGN(0.001)); 
+//        Operators.MapFunctionValues(G0ToDeath,0.0,8.0,Operators.gaussian,7.0,1.0);
+        Operators.MapFunctionValues(G0ToDeath,21.0,30.0,Operators.gaussian,28.0,1.0);
         G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G0ToDeath, G0ToDeath.min, G0ToDeath.max),0, G0ToDeath);
         simulation.theta[0].dyn.G0.density.put("Death", G0ToDeath);
         
@@ -104,13 +105,13 @@ public class ChronoCell {
         Operators.MapFunctionValues(simulation.theta[0].G1,0.0,10.0,Operators.constant,1.0);
         /// Phase S
         simulation.theta[0].S= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(step));
-        Operators.MapFunctionValues(simulation.theta[0].S,0.0,8.0,Operators.constant,1.0);
+        Operators.MapFunctionValues(simulation.theta[0].S,0.0,8.0,Operators.constant,0.0);
         /// Phase G2
         simulation.theta[0].G2= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support2),Numbers.CGN(step));
-        Operators.MapFunctionValues(simulation.theta[0].G2,0.0,support2,Operators.constant,1.0);
+        Operators.MapFunctionValues(simulation.theta[0].G2,0.0,support2,Operators.constant,0.0);
         /// Phase M
         simulation.theta[0].M= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),Numbers.CGN(step));
-        Operators.MapFunctionValues(simulation.theta[0].M,0.0,2.0,Operators.constant,1.0);       
+        Operators.MapFunctionValues(simulation.theta[0].M,0.0,2.0,Operators.constant,0.0);       
         
         for (int i=0;i<simulation.theta[0].phaseNb;i++){
             simulation.theta[0].setPhase(i,Operators.MultiplyFunctions(simulation.theta[0].getPhase(i),Operators.PowerOfFunction(simulation.theta[0].dyn.getPhase(i).SolutionFilter, -1.0) ));
@@ -123,9 +124,9 @@ public class ChronoCell {
 //        win1.SetFunction(simulation.theta[0].S);
 //        win1.setVisible(true);
 
-//        for (int i=0;i<10000;i++){            
-//            SimulationStructureOperators.ComputeSimulationNextValue(simulation);
-//        }
+        for (int i=0;i<10000;i++){            
+            SimulationStructureOperators.ComputeSimulationNextValue(simulation);
+        }
 //        System.err.format("DeathBG1 = %f \n", simulation.solution[0].probaDeathBeforeG1);
 //        System.err.format("SBG2 = %f \n", simulation.solution[0].probaSBeforeG0);
 //        FunctionStructure tempProb=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].transitionProbabilities[3]);
@@ -143,8 +144,8 @@ public class ChronoCell {
 //        GUISolution win3 =new GUISolution();
 //        win3.SetFunction(simulation.solution[0]);
 //        win3.setVisible(true);
-//        GUISimulation win4 =new GUISimulation();
-//        win4.SetFunction(simulation);
-//        win4.setVisible(true);
+        GUISimulation win4 =new GUISimulation();
+        win4.SetFunction(simulation);
+        win4.setVisible(true);
     }
 }

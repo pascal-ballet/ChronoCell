@@ -233,6 +233,8 @@ public class Operators {
         for (int i =cum.minIndex+1;i<=cum.maxIndex;i++){
             cum.values[i]=cum.values[i-1]+GetFunctionValue(fct, (i-1)*fct.step)*cum.step;
         }
+        /// normalization (crado ? rependre la boucle précédente pour être sûr de ne jamais dépasser 1 par le calcul ?)
+        cum=AffineFunctionTransformation(1.0/GetFunctionMaxValue(cum),0, cum);
         return cum;
     } 
      
