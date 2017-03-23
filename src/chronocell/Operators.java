@@ -191,7 +191,7 @@ public class Operators {
         double min=fct.min;
         for (int i=fct.minIndex;i<fct.maxIndex;i++){
             /// arrondi à paramétrer
-            if (Math.abs(fct.values[i])<0.0000001){
+            if (Numbers.IsZero(fct.values[i])){
                 min+=fct.step;
             }
             else {
@@ -200,7 +200,7 @@ public class Operators {
         }
         double max=fct.max;
         for (int i=fct.maxIndex;i>=fct.minIndex;i--){
-            if (Math.abs(fct.values[i])<0.0000001){
+            if (Numbers.IsZero(fct.values[i])){
                 max-=fct.step;
             }
             else {
@@ -213,6 +213,26 @@ public class Operators {
         }
         return ind;
     }
+    
+    public static FunctionStructure AlphaFunction(FunctionStructure f1,FunctionStructure F1,FunctionStructure F2){
+        FunctionStructure alpha,MF1,MF2,ind,temp;
+        temp=Operators.MultiplyFunctions(f1,F2);
+        // ne pas calculer si au départ le produit fF est nul. Crado, à reprendre.
+        if (Numbers.IsZero(Operators.GetFunctionMaxValue(temp))){
+            alpha=temp;
+        }
+        else {
+        ind=Operators.MultiplyFunctions(Operators.FunctionSupport(f1),Operators.FunctionSupport(F2));
+        MF1=Operators.MultiplyFunctions(ind,Operators.AffineFunctionTransformation(-1.0, 1.0, F1));
+        MF1=Operators.PowerOfFunction(MF1,-1.0);
+        MF2=Operators.MultiplyFunctions(ind,Operators.AffineFunctionTransformation(-1.0, 1.0, F2));
+        MF2=Operators.PowerOfFunction(MF2,-1.0);
+        temp=Operators.MultiplyFunctions(temp, MF1);
+        temp=Operators.MultiplyFunctions(temp, MF2);
+        alpha=Operators.CumulativeFunction(temp);
+        }
+        return alpha;
+    } 
     
      public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
         double sum=0.0;
@@ -245,9 +265,9 @@ public class Operators {
                 power.values[i]=Math.pow(fct1.values[i],pow);
                
 //                System.out.println("fct"+fct1.values[i]+"pow"+power.values[i]);
-                if (fct1.values[i]<0.00000001){
-                    System.out.println(" fct="+fct1.values[i]+", pow="+pow+", fpow="+power.values[i]);
-                }
+//                if (fct1.values[i]<0.00000001){
+//                    System.out.println(" fct="+fct1.values[i]+", pow="+pow+", fpow="+power.values[i]);
+//                }
         }
         
     return power;

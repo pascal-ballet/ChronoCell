@@ -32,4 +32,12 @@ public class Numbers {
         }
         return CGN(lcs);
     }
+    public static boolean IsZero(double x){
+        if (Math.abs(x)<0.00000001){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

@@ -124,9 +124,9 @@ public class ChronoCell {
 //        win1.SetFunction(simulation.theta[0].S);
 //        win1.setVisible(true);
 
-        for (int i=0;i<10000;i++){            
-            SimulationStructureOperators.ComputeSimulationNextValue(simulation);
-        }
+//        for (int i=0;i<10000;i++){            
+//            SimulationStructureOperators.ComputeSimulationNextValue(simulation);
+//        }
 //        System.err.format("DeathBG1 = %f \n", simulation.solution[0].probaDeathBeforeG1);
 //        System.err.format("SBG2 = %f \n", simulation.solution[0].probaSBeforeG0);
 //        FunctionStructure tempProb=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].transitionProbabilities[3]);
@@ -144,8 +144,8 @@ public class ChronoCell {
 //        GUISolution win3 =new GUISolution();
 //        win3.SetFunction(simulation.solution[0]);
 //        win3.setVisible(true);
-        GUISimulation win4 =new GUISimulation();
-        win4.SetFunction(simulation);
-        win4.setVisible(true);
+//        GUISimulation win4 =new GUISimulation();
+//        win4.SetFunction(simulation);
+//        win4.setVisible(true);
     }
 }
