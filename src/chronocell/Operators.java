@@ -240,7 +240,7 @@ public class Operators {
         int end=(int)  (Math.round(fct.minIndex+(Math.min(sup, fct.max)-fct.min)/fct.step));
         
 //         System.err.format("start=%d, end=%d \n",start,end);
-        for (int i=start;i<=end-1;i++){
+        for (int i=start;i<end;i++){
             // rectangles
             sum+=fct.values[i]*fct.step;
         }
