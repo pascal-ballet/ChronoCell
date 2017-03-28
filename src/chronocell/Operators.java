@@ -214,25 +214,33 @@ public class Operators {
         return ind;
     }
     
+    public static FunctionStructure CropFunction(FunctionStructure fct){
+        FunctionStructure ind=FunctionSupport(fct);
+        fct=MultiplyFunctions(fct, ind);
+        return fct;
+    }
+    
     public static FunctionStructure AlphaFunction(FunctionStructure f1,FunctionStructure F1,FunctionStructure F2){
-        FunctionStructure alpha,MF1,MF2,ind,temp;
+        FunctionStructure alpha,MF1,MF2,fF,temp;
         temp=Operators.MultiplyFunctions(f1,F2);
         // ne pas calculer si au départ le produit fF est nul. Crado, à reprendre.
         if (Numbers.IsZero(Operators.GetFunctionMaxValue(temp))){
             alpha=temp;
         }
         else {
-        ind=Operators.MultiplyFunctions(Operators.FunctionSupport(f1),Operators.FunctionSupport(F2));
-        MF1=Operators.MultiplyFunctions(ind,Operators.AffineFunctionTransformation(-1.0, 1.0, F1));
-        MF1=Operators.PowerOfFunction(MF1,-1.0);
-        MF2=Operators.MultiplyFunctions(ind,Operators.AffineFunctionTransformation(-1.0, 1.0, F2));
+        fF=MultiplyFunctions(Operators.FunctionSupport(f1),Operators.FunctionSupport(F2));
+        MF1=CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0, F1));
+        MF1=PowerOfFunction(MF1,-1.0);
+        MF2=CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0, F2));
         MF2=Operators.PowerOfFunction(MF2,-1.0);
-        temp=Operators.MultiplyFunctions(temp, MF1);
+        temp=Operators.MultiplyFunctions(fF, MF1);
         temp=Operators.MultiplyFunctions(temp, MF2);
         alpha=Operators.CumulativeFunction(temp);
         }
         return alpha;
     } 
+    
+      
     
      public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
         double sum=0.0;
@@ -286,7 +294,18 @@ public class Operators {
         }
         
     return prod;
-    }  
+    } 
+    
+        public static FunctionStructure MultiplyFunctionByCumulative(FunctionStructure fct,FunctionStructure cumul){
+        FunctionStructure prod=copyFunction(fct);
+        double min=Math.max(fct.min, cumul.min);
+        for (int i=prod.minIndex;i<=prod.maxIndex;i++){
+            if (prod.min+i*prod.step <= cumul.max){
+                prod.values[i]=fct.values[i]*GetFunctionValue(cumul,prod.min+i*prod.step);
+                    }
+        }
+        return prod;
+    }
      
     public static FunctionStructure MultiplyFunctionRaw(FunctionStructure fct1,FunctionStructure fct2){
         FunctionStructure prod=new FunctionStructure();
