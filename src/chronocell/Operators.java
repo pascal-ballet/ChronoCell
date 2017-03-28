@@ -306,6 +306,17 @@ public class Operators {
         }
         return prod;
     }
+        
+            public static FunctionStructure MultiplyFunctionByOneMinusCumulative(FunctionStructure fct,FunctionStructure cumul){
+        FunctionStructure prod=copyFunction(fct);
+        double max=Math.min(fct.max, cumul.max);
+        for (int i=prod.minIndex;i<=prod.maxIndex;i++){
+            if (prod.min+i*prod.step >= cumul.min){
+                prod.values[i]=fct.values[i]*GetFunctionValue(cumul,prod.min+i*prod.step);
+                    }
+        }
+        return prod;
+    }
      
     public static FunctionStructure MultiplyFunctionRaw(FunctionStructure fct1,FunctionStructure fct2){
         FunctionStructure prod=new FunctionStructure();

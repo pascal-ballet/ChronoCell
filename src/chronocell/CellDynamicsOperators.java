@@ -34,10 +34,10 @@ public class CellDynamicsOperators {
         dyn.G0.oneMinCumul.put("G1", Operators.CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.G0.cumul.get("G1"))));
         
         /// Calcul des poids
-        temp=Operators.MultiplyFunctions(dyn.G0.density.get("Death"),dyn.G0.oneMinCumul.get("G1"));
+        temp=Operators.MultiplyFunctionByOneMinusCumulative(dyn.G0.density.get("Death"),dyn.G0.oneMinCumul.get("G1"));
         x=Operators.IntegrateFunction(temp,dyn.G0.density.get("Death").min,dyn.G0.density.get("Death").max);
         dyn.G0.weight.put("Death",x);
-        temp=Operators.MultiplyFunctions(dyn.G0.density.get("G1"),dyn.G0.oneMinCumul.get("Death"));
+        temp=Operators.MultiplyFunctionByOneMinusCumulative(dyn.G0.density.get("G1"),dyn.G0.oneMinCumul.get("Death"));
         x=Operators.IntegrateFunction(temp,dyn.G0.density.get("G1").min,dyn.G0.density.get("G1").max);
         dyn.G0.weight.put("G1",x);
         // normalisation
@@ -80,6 +80,8 @@ public class CellDynamicsOperators {
      
         
         temp=Operators.MultiplyFunctions(dyn.G1.density.get("G0"),dyn.G1.oneMinCumul.get("S"));
+        
+        
         x=Operators.IntegrateFunction(temp,dyn.G1.density.get("G0").min,dyn.G1.density.get("G0").max);
         dyn.G1.weight.put("G0",x);
         temp=Operators.MultiplyFunctions(dyn.G1.density.get("S"),dyn.G1.oneMinCumul.get("G0"));
@@ -121,15 +123,17 @@ public class CellDynamicsOperators {
 //        temp=Operators.MultiplyFunctions(temp, MF);
 //        temp=Operators.MultiplyFunctions(temp, MF2);
         
-       dyn.G1.alpha.put("G0",Operators.AlphaFunction(dyn.G1.density.get("G0"), dyn.G1.cumul.get("G0"), dyn.G1.oneMinCumul.get("S")));
+       dyn.G1.alpha.put("G0",AlphaFunction2(dyn.G1,"G0","S"));
+       
 //       dyn.G1.alpha.put("G0", Operators.CumulativeFunction(temp));
 
 
         
                         
          
-        dyn.G1.alpha.put("S",Operators.AlphaFunction(dyn.G1.density.get("S"), dyn.G1.cumul.get("S"), dyn.G1.oneMinCumul.get("G0")));
+        dyn.G1.alpha.put("S",AlphaFunction2(dyn.G1,"S","G0"));
 //    
+        
         temp=Operators.ComposeFunctionInterfaceFunctionStructure(dyn.G1.alpha.get("G0"),Operators.exp,-1.0);
         temp=Operators.MultiplyFunctions(dyn.G1.oneMinCumul.get("G0"), temp);
         dyn.G1.SolutionFilter=Operators.PowerOfFunction(temp, dyn.G1.weight.get("G0"));
@@ -138,7 +142,7 @@ public class CellDynamicsOperators {
         temp=Operators.PowerOfFunction(temp, dyn.G1.weight.get("S"));
         dyn.G1.SolutionFilter=Operators.MultiplyFunctions(dyn.G1.SolutionFilter, temp);
         
-        
+        Operators.plotFunction(dyn.G1.SolutionFilter);
 
 
         // S
