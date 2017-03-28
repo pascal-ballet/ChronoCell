@@ -140,6 +140,9 @@ public class GUI extends javax.swing.JFrame {
 //        double minVal=Operators.GetFunctionMinValue(f);
         double minVal=0;
         double maxVal=Operators.GetFunctionMaxValue(f);
+        
+//        Operators.PrintFunction("gui", f, true); 
+//        System.out.println("maxval "+maxVal);
         for (int i=f.minIndex;i<=f.maxIndex-1;i++){
             int absciss1=(int) Math.round((i-f.minIndex)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+1));
             int absciss2=(int) Math.round((i-f.minIndex+1)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+1));

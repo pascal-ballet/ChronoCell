@@ -68,7 +68,7 @@ public class CellDynamicsOperators {
         temp=Operators.PowerOfFunction(temp, dyn.G0.weight.get("G1"));
         dyn.G0.SolutionFilter=Operators.MultiplyFunctions(dyn.G0.SolutionFilter, temp);
         
-        Operators.plotFunction(dyn.G0.SolutionFilter);
+//        Operators.plotFunction(dyn.G0.SolutionFilter);
 
         // G1
         dyn.G1.cumul.put("G0",Operators.CumulativeFunction(dyn.G1.density.get("G0")));
@@ -142,19 +142,18 @@ public class CellDynamicsOperators {
         temp=Operators.PowerOfFunction(temp, dyn.G1.weight.get("S"));
         dyn.G1.SolutionFilter=Operators.MultiplyFunctions(dyn.G1.SolutionFilter, temp);
         
-        Operators.plotFunction(dyn.G1.SolutionFilter);
 
 
         // S
         dyn.S.cumul.put("G2",Operators.CumulativeFunction(dyn.S.density.get("G2")) );
-        dyn.S.oneMinCumul.put("G2", Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.S.cumul.get("G2")));
+        dyn.S.oneMinCumul.put("G2", Operators.CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.S.cumul.get("G2"))));
         dyn.S.weight.put("G2",1.0);
         dyn.S.SolutionFilter=dyn.S.oneMinCumul.get("G2");
         
         
         // G2
         dyn.G2.cumul.put("M",Operators.CumulativeFunction(dyn.G2.density.get("M")) );
-        dyn.G2.oneMinCumul.put("M", Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.G2.cumul.get("M")));
+        dyn.G2.oneMinCumul.put("M", Operators.CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.G2.cumul.get("M"))));
         dyn.G2.weight.put("M",1.0);
         dyn.G2.SolutionFilter=dyn.G2.oneMinCumul.get("M");
 //        dyn.G2.ThetaConvolution=Operators.copyFunction(dyn.S.density.get("G2"));
@@ -162,23 +161,38 @@ public class CellDynamicsOperators {
 
         // M
         dyn.M.cumul.put("G1",Operators.CumulativeFunction(dyn.M.density.get("G1")) );
-        dyn.M.oneMinCumul.put("G1", Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.M.cumul.get("G1")));
+        dyn.M.oneMinCumul.put("G1", Operators.CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.M.cumul.get("G1"))));
         dyn.M.weight.put("G1",1.0);
         dyn.M.SolutionFilter=dyn.M.oneMinCumul.get("G1");
 //        dyn.M.ThetaConvolution=Operators.copyFunction(dyn.G2.density.get("M"));
         
 
+        
 //      Intermediate function thetaConvolution
-//      G0
-        dyn.G0.ThetaConvolution=Operators.copyFunction(dyn.G1.density.get("G0"));
-        temp=Operators.copyFunction(dyn.G1.alpha.get("G0"));
-        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G1.weight.get("G0") );
-        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, temp);
-        temp=Operators.copyFunction(dyn.G1.alpha.get("S"));
-        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G1.weight.get("S") );
-        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, temp);
-        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"),1.0-dyn.G1.weight.get("S")));
 
+//      G0, to be convolved with theta1
+//        dyn.G0.ThetaConvolution=Operators.copyFunction(dyn.G1.density.get("G0"));
+         temp=Operators.copyFunction(dyn.G1.alpha.get("G0"));
+        System.out.println("poids "+dyn.G1.weight.get("S"));
+        FunctionStructure temp1=null,temp2=null;
+        temp1=Operators.AffineFunctionTransformation(dyn.G1.weight.get("G0"), 0.0, dyn.G1.alpha.get("G0"));
+        temp2=Operators.AffineFunctionTransformation(dyn.G1.weight.get("S"), 0.0, dyn.G1.alpha.get("S"));
+        System.out.println("max1 "+Operators.GetFunctionMaxValue(temp1));
+        System.out.println("max2 "+Operators.GetFunctionMaxValue(temp2));
+        temp=Operators.AddFunctions(temp1,temp2);
+        System.out.println("max0 "+Operators.GetFunctionMaxValue(temp));
+        Operators.plotFunction(temp);
+        Operators.PrintFunction("temp1", temp1, false);
+        Operators.PrintFunction("temp2", temp2, false);
+        Operators.PrintFunction("temp", temp, true);
+//        Operators.PrintFunction("temp", temp, true);
+        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,1.1);
+        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.density.get("G0"), temp);
+        
+//      temp=Operators.copyFunction(dyn.G1.alpha.get("S"));
+//        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G1.weight.get("S") );
+//        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, temp);
+        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"),1.0-dyn.G1.weight.get("S")));
         dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("G0"),1.0-dyn.G1.weight.get("G0")));
 
 //        G1

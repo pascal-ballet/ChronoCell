@@ -165,18 +165,21 @@ public class Operators {
     }
     
     public static void PrintFunction(String name, FunctionStructure fct,boolean displayValues){
-        System.err.format("\n Function :%s \n",name);
-        System.err.format("step=%f\n",fct.step);
-        System.err.format("min=%f, max=%f\n",fct.min,fct.max);
-//        System.err.format("values length=%d\n",fct.values.length);
-        System.err.format("minIndex=%d, maxIndex=%d\n",fct.minIndex,fct.maxIndex);
+        System.out.println("");
+        System.out.println("Function "+name);
+        System.out.println("step="+fct.step);
+        System.out.println("min="+fct.min+", max="+fct.max);
+        System.out.println("minIndex="+fct.minIndex+", maxIndex="+fct.maxIndex);
 //       for (int i=0;i<fct.values.length;i++){
 //            System.err.format("**** f(%f)=%f\n",fct.min+(i-fct.minIndex)*fct.step,fct.values[i]);
 //        }
-        System.err.format("**** Integral =%f\n",IntegrateFunction(fct, fct.min, fct.max));
+        System.out.println("minVal="+GetFunctionMinValue(fct)+", maxVal="+GetFunctionMaxValue(fct));
+        System.out.println("**** Integral ="+IntegrateFunction(fct, fct.min, fct.max));
         if (displayValues==true){
+            double x;
             for (int i=fct.minIndex;i<=fct.maxIndex;i++){
-                System.err.format("**** f(%f)=%.20f\n",fct.min+(i-fct.minIndex)*fct.step,fct.values[i]);
+                x=fct.min+(i-fct.minIndex)*fct.step;
+                System.out.println("**** f("+x+")="+fct.values[i]);
             }
  
         }
@@ -336,10 +339,13 @@ public class Operators {
     
     public static FunctionStructure AddFunctions(FunctionStructure fct1,FunctionStructure fct2){
         FunctionStructure sum=Operators.createFunction(Math.min(fct1.min, fct2.min), Math.max(fct1.max, fct2.max), Numbers.LeastCommonStep(fct1.step,fct2.step));
+        double x;
         for (int i=sum.minIndex;i<=sum.maxIndex;i++){
-            sum.values[i]=GetFunctionValue(fct1, sum.min+i*sum.step)+GetFunctionValue(fct2, sum.min+i*sum.step);
+            x=sum.min+i*sum.step;
+            sum.values[i]=GetFunctionValue(fct1,x)+GetFunctionValue(fct2,x);
+            
         }
-    return sum;
+        return sum;
     } 
     
     public static FunctionStructure AffineFunctionTransformation(double a, double b, FunctionStructure fct){
