@@ -46,8 +46,8 @@ public class CellDynamicsOperators {
         dyn.G0.weight.put("G1",dyn.G0.weight.get("G1")/x);
         
         // fonctions alpha
-        dyn.G0.alpha.put("Death",AlphaFunction2(dyn.G0,"Death","G1"));
-        dyn.G0.alpha.put("G1",AlphaFunction2(dyn.G0,"G1","Death"));
+        dyn.G0.alpha.put("Death",AlphaFunction(dyn.G0,"Death","G1"));
+        dyn.G0.alpha.put("G1",AlphaFunction(dyn.G0,"G1","Death"));
          
 //        Operators.plotFunction(dyn.G0.density.get("Death"));
 //        Operators.plotFunction(dyn.G0.cumul.get("G1"));
@@ -55,11 +55,12 @@ public class CellDynamicsOperators {
 //        Operators.plotFunction(dyn.G0.oneMinCumul.get("G1"));
 //        Operators.plotFunction(dyn.G0.alpha.get("Death"));
 //        Operators.PrintFunction("alpha", dyn.G0.alpha.get("Death"), true);
+Operators.plotFunction(dyn.G0.alpha.get("Death"));
         temp=Operators.ComposeFunctionInterfaceFunctionStructure(dyn.G0.alpha.get("Death"),Operators.exp,-1.0);
-//        Operators.plotFunction(temp);
         temp=Operators.MultiplyFunctions(dyn.G0.oneMinCumul.get("Death"), temp);
         dyn.G0.SolutionFilter=Operators.PowerOfFunction(temp, dyn.G0.weight.get("Death"));
         
+        Operators.plotFunction(dyn.G0.SolutionFilter);
         
         
         
@@ -123,7 +124,7 @@ public class CellDynamicsOperators {
 //        temp=Operators.MultiplyFunctions(temp, MF);
 //        temp=Operators.MultiplyFunctions(temp, MF2);
         
-       dyn.G1.alpha.put("G0",AlphaFunction2(dyn.G1,"G0","S"));
+       dyn.G1.alpha.put("G0",AlphaFunction(dyn.G1,"G0","S"));
        
 //       dyn.G1.alpha.put("G0", Operators.CumulativeFunction(temp));
 
@@ -131,7 +132,7 @@ public class CellDynamicsOperators {
         
                         
          
-        dyn.G1.alpha.put("S",AlphaFunction2(dyn.G1,"S","G0"));
+        dyn.G1.alpha.put("S",AlphaFunction(dyn.G1,"S","G0"));
 //    
         
         temp=Operators.ComposeFunctionInterfaceFunctionStructure(dyn.G1.alpha.get("G0"),Operators.exp,-1.0);
@@ -171,43 +172,40 @@ public class CellDynamicsOperators {
 //      Intermediate function thetaConvolution
 
 //      G0, to be convolved with theta1
-//        dyn.G0.ThetaConvolution=Operators.copyFunction(dyn.G1.density.get("G0"));
-         temp=Operators.copyFunction(dyn.G1.alpha.get("G0"));
-        System.out.println("poids "+dyn.G1.weight.get("S"));
-        FunctionStructure temp1=null,temp2=null;
+        FunctionStructure temp1=null,temp2=null,bubu=null;
         temp1=Operators.AffineFunctionTransformation(dyn.G1.weight.get("G0"), 0.0, dyn.G1.alpha.get("G0"));
         temp2=Operators.AffineFunctionTransformation(dyn.G1.weight.get("S"), 0.0, dyn.G1.alpha.get("S"));
-        System.out.println("max1 "+Operators.GetFunctionMaxValue(temp1));
-        System.out.println("max2 "+Operators.GetFunctionMaxValue(temp2));
-        temp=Operators.AddFunctions(temp1,temp2);
-        System.out.println("max0 "+Operators.GetFunctionMaxValue(temp));
-        Operators.plotFunction(temp);
-        Operators.PrintFunction("temp1", temp1, false);
-        Operators.PrintFunction("temp2", temp2, false);
-        Operators.PrintFunction("temp", temp, true);
-//        Operators.PrintFunction("temp", temp, true);
-        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,1.1);
-        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.density.get("G0"), temp);
-        
-//      temp=Operators.copyFunction(dyn.G1.alpha.get("S"));
-//        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G1.weight.get("S") );
-//        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, temp);
+        bubu=Operators.AddFunctions(temp1,temp2);
+        bubu=Operators.ComposeFunctionInterfaceFunctionStructure(bubu, Operators.exp,-1.0);
+        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.density.get("G0"), bubu);
         dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"),1.0-dyn.G1.weight.get("S")));
         dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("G0"),1.0-dyn.G1.weight.get("G0")));
-
+        
 //        G1
 
         // thetaConvolution only to be used with theta_0
-        dyn.G1.ThetaConvolution=Operators.copyFunction(dyn.G0.density.get("G1"));
-        dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.ThetaConvolution, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("G1"),1.0-dyn.G0.weight.get("G1")));
-        dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.ThetaConvolution, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("Death"),1.0-dyn.G0.weight.get("Death")));
         
-        temp=Operators.copyFunction(dyn.G0.alpha.get("G1"));
-        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G0.weight.get("G1") );
-        dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.ThetaConvolution, temp);
-        temp=Operators.copyFunction(dyn.G0.alpha.get("Death"));
-        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G0.weight.get("Death") );
-        dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.ThetaConvolution, temp);
+        temp1=null;temp2=null;bubu=null;
+        temp1=Operators.AffineFunctionTransformation(dyn.G0.weight.get("G1"), 0.0, dyn.G0.alpha.get("G1"));
+        temp2=Operators.AffineFunctionTransformation(dyn.G0.weight.get("Death"), 0.0, dyn.G0.alpha.get("Death"));
+        bubu=Operators.AddFunctions(temp1,temp2);
+//        Operators.plotFunction(dyn.G0.alpha.get("Death"));
+        bubu=Operators.ComposeFunctionInterfaceFunctionStructure(bubu, Operators.exp,-1.0);
+        dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.density.get("G1"), bubu);
+        dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.ThetaConvolution, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("Death"),1.0-dyn.G0.weight.get("Death")));
+        dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.ThetaConvolution, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("G1"),1.0-dyn.G0.weight.get("G1")));
+        
+//        Operators.plotFunction(dyn.G1.ThetaConvolution);
+//        dyn.G1.ThetaConvolution=Operators.copyFunction(dyn.G0.density.get("G1"));
+//        dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.ThetaConvolution, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("G1"),1.0-dyn.G0.weight.get("G1")));
+//        dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.ThetaConvolution, Operators.PowerOfFunction(dyn.G0.oneMinCumul.get("Death"),1.0-dyn.G0.weight.get("Death")));
+//        
+//        temp=Operators.copyFunction(dyn.G0.alpha.get("G1"));
+//        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G0.weight.get("G1") );
+//        dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.ThetaConvolution, temp);
+//        temp=Operators.copyFunction(dyn.G0.alpha.get("Death"));
+//        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G0.weight.get("Death") );
+//        dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.ThetaConvolution, temp);
         
         
 //        S
@@ -226,13 +224,13 @@ public class CellDynamicsOperators {
 //        
     }
     
-     public static FunctionStructure AlphaFunction2(Phase phase,String phase1,String phase2){
+     public static FunctionStructure AlphaFunction(Phase phase,String phase1,String phase2){
         FunctionStructure alpha,MF1,MF2,fF,temp;
         temp=Operators.MultiplyFunctionByCumulative(phase.density.get(phase1),phase.cumul.get(phase2));
         // ne pas calculer si au départ le produit fF est nul. Crado, à reprendre.
         if (Numbers.IsZero(Operators.GetFunctionMaxValue(temp))){
             alpha=temp;
-            System.out.println("zero");
+            Operators.PrintFunction("Zero", alpha,false);
         }
         else {
 //        fF=MultiplyFunctions(Operators.FunctionSupport(f1),Operators.FunctionSupport(F2));
@@ -244,6 +242,7 @@ public class CellDynamicsOperators {
         temp=Operators.MultiplyFunctions(temp, MF2);
         alpha=Operators.CumulativeFunction(temp);
         }
+        Operators.PrintFunction("Non Zero", alpha,false);
         return alpha;
     } 
 }

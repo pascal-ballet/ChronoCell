@@ -16,8 +16,11 @@ public class GUI extends javax.swing.JFrame {
     /**
      * Creates new form GUI
      */
-    public GUI() {
+    public GUI(FunctionStructure fct) {
+//        f = fct;
+        SetFunction(fct);
         initComponents();
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -125,23 +128,25 @@ public class GUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI().setVisible(true);
+                new GUI(null).setVisible(true);
             }
         });
     }
     FunctionStructure f;
     public void SetFunction(FunctionStructure fct){
         f=fct;
+//        Operators.PrintFunction("gui0", f, false);
     }
     @Override
     public void paint(Graphics g){
+//        Operators.PrintFunction("gui", f, false);
         super.paint(g);
         Graphics gp=jPanel1.getGraphics();
 //        double minVal=Operators.GetFunctionMinValue(f);
         double minVal=0;
         double maxVal=Operators.GetFunctionMaxValue(f);
         
-//        Operators.PrintFunction("gui", f, true); 
+         
 //        System.out.println("maxval "+maxVal);
         for (int i=f.minIndex;i<=f.maxIndex-1;i++){
             int absciss1=(int) Math.round((i-f.minIndex)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+1));

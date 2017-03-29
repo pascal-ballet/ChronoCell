@@ -167,6 +167,7 @@ public class Operators {
     public static void PrintFunction(String name, FunctionStructure fct,boolean displayValues){
         System.out.println("");
         System.out.println("Function "+name);
+        System.out.println(fct);
         System.out.println("step="+fct.step);
         System.out.println("min="+fct.min+", max="+fct.max);
         System.out.println("minIndex="+fct.minIndex+", maxIndex="+fct.maxIndex);
@@ -185,8 +186,8 @@ public class Operators {
         }
     } 
     public static void plotFunction(FunctionStructure fct){
-        GUI win =new GUI();
-        win.SetFunction(fct);
+        GUI win =new GUI(fct);
+        //win.SetFunction(fct);
         win.setVisible(true);
     }
     
@@ -340,11 +341,11 @@ public class Operators {
     public static FunctionStructure AddFunctions(FunctionStructure fct1,FunctionStructure fct2){
         FunctionStructure sum=Operators.createFunction(Math.min(fct1.min, fct2.min), Math.max(fct1.max, fct2.max), Numbers.LeastCommonStep(fct1.step,fct2.step));
         double x;
-        for (int i=sum.minIndex;i<=sum.maxIndex;i++){
-            x=sum.min+i*sum.step;
-            sum.values[i]=GetFunctionValue(fct1,x)+GetFunctionValue(fct2,x);
-            
-        }
+            for (int i=sum.minIndex;i<=sum.maxIndex;i++){
+                x=sum.min+(i-sum.minIndex)*sum.step;
+                sum.values[i]=GetFunctionValue(fct1,x)+GetFunctionValue(fct2,x);
+
+            }
         return sum;
     } 
     
