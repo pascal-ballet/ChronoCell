@@ -46,8 +46,8 @@ public class CellDynamicsOperators {
         dyn.G0.weight.put("G1",dyn.G0.weight.get("G1")/x);
         
         // fonctions alpha
-        dyn.G0.alpha.put("Death",AlphaFunction(dyn.G0,"Death","G1"));
         dyn.G0.alpha.put("G1",AlphaFunction(dyn.G0,"G1","Death"));
+        dyn.G0.alpha.put("Death",AlphaFunction(dyn.G0,"Death","G1"));
          
 //        Operators.plotFunction(dyn.G0.density.get("Death"));
 //        Operators.plotFunction(dyn.G0.cumul.get("G1"));
@@ -55,12 +55,10 @@ public class CellDynamicsOperators {
 //        Operators.plotFunction(dyn.G0.oneMinCumul.get("G1"));
 //        Operators.plotFunction(dyn.G0.alpha.get("Death"));
 //        Operators.PrintFunction("alpha", dyn.G0.alpha.get("Death"), true);
-Operators.plotFunction(dyn.G0.alpha.get("Death"));
         temp=Operators.ComposeFunctionInterfaceFunctionStructure(dyn.G0.alpha.get("Death"),Operators.exp,-1.0);
         temp=Operators.MultiplyFunctions(dyn.G0.oneMinCumul.get("Death"), temp);
         dyn.G0.SolutionFilter=Operators.PowerOfFunction(temp, dyn.G0.weight.get("Death"));
         
-        Operators.plotFunction(dyn.G0.SolutionFilter);
         
         
         
@@ -181,6 +179,15 @@ Operators.plotFunction(dyn.G0.alpha.get("Death"));
         dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"),1.0-dyn.G1.weight.get("S")));
         dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("G0"),1.0-dyn.G1.weight.get("G0")));
         
+        
+//      S, to be convolved with theta1 
+
+        dyn.S.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.density.get("S"), bubu);
+        dyn.S.ThetaConvolution=Operators.MultiplyFunctions(dyn.S.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"),1.0-dyn.G1.weight.get("S")));
+        dyn.S.ThetaConvolution=Operators.MultiplyFunctions(dyn.S.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("G0"),1.0-dyn.G1.weight.get("G0")));
+       
+
+
 //        G1
 
         // thetaConvolution only to be used with theta_0
@@ -208,29 +215,39 @@ Operators.plotFunction(dyn.G0.alpha.get("Death"));
 //        dyn.G1.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.ThetaConvolution, temp);
         
         
-//        S
-        
-        dyn.S.ThetaConvolution=Operators.copyFunction(dyn.G1.density.get("S"));
-        dyn.S.ThetaConvolution=Operators.MultiplyFunctions(dyn.S.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"),1.0-dyn.G1.weight.get("S")));
-        dyn.S.ThetaConvolution=Operators.MultiplyFunctions(dyn.S.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("G0"),1.0-dyn.G1.weight.get("G0")));
-        temp=Operators.copyFunction(dyn.G1.alpha.get("S"));
-        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G1.weight.get("S") );
-        dyn.S.ThetaConvolution=Operators.MultiplyFunctions(dyn.S.ThetaConvolution, temp);
-        temp=Operators.copyFunction(dyn.G1.alpha.get("G0"));
-        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G1.weight.get("G0") );
-        dyn.S.ThetaConvolution=Operators.MultiplyFunctions(dyn.S.ThetaConvolution, temp);
+////        S
+//        temp1=null;temp2=null;bubu=null;
+//        
+//        temp1=Operators.AffineFunctionTransformation(dyn.G1.weight.get("G0"), 0.0, dyn.G1.alpha.get("G0"));
+//        temp2=Operators.AffineFunctionTransformation(dyn.G1.weight.get("S"), 0.0, dyn.G1.alpha.get("S"));
+//        bubu=Operators.AddFunctions(temp1,temp2);
+//        bubu=Operators.ComposeFunctionInterfaceFunctionStructure(bubu, Operators.exp,-1.0);
+//        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G1.density.get("G0"), bubu);
+//        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"),1.0-dyn.G1.weight.get("S")));
+//        dyn.G0.ThetaConvolution=Operators.MultiplyFunctions(dyn.G0.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("G0"),1.0-dyn.G1.weight.get("G0")));
+//        
+//        
+//        dyn.S.ThetaConvolution=Operators.copyFunction(dyn.G1.density.get("S"));
+//        dyn.S.ThetaConvolution=Operators.MultiplyFunctions(dyn.S.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("S"),1.0-dyn.G1.weight.get("S")));
+//        dyn.S.ThetaConvolution=Operators.MultiplyFunctions(dyn.S.ThetaConvolution, Operators.PowerOfFunction(dyn.G1.oneMinCumul.get("G0"),1.0-dyn.G1.weight.get("G0")));
+//        temp=Operators.copyFunction(dyn.G1.alpha.get("S"));
+//        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G1.weight.get("S") );
+//        dyn.S.ThetaConvolution=Operators.MultiplyFunctions(dyn.S.ThetaConvolution, temp);
+//        temp=Operators.copyFunction(dyn.G1.alpha.get("G0"));
+//        Operators.MapFunctionValues(temp, temp.min, temp.max, Operators.exp,-dyn.G1.weight.get("G0") );
+//        dyn.S.ThetaConvolution=Operators.MultiplyFunctions(dyn.S.ThetaConvolution, temp);
 
         
 //        
     }
     
      public static FunctionStructure AlphaFunction(Phase phase,String phase1,String phase2){
-        FunctionStructure alpha,MF1,MF2,fF,temp;
-        temp=Operators.MultiplyFunctionByCumulative(phase.density.get(phase1),phase.cumul.get(phase2));
+//        System.out.println("\n +++++++ phases :"+phase1+" "+phase2+"\n");
+        FunctionStructure alpha,MF1,MF2,fF;
+        alpha=Operators.MultiplyFunctionByCumulative(phase.density.get(phase1),phase.cumul.get(phase2));
         // ne pas calculer si au départ le produit fF est nul. Crado, à reprendre.
-        if (Numbers.IsZero(Operators.GetFunctionMaxValue(temp))){
-            alpha=temp;
-            Operators.PrintFunction("Zero", alpha,false);
+        if (Numbers.IsZero(Operators.GetFunctionMaxValue(alpha))){
+        return alpha;
         }
         else {
 //        fF=MultiplyFunctions(Operators.FunctionSupport(f1),Operators.FunctionSupport(F2));
@@ -238,11 +255,11 @@ Operators.plotFunction(dyn.G0.alpha.get("Death"));
         MF1=PowerOfFunction(MF1,-1.0);
         MF2=CropFunction(phase.oneMinCumul.get(phase2));
         MF2=Operators.PowerOfFunction(MF2,-1.0);
-        temp=Operators.MultiplyFunctions(temp, MF1);
-        temp=Operators.MultiplyFunctions(temp, MF2);
-        alpha=Operators.CumulativeFunction(temp);
-        }
-        Operators.PrintFunction("Non Zero", alpha,false);
+        alpha=Operators.MultiplyFunctions(alpha, MF1);
+        alpha=Operators.MultiplyFunctions(alpha, MF2);
+//        Operators.plotFunction(temp);
+        alpha=Operators.Primitive(alpha);
         return alpha;
+        }
     } 
 }

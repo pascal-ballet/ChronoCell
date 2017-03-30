@@ -11,6 +11,7 @@ package chronocell;
  */
 public class Numbers {
     public static double minStep=0.001;
+    
     private static double ClosestGridNumber(double number){
         long gridIndex=(long) Math.round(number/minStep);
         double gridNumber=gridIndex*minStep;

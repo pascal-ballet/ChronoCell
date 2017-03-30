@@ -123,7 +123,9 @@ public class Operators {
       
     public static void MapFunctionValues(FunctionStructure fct,double min, double max,FunctionInterface g,double ... p){
         for (int i=(int) Math.round(min/fct.step);i<=(int) Math.round(max/fct.step);i++){
-            fct.values[i]=g.op(i*fct.step+fct.min,p);
+            
+            // vérifier i-fct.minIndex
+            fct.values[i]=g.op((i-fct.minIndex)*fct.step+fct.min,p);
         }
     }
     
@@ -139,7 +141,7 @@ public class Operators {
     public static double GetFunctionValue(FunctionStructure fct,double x){
         double y=0.0;
         if ((x>=fct.min) && (x<=fct.max)){
-            y=fct.values[fct.minIndex+ (int) (Math.round((x-fct.min)/fct.step))];
+            y=fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))];
             }
         return y;
     }
@@ -179,7 +181,7 @@ public class Operators {
         if (displayValues==true){
             double x;
             for (int i=fct.minIndex;i<=fct.maxIndex;i++){
-                x=fct.min+(i-fct.minIndex)*fct.step;
+                x=Numbers.CGN(fct.min+(i-fct.minIndex)*fct.step);
                 System.out.println("**** f("+x+")="+fct.values[i]);
             }
  
@@ -248,8 +250,8 @@ public class Operators {
     
      public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
         double sum=0.0;
-        int start=(int) (Math.round(fct.minIndex+(Math.max(inf, fct.min)-fct.min)/fct.step));
-        int end=(int)  (Math.round(fct.minIndex+(Math.min(sup, fct.max)-fct.min)/fct.step));
+        int start=(int) Numbers.CGN(Math.round(fct.minIndex+(Math.max(inf, fct.min)-fct.min)/fct.step));
+        int end=(int)  Numbers.CGN(Math.round(fct.minIndex+(Math.min(sup, fct.max)-fct.min)/fct.step));
         
 //         System.err.format("start=%d, end=%d \n",start,end);
         for (int i=start;i<end;i++){
@@ -257,6 +259,17 @@ public class Operators {
             sum+=fct.values[i]*fct.step;
         }
         return sum;
+    } 
+     
+    public static FunctionStructure Primitive(FunctionStructure fct){
+        // increase fct's support
+        FunctionStructure prim=createFunction(0, fct.max, fct.step);
+        for (int i =prim.minIndex+1;i<=prim.maxIndex;i++){
+            prim.values[i]=prim.values[i-1]+GetFunctionValue(fct, (i-1)*fct.step)*prim.step;
+        }
+        /// normalization (crado ? rependre la boucle précédente pour être sûr de ne jamais dépasser 1 par le calcul ?)
+//        cum=AffineFunctionTransformation(1.0/GetFunctionMaxValue(cum),0, cum);
+        return prim;
     } 
      
     public static FunctionStructure CumulativeFunction(FunctionStructure fct){

@@ -18,6 +18,10 @@ import static chronocell.Operators.MultiplyFunctions;
 import static chronocell.Operators.PowerOfFunction;
 import static chronocell.Operators.TranslateFunction;
 
+import java.math.BigDecimal;
+//import java.math.BigInteger;
+//import java.math.MathContext;
+//import java.math.RoundingMode;
 /**
  *
  * @author pascal
@@ -115,18 +119,21 @@ public class ChronoCell {
         
         for (int i=0;i<simulation.theta[0].phaseNb;i++){
             simulation.theta[0].setPhase(i,Operators.MultiplyFunctions(simulation.theta[0].getPhase(i),Operators.PowerOfFunction(simulation.theta[0].dyn.getPhase(i).SolutionFilter, -1.0) ));
-        }        
-         
-        double x=Math.pow(0.0, 1.0);
-        System.out.println("0.0^1="+x);
+        }  
+
+//        BigDecimal bd = new BigDecimal(1.020101);
+//        bd = bd.setScale(3, BigDecimal.ROUND_HALF_EVEN);
+//        bd=BigDecimal.valueOf(Math.sin( bd.doubleValue()));
+//        System.out.println("??? "+bd);
+        
         
 //        GUI win1 =new GUI();    
 //        win1.SetFunction(simulation.theta[0].S);
 //        win1.setVisible(true);
 
-//        for (int i=0;i<10000;i++){            
-//            SimulationStructureOperators.ComputeSimulationNextValue(simulation);
-//        }
+        for (int i=0;i<10000;i++){            
+            SimulationStructureOperators.ComputeSimulationNextValue(simulation);
+        }
 //        System.err.format("DeathBG1 = %f \n", simulation.solution[0].probaDeathBeforeG1);
 //        System.err.format("SBG2 = %f \n", simulation.solution[0].probaSBeforeG0);
 //        FunctionStructure tempProb=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].transitionProbabilities[3]);
@@ -147,5 +154,6 @@ public class ChronoCell {
 //        GUISimulation win4 =new GUISimulation();
 //        win4.SetFunction(simulation);
 //        win4.setVisible(true);
+        Operators.plotFunction(simulation.theta[0].G1);
     }
 }
