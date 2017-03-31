@@ -19,14 +19,23 @@ public class SimulationStructureOperators {
 //        simulation.theta[simulation.currentSolution+1]=new ThetaStructure();
         simulation.theta[simulation.currentSolution+1].dyn=simulation.theta[simulation.currentSolution].dyn;
         simulation.currentSolution+=1;
-        FunctionStructure ind=new FunctionStructure();
+//        FunctionStructure ind=new FunctionStructure();
         for (int i=0;i<simulation.theta[simulation.currentSolution].phaseNb;i++){
-            ind=createFunction(simulation.theta[simulation.currentSolution-1].dyn.getPhase(i).SolutionFilter.min,simulation.theta[simulation.currentSolution-1].dyn.getPhase(i).SolutionFilter.max,simulation.theta[simulation.currentSolution-1].dyn.getPhase(i).SolutionFilter.step);
-            simulation.theta[simulation.currentSolution].setPhase(i,Operators.MultiplyFunctions(ind, simulation.theta[simulation.currentSolution-1].getPhase(i)));
-            for (int j=simulation.theta[simulation.currentSolution].getPhase(i).minIndex;j<simulation.theta[simulation.currentSolution].getPhase(i).maxIndex;j++){
-                simulation.theta[simulation.currentSolution].getPhase(i).values[j]*=survivalProbability.op(simulation.treat.doses[treatNb],i);
-            }
+            FunctionStructure temp = Operators.copyFunction(simulation.theta[simulation.currentSolution-1].getPhase(i));
+//            if (i==2){Operators.plotFunction(temp);
+//            try {Thread.sleep(10000);} catch(InterruptedException ex) {    Thread.currentThread().interrupt();}
+//            Operators.plotFunction(Operators.AffineFunctionTransformation(survivalProbability.op(simulation.treat.doses[treatNb],i), 0.0,temp));
+//            try {Thread.sleep(10000);} catch(InterruptedException ex) {    Thread.currentThread().interrupt();}}
+            temp=Operators.AffineFunctionTransformation(survivalProbability.op(simulation.treat.doses[treatNb],i), 0.0,temp);
+//            ind=createFunction(simulation.theta[simulation.currentSolution-1].dyn.getPhase(i).SolutionFilter.min,simulation.theta[simulation.currentSolution-1].dyn.getPhase(i).SolutionFilter.max,simulation.theta[simulation.currentSolution-1].dyn.getPhase(i).SolutionFilter.step);
+//            simulation.theta[simulation.currentSolution].setPhase(i,Operators.MultiplyFunctions(ind, simulation.theta[simulation.currentSolution-1].getPhase(i)));
+//            simulation.theta[simulation.currentSolution].setPhase(i,simulation.theta[simulation.currentSolution-1].getPhase(i));
+//           if (i==2){Operators.plotFunction(temp);
+//           try {Thread.sleep(10000);} catch(InterruptedException ex) {    Thread.currentThread().interrupt();}} 
+           simulation.theta[simulation.currentSolution].setPhase(i,temp);
+//           if (i==2){Operators.plotFunction(simulation.theta[simulation.currentSolution].getPhase(i));}
         }
+//        try {Thread.sleep(1000000);} catch(InterruptedException ex) {    Thread.currentThread().interrupt();}
     }
     
     public static void ComputeSimulationNextValue(SimulationStructure simulation){
@@ -48,6 +57,7 @@ public class SimulationStructureOperators {
                 solNumber+=1;
             }
         }
+//        System.out.println("solution n : "+solNumber);
         return Operators.GetFunctionValue(simulation.theta[solNumber].getPhase(phase),s-T)*Operators.GetFunctionValue(simulation.theta[solNumber].dyn.getPhase(phase).SolutionFilter,s);
     };
 }

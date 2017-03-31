@@ -110,7 +110,7 @@ public class Operators {
     public static FunctionInterface survivalProbability = new FunctionInterface(){
       public double op(double x,double ... p){
           //p[0]=phase
-          if (p[0]==2){
+          if (p[0]==3){
               return 0.2;
           }
           else{
@@ -363,7 +363,7 @@ public class Operators {
     } 
     
     public static FunctionStructure AffineFunctionTransformation(double a, double b, FunctionStructure fct){
-        FunctionStructure transf=Operators.createFunction(fct.min, fct.max, fct.step);
+        FunctionStructure transf=Operators.copyFunction(fct);
 //        PrintFunction("affineTranform",transf);
         for (int i=transf.minIndex;i<=transf.maxIndex;i++){
             transf.values[i]=fct.values[i]*a+b;

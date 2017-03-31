@@ -33,6 +33,7 @@ public class CellDynamicsOperators {
         dyn.G0.oneMinCumul.put("Death", Operators.CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.G0.cumul.get("Death"))));
         dyn.G0.oneMinCumul.put("G1", Operators.CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.G0.cumul.get("G1"))));
         
+        
         /// Calcul des poids
         temp=Operators.MultiplyFunctionByOneMinusCumulative(dyn.G0.density.get("Death"),dyn.G0.oneMinCumul.get("G1"));
         x=Operators.IntegrateFunction(temp,dyn.G0.density.get("Death").min,dyn.G0.density.get("Death").max);
@@ -72,7 +73,6 @@ public class CellDynamicsOperators {
         // G1
         dyn.G1.cumul.put("G0",Operators.CumulativeFunction(dyn.G1.density.get("G0")));
         dyn.G1.cumul.put("S",Operators.CumulativeFunction(dyn.G1.density.get("S")) );
-        
         dyn.G1.oneMinCumul.put("G0", Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.G1.cumul.get("G0")));
         dyn.G1.oneMinCumul.put("S", Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.G1.cumul.get("S")));
         

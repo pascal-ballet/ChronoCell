@@ -41,8 +41,8 @@ public class ChronoCell {
             SimulationStructure simulation=new SimulationStructure();
             simulation.timeStep=0.01;
             simulation.treat= new TreatmentStructure();
-            simulation.treat.times= new double[]{Double.NaN};
-            simulation.treat.doses= new double[]{0.0};
+            simulation.treat.times= new double[]{50.0,Double.NaN};
+            simulation.treat.doses= new double[]{2.0,0.0};
 //            simulation.solution= new SolutionStructure[simulation.treat.times.length];
             simulation.theta= new ThetaStructure[simulation.treat.times.length];
             for (int i=0;i<simulation.treat.times.length;i++){
@@ -74,13 +74,13 @@ public class ChronoCell {
         G0ToG1=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G0ToG1, G0ToG1.min, G0ToG1.max),0, G0ToG1);
         simulation.theta[0].dyn.G0.density.put("G1", G0ToG1);
         // G1->G0
-        FunctionStructure G1ToG0=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01)); 
-        Operators.MapFunctionValues(G1ToG0,0.0,support0,Operators.gaussian,15.0,5.0);
+        FunctionStructure G1ToG0=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(30.0),Numbers.CGN(0.01)); 
+        Operators.MapFunctionValues(G1ToG0,12.0,30.0,Operators.gaussian,16.8,2.0);
         G1ToG0=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G1ToG0, G1ToG0.min, G1ToG0.max),0, G1ToG0);
         simulation.theta[0].dyn.G1.density.put("G0", G1ToG0);
         // G1->S
         FunctionStructure G1ToS=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01));
-        Operators.MapFunctionValues(G1ToS,14.0,support0,Operators.gaussian,16.0,1.0);
+        Operators.MapFunctionValues(G1ToS,10.0,support0,Operators.gaussian,14.0,5.0);
         G1ToS=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G1ToS, G1ToS.min, G1ToS.max),0, G1ToS);
         simulation.theta[0].dyn.G1.density.put("S", G1ToS);
         // S->G2
@@ -100,6 +100,7 @@ public class ChronoCell {
         simulation.theta[0].dyn.M.density.put("G1", MToG1);    
               
         CellDynamicsOperators.DynamicsFilling(simulation.theta[0].dyn);
+        
             ///// Initial conditions
         /// Phase G0
         simulation.theta[0].G0 = Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),Numbers.CGN(step));        
@@ -115,12 +116,12 @@ public class ChronoCell {
         Operators.MapFunctionValues(simulation.theta[0].G2,0.0,support2,Operators.constant,0.0);
         /// Phase M
         simulation.theta[0].M= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),Numbers.CGN(step));
-        Operators.MapFunctionValues(simulation.theta[0].M,0.0,2.0,Operators.constant,0.0);       
-        
+        Operators.MapFunctionValues(simulation.theta[0].M,0.0,2.0,Operators.constant,0.0);   
         for (int i=0;i<simulation.theta[0].phaseNb;i++){
-            simulation.theta[0].setPhase(i,Operators.MultiplyFunctions(simulation.theta[0].getPhase(i),Operators.PowerOfFunction(simulation.theta[0].dyn.getPhase(i).SolutionFilter, -1.0) ));
+            simulation.theta[0].setPhase(i,Operators.MultiplyFunctions(simulation.theta[0].getPhase(i),Operators.PowerOfFunction(Operators.CropFunction(simulation.theta[0].dyn.getPhase(i).SolutionFilter), -1.0) ));
+//        Operators.plotFunction(simulation.theta[0].getPhase(i));
         }  
-
+    
 //        BigDecimal bd = new BigDecimal(1.020101);
 //        bd = bd.setScale(3, BigDecimal.ROUND_HALF_EVEN);
 //        bd=BigDecimal.valueOf(Math.sin( bd.doubleValue()));
@@ -151,9 +152,9 @@ public class ChronoCell {
 //        GUISolution win3 =new GUISolution();
 //        win3.SetFunction(simulation.solution[0]);
 //        win3.setVisible(true);
-//        GUISimulation win4 =new GUISimulation();
-//        win4.SetFunction(simulation);
-//        win4.setVisible(true);
-        Operators.plotFunction(simulation.theta[0].G1);
+        GUISimulation win4 =new GUISimulation();
+        win4.SetFunction(simulation);
+        win4.setVisible(true);
+//        Operators.plotFunction(simulation.theta[1].G1);
     }
 }
