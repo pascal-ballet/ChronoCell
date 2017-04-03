@@ -6,7 +6,6 @@
 
 
 // Todo :   *  write properly solutions for initial condition to solve the shift of time between bifurcations
-//          * solve the problem of cell death
 //          * improve to transition probabilities that can evolve along time and depend on pO2
 //          * implement population size calculus
 //          * check oprators that copy functions or not
@@ -41,8 +40,8 @@ public class ChronoCell {
             SimulationStructure simulation=new SimulationStructure();
             simulation.timeStep=0.01;
             simulation.treat= new TreatmentStructure();
-            simulation.treat.times= new double[]{50.0,Double.NaN};
-            simulation.treat.doses= new double[]{2.0,0.0};
+            simulation.treat.times= new double[]{20.0,60.0,85.0,Double.NaN};
+            simulation.treat.doses= new double[]{10.0,10.0,10.0,0.0};
 //            simulation.solution= new SolutionStructure[simulation.treat.times.length];
             simulation.theta= new ThetaStructure[simulation.treat.times.length];
             for (int i=0;i<simulation.treat.times.length;i++){
@@ -55,7 +54,7 @@ public class ChronoCell {
 //            simulation.solution[0].phaseName[3]="G2";
 //            simulation.solution[0].phaseName[4]="M";
             
-            double support0=20.0,support2=18.0;
+            double support0=30.0,support2=15.0;
             // uitliser le timeStep de simulationStructure
             double step=0.01;
             double pO2=20.0,C=1.0,B=0.075,M=26.3;
@@ -74,13 +73,14 @@ public class ChronoCell {
         G0ToG1=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G0ToG1, G0ToG1.min, G0ToG1.max),0, G0ToG1);
         simulation.theta[0].dyn.G0.density.put("G1", G0ToG1);
         // G1->G0
-        FunctionStructure G1ToG0=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(30.0),Numbers.CGN(0.01)); 
-        Operators.MapFunctionValues(G1ToG0,12.0,30.0,Operators.gaussian,16.8,2.0);
+        FunctionStructure G1ToG0=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(100.0),Numbers.CGN(0.01)); 
+//        Operators.MapFunctionValues(G1ToG0,12.0,30.0,Operators.gaussian,16.8,2.0);
+        Operators.MapFunctionValues(G1ToG0,50.0,51.0,Operators.constant,1.0);
         G1ToG0=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G1ToG0, G1ToG0.min, G1ToG0.max),0, G1ToG0);
         simulation.theta[0].dyn.G1.density.put("G0", G1ToG0);
         // G1->S
         FunctionStructure G1ToS=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),Numbers.CGN(0.01));
-        Operators.MapFunctionValues(G1ToS,10.0,support0,Operators.gaussian,14.0,5.0);
+        Operators.MapFunctionValues(G1ToS,0.0,support0,Operators.continuousGeometricDistribution,15.0,simulation.pO2,simulation.C,simulation.B,simulation.m);
         G1ToS=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G1ToS, G1ToS.min, G1ToS.max),0, G1ToS);
         simulation.theta[0].dyn.G1.density.put("S", G1ToS);
         // S->G2
@@ -90,7 +90,7 @@ public class ChronoCell {
         simulation.theta[0].dyn.S.density.put("G2", SToG2);
         // G2->M
         FunctionStructure G2ToM=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support2),Numbers.CGN(0.01)); 
-        Operators.MapFunctionValues(G2ToM,3.0,support2,Operators.continuousGeometricDistribution,3.0,pO2,C,B,M);
+        Operators.MapFunctionValues(G2ToM,3.0,support2,Operators.continuousGeometricDistribution,3.0,simulation.pO2,simulation.C,simulation.B,simulation.m);
         G2ToM=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G2ToM, G2ToM.min, G2ToM.max),0, G2ToM);
         simulation.theta[0].dyn.G2.density.put("M", G2ToM);
         // M->G1
@@ -122,19 +122,18 @@ public class ChronoCell {
 //        Operators.plotFunction(simulation.theta[0].getPhase(i));
         }  
     
-//        BigDecimal bd = new BigDecimal(1.020101);
-//        bd = bd.setScale(3, BigDecimal.ROUND_HALF_EVEN);
-//        bd=BigDecimal.valueOf(Math.sin( bd.doubleValue()));
-//        System.out.println("??? "+bd);
-        
+//       
         
 //        GUI win1 =new GUI();    
 //        win1.SetFunction(simulation.theta[0].S);
 //        win1.setVisible(true);
-
-        for (int i=0;i<10000;i++){            
+double T=100.0;
+FunctionStructure population=Operators.createFunction(0.0, T, simulation.timeStep);
+        for (int i=0;i<=((int) T/simulation.timeStep);i++){            
             SimulationStructureOperators.ComputeSimulationNextValue(simulation);
+            population.values[i]=SimulationStructureOperators.GetSimulationPopulationSize(simulation, i*simulation.timeStep);
         }
+        Operators.plotFunction(population);
 //        System.err.format("DeathBG1 = %f \n", simulation.solution[0].probaDeathBeforeG1);
 //        System.err.format("SBG2 = %f \n", simulation.solution[0].probaSBeforeG0);
 //        FunctionStructure tempProb=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].transitionProbabilities[3]);

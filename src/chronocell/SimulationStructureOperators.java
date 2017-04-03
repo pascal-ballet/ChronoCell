@@ -26,7 +26,7 @@ public class SimulationStructureOperators {
 //            try {Thread.sleep(10000);} catch(InterruptedException ex) {    Thread.currentThread().interrupt();}
 //            Operators.plotFunction(Operators.AffineFunctionTransformation(survivalProbability.op(simulation.treat.doses[treatNb],i), 0.0,temp));
 //            try {Thread.sleep(10000);} catch(InterruptedException ex) {    Thread.currentThread().interrupt();}}
-            temp=Operators.AffineFunctionTransformation(survivalProbability.op(simulation.treat.doses[treatNb],i), 0.0,temp);
+            temp=Operators.AffineFunctionTransformation(survivalProbability.op(simulation.treat.doses[treatNb],simulation.pO2,simulation.alpha,simulation.beta,simulation.m,simulation.k,i), 0.0,temp);
 //            ind=createFunction(simulation.theta[simulation.currentSolution-1].dyn.getPhase(i).SolutionFilter.min,simulation.theta[simulation.currentSolution-1].dyn.getPhase(i).SolutionFilter.max,simulation.theta[simulation.currentSolution-1].dyn.getPhase(i).SolutionFilter.step);
 //            simulation.theta[simulation.currentSolution].setPhase(i,Operators.MultiplyFunctions(ind, simulation.theta[simulation.currentSolution-1].getPhase(i)));
 //            simulation.theta[simulation.currentSolution].setPhase(i,simulation.theta[simulation.currentSolution-1].getPhase(i));
@@ -59,5 +59,18 @@ public class SimulationStructureOperators {
         }
 //        System.out.println("solution n : "+solNumber);
         return Operators.GetFunctionValue(simulation.theta[solNumber].getPhase(phase),s-T)*Operators.GetFunctionValue(simulation.theta[solNumber].dyn.getPhase(phase).SolutionFilter,s);
+    };
+    
+    public static double GetSimulationPopulationSize(SimulationStructure simulation, double T){
+        FunctionStructure temp=null;
+        double pop=0.0;
+        for (int phase=0;phase<simulation.theta[simulation.currentSolution].phaseNb;phase++){
+            temp=Operators.createFunction(0.0,simulation.theta[simulation.currentSolution].dyn.getPhase(phase).SolutionFilter.max,simulation.timeStep);
+            for (int i=temp.minIndex;i<temp.maxIndex;i++){
+                temp.values[i]=SimulationStructureOperators.GetSimulationValue(simulation, phase, T,i*temp.step);
+            }
+            pop+=Operators.IntegrateFunction(temp,temp.min, temp.max);
+        }
+        return pop;
     };
 }

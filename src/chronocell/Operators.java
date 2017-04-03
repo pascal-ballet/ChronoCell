@@ -68,7 +68,7 @@ public class Operators {
     
     public static FunctionInterface gompertz = new FunctionInterface(){
       public double op(double x,double ... p){
-          //p=[C,B,M]
+          //p=[C,B,m]
           //x=pO2
           // double C=1.0, B=0.075, M=26.3, pO2=60.0;
           return p[0]*Math.exp(-Math.exp(-p[1]*(x-p[2])));
@@ -92,7 +92,7 @@ public class Operators {
     
     public static FunctionInterface continuousGeometricDistribution = new FunctionInterface(){
       public double op(double x,double ... p){
-          //p=[shift,pO2,C,B,M]
+          //p=[shift,pO2,C,B,m]
           // double C=1.0, B=0.075, M=26.3, pO2=60.0;
           double[] parameterGompertz=new double[]{p[2],p[3],p[4]};
           double prob=gompertz.op(p[1],parameterGompertz);
@@ -108,18 +108,25 @@ public class Operators {
     };
 
     public static FunctionInterface survivalProbability = new FunctionInterface(){
-      public double op(double x,double ... p){
-          //p[0]=phase
-          if (p[0]==3){
-              return 0.2;
-          }
+      public double op(double dose,double ... p){
+          //p[0]=pO2,p[1]=alpha,p[2]=beta,p[3]=m,p[4]=k,p[5]=phase
+          double z=(1+p[2]/p[3]*dose*OMF.op(p[0],p[3],p[4]));
+          double proba=Math.exp(-p[1]*dose*OMF.op(p[0],p[3],p[4])*z);
+            if (p[5]==3){
+                return 2*proba;
+            }
           else{
-              return 0.8;
+              return proba;
           }
         }  
     };
     
-  
+    public static FunctionInterface OMF = new FunctionInterface(){
+      public double op(double x,double ... p){
+          //p[0]=m,p[1]=k
+          return (p[0]*x+p[1])/(p[0]*(x+p[1]));
+      }
+    };  
       
     public static void MapFunctionValues(FunctionStructure fct,double min, double max,FunctionInterface g,double ... p){
         for (int i=(int) Math.round(min/fct.step);i<=(int) Math.round(max/fct.step);i++){
