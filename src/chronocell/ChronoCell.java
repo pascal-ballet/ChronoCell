@@ -5,7 +5,8 @@
  */
 
 
-// Todo :   *  write properly solutions for initial condition to solve the shift of time between bifurcations
+// Todo :   * CRUCIAL : check dependency on timestep !
+//          *  write properly solutions for initial condition to solve the shift of time between bifurcations
 //          * improve to transition probabilities that can evolve along time and depend on pO2
 //          * implement population size calculus
 //          * check oprators that copy functions or not
@@ -40,8 +41,10 @@ public class ChronoCell {
             SimulationStructure simulation=new SimulationStructure();
             simulation.timeStep=0.01;
             simulation.treat= new TreatmentStructure();
-            simulation.treat.times= new double[]{20.0,60.0,85.0,Double.NaN};
-            simulation.treat.doses= new double[]{10.0,10.0,10.0,0.0};
+            simulation.treat.times= new double[]{20.0,188.0,356.0,524.0,Double.NaN};
+            simulation.treat.doses= new double[]{10.0,10.0,10.0,10.0,0.0};
+//            simulation.treat.times= new double[]{20.0,60.0,85.0,Double.NaN};
+//            simulation.treat.doses= new double[]{10.0,10.0,10.0,0.0};
 //            simulation.solution= new SolutionStructure[simulation.treat.times.length];
             simulation.theta= new ThetaStructure[simulation.treat.times.length];
             for (int i=0;i<simulation.treat.times.length;i++){
@@ -127,7 +130,7 @@ public class ChronoCell {
 //        GUI win1 =new GUI();    
 //        win1.SetFunction(simulation.theta[0].S);
 //        win1.setVisible(true);
-double T=100.0;
+double T=550.0;
 FunctionStructure population=Operators.createFunction(0.0, T, simulation.timeStep);
         for (int i=0;i<=((int) T/simulation.timeStep);i++){            
             SimulationStructureOperators.ComputeSimulationNextValue(simulation);
