@@ -15,7 +15,7 @@ import static chronocell.Operators.survivalProbability;
 public class SimulationStructureOperators {
     
      public static void ApplyTreatment(int treatNb,SimulationStructure simulation){
-        System.err.format("traitement %d à %f h\n", treatNb,simulation.currentTime);
+        System.out.println("traitement "+treatNb+" au temps "+simulation.currentTime+", dose = "+simulation.treat.doses[treatNb]);
 //        simulation.theta[simulation.currentSolution+1]=new ThetaStructure();
         simulation.theta[simulation.currentSolution+1].dyn=simulation.theta[simulation.currentSolution].dyn;
         simulation.currentSolution+=1;

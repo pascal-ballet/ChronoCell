@@ -113,7 +113,7 @@ public class Operators {
           double z=(1+p[2]/p[3]*dose*OMF.op(p[0],p[3],p[4]));
           double proba=Math.exp(-p[1]*dose*OMF.op(p[0],p[3],p[4])*z);
             if (p[5]==3){
-                return 2*proba;
+                return 0.5*proba;
             }
           else{
               return proba;
@@ -312,6 +312,7 @@ public class Operators {
         }
         else{
             prod=Operators.createFunction(Math.max(fct1.min, fct2.min), Math.min(fct1.max, fct2.max), Numbers.LeastCommonStep(fct1.step,fct2.step));
+//            System.out.println("step1 ="+fct1.step+", step2 ="+fct2.step+", lqs ="+Numbers.LeastCommonStep(fct1.step,fct2.step));
             for (int i=prod.minIndex;i<=prod.maxIndex;i++){
                 prod.values[i]=GetFunctionValue(fct1, prod.min+i*prod.step)*GetFunctionValue(fct2, prod.min+i*prod.step);
             }

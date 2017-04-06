@@ -164,7 +164,7 @@ public class CellDynamicsOperators {
         dyn.M.weight.put("G1",1.0);
         dyn.M.SolutionFilter=dyn.M.oneMinCumul.get("G1");
 //        dyn.M.ThetaConvolution=Operators.copyFunction(dyn.G2.density.get("M"));
-        
+//        Operators.plotFunction(dyn.M.SolutionFilter);
 
         
 //      Intermediate function thetaConvolution
