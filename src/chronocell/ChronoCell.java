@@ -5,7 +5,8 @@
  */
 
 
-// Todo :   * CRUCIAL : check dependency on timestep ! -> solve dirac problem
+// Todo :   * Implement constant solution for initial condition (if extinction, take Laplace transform for lambda=0).
+//          * CRUCIAL : check dependency on timestep ! -> solve dirac problem
 //          *  write properly solutions for initial condition to solve the shift of time between bifurcations
 //          * improve to transition probabilities that can evolve along time and depend on pO2
 //          * implement population size calculus
@@ -41,8 +42,8 @@ public class ChronoCell {
             SimulationStructure simulation=new SimulationStructure();
             simulation.timeStep=(0.1);
             double simulationTime =336.0;
-            int fractions=4;
-            double totalDose =45;
+            int fractions=8;
+            double totalDose =45.0;
             double intervalBetweenDose=simulationTime/(fractions+1);
             double fractionDose=totalDose/fractions;
             simulation.treat= new TreatmentStructure();
@@ -79,17 +80,17 @@ public class ChronoCell {
         // G0->Death
         FunctionStructure G0ToDeath=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(30.0),step); 
 //        Operators.MapFunctionValues(G0ToDeath,0.0,8.0,Operators.gaussian,7.0,1.0);
-        Operators.MapFunctionValues(G0ToDeath,21.0,30.0,Operators.gaussian,28.0,1.0);
+        Operators.MapFunctionValues(G0ToDeath,0.0,10.0,Operators.gaussian,5.0,1.0);
         G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G0ToDeath, G0ToDeath.min, G0ToDeath.max),0, G0ToDeath);
         simulation.theta[0].dyn.G0.density.put("Death", G0ToDeath);
         // G0->G1
         FunctionStructure G0ToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),step);  
-        Operators.MapFunctionValues(G0ToG1,0.0,8.0,Operators.gaussian,5.0,1.0);;
+        Operators.MapFunctionValues(G0ToG1,0.0,8.0,Operators.gaussian,5.0,1.0);
         G0ToG1=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G0ToG1, G0ToG1.min, G0ToG1.max),0, G0ToG1);
         simulation.theta[0].dyn.G0.density.put("G1", G0ToG1);
         // G1->G0
         FunctionStructure G1ToG0=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(100.0),step); 
-        Operators.MapFunctionValues(G1ToG0,12.0,30.0,Operators.gaussian,19.5,2.0);
+        Operators.MapFunctionValues(G1ToG0,12.0,30.0,Operators.gaussian,16.3,2.0);
 //        Operators.MapFunctionValues(G1ToG0,50.0,51.0,Operators.constant,1.0);
         G1ToG0=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G1ToG0, G1ToG0.min, G1ToG0.max),0, G1ToG0);
         simulation.theta[0].dyn.G1.density.put("G0", G1ToG0);

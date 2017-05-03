@@ -113,7 +113,7 @@ public class Operators {
           double z=(1+p[2]/p[3]*dose*OMF.op(p[0],p[3],p[4]));
           double proba=Math.exp(-p[1]*dose*OMF.op(p[0],p[3],p[4])*z);
             if (p[5]==3){
-                return 0.5*proba;
+                return 0.9*proba;
             }
           else{
               return proba;

@@ -31,7 +31,8 @@ public class ThetaStructureOperators {
         FunctionStructure tempCumulComp= new FunctionStructure();
         // phase G0
             tempConvolution=TranslateFunction(theta.G0.min, theta.dyn.G0.ThetaConvolution);
-            nextVal=theta.dyn.G1.weight.get("G0")*IntegrateFunction(MultiplyFunctions(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
+//            nextVal=theta.dyn.G1.weight.get("G0")*IntegrateFunction(MultiplyFunctions(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
+            nextVal=IntegrateFunction(MultiplyFunctions(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
             theta.G0.min=theta.G0.min-theta.G0.step;
             theta.G0.minIndex-=1;
             theta.G0.values[theta.G0.minIndex]=nextVal;
@@ -40,7 +41,7 @@ public class ThetaStructureOperators {
         // phase G1
             // from G0
             tempConvolution=TranslateFunction(theta.G1.min, theta.dyn.G1.ThetaConvolution);
-            nextVal=theta.dyn.G0.weight.get("G1")*IntegrateFunction(MultiplyFunctions(theta.G0,tempConvolution),tempConvolution.min,tempConvolution.max);
+            nextVal=IntegrateFunction(MultiplyFunctions(theta.G0,tempConvolution),tempConvolution.min,tempConvolution.max);
             // from M
             tempConvolution=TranslateFunction(theta.G1.min, theta.dyn.M.density.get("G1"));
             nextVal+=2*IntegrateFunction(MultiplyFunctions(theta.M,tempConvolution),tempConvolution.min,tempConvolution.max);
@@ -51,7 +52,7 @@ public class ThetaStructureOperators {
         // phase S
             tempConvolution=TranslateFunction(theta.S.min, theta.dyn.S.ThetaConvolution);
            
-            nextVal=theta.dyn.G1.weight.get("S")*IntegrateFunction(MultiplyFunctions(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
+            nextVal=IntegrateFunction(MultiplyFunctions(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
             theta.S.min=theta.S.min-theta.S.step;
             theta.S.minIndex-=1;
             theta.S.values[theta.S.minIndex]=nextVal;
