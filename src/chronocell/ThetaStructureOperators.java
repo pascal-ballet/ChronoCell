@@ -27,8 +27,6 @@ public class ThetaStructureOperators {
         } 
         double nextVal= 0.0;
         FunctionStructure tempConvolution= new FunctionStructure();
-        FunctionStructure tempDensity= new FunctionStructure();
-        FunctionStructure tempCumulComp= new FunctionStructure();
         // phase G0
             tempConvolution=TranslateFunction(theta.G0.min, theta.dyn.G0.ThetaConvolution);
 //            nextVal=theta.dyn.G1.weight.get("G0")*IntegrateFunction(MultiplyFunctions(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
@@ -59,6 +57,7 @@ public class ThetaStructureOperators {
             
         // phase G2
            tempConvolution=TranslateFunction(theta.G2.min, theta.dyn.S.density.get("G2"));
+           
             nextVal=IntegrateFunction(MultiplyFunctions(theta.S,tempConvolution),tempConvolution.min,tempConvolution.max);
             theta.G2.min=theta.G2.min-theta.G2.step;
             theta.G2.minIndex-=1;
@@ -66,6 +65,7 @@ public class ThetaStructureOperators {
            
         // phase M
            tempConvolution=TranslateFunction(theta.M.min, theta.dyn.G2.density.get("M"));
+           
            nextVal=IntegrateFunction(MultiplyFunctions(theta.G2,tempConvolution),tempConvolution.min,tempConvolution.max);
            theta.M.min=theta.M.min-theta.M.step;
             theta.M.minIndex-=1;

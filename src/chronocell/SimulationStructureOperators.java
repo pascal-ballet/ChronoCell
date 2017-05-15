@@ -50,7 +50,7 @@ public class SimulationStructureOperators {
         simulation.currentTime+=simulation.timeStep;
     }
     
-    public static double GetSimulationValue(SimulationStructure simulation, int phase, double T, double s){
+    public static double GetSimulationValue(SimulationStructure simulation, int phase, double T, double t){
         int solNumber=0;
         for (int i=0;i<simulation.currentSolution;i++){
             if (T>=simulation.treat.times[i]){
@@ -58,7 +58,7 @@ public class SimulationStructureOperators {
             }
         }
 //        System.out.println("solution n : "+solNumber);
-        return Operators.GetFunctionValue(simulation.theta[solNumber].getPhase(phase),s-T)*Operators.GetFunctionValue(simulation.theta[solNumber].dyn.getPhase(phase).SolutionFilter,s);
+        return Operators.GetFunctionValue(simulation.theta[solNumber].getPhase(phase),t-T)*Operators.GetFunctionValue(simulation.theta[solNumber].dyn.getPhase(phase).SolutionFilter,t);
     };
     
     public static double GetSimulationPopulationSize(SimulationStructure simulation, double T){

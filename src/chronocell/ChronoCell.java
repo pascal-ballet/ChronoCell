@@ -41,9 +41,9 @@ public class ChronoCell {
         // Parameters
             SimulationStructure simulation=new SimulationStructure();
             simulation.timeStep=(0.1);
-            double simulationTime =336.0;
-            int fractions=8;
-            double totalDose =45.0;
+            double simulationTime =30.0;
+            int fractions=1;
+            double totalDose =0.0;
             double intervalBetweenDose=simulationTime/(fractions+1);
             double fractionDose=totalDose/fractions;
             simulation.treat= new TreatmentStructure();
@@ -102,6 +102,7 @@ public class ChronoCell {
         // S->G2
         FunctionStructure SToG2=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),step); 
         Operators.MapFunctionValues(SToG2,8.0-step,8.0,Operators.constant,1.0);
+//        Operators.MapFunctionValues(SToG2,5.0,8.0,Operators.gaussian,6.0,2.0);
         SToG2=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(SToG2, SToG2.min, SToG2.max),0, SToG2);
         simulation.theta[0].dyn.S.density.put("G2", SToG2);
         // G2->M
@@ -112,55 +113,43 @@ public class ChronoCell {
         // M->G1
         FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),step); 
         Operators.MapFunctionValues(MToG1,2.0-step,2.0,Operators.constant,1.0);
+//        Operators.MapFunctionValues(MToG1,0.0,2.0,Operators.gaussian,1.0,1.0);
         MToG1=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(MToG1, MToG1.min, MToG1.max),0, MToG1);
         simulation.theta[0].dyn.M.density.put("G1", MToG1);    
               
         CellDynamicsOperators.DynamicsFilling(simulation.theta[0].dyn);
         
-            ///// Initial conditions
-        /// Phase G0
-        simulation.theta[0].G0 = Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),step);        
-        Operators.MapFunctionValues(simulation.theta[0].G0,0.0,8.0,Operators.constant,0.0);
-        /// Phase G1
-        simulation.theta[0].G1= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),step);
-        Operators.MapFunctionValues(simulation.theta[0].G1,0.0,10.0,Operators.constant,1.0);
-        /// Phase S
-        simulation.theta[0].S= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),step);
-        Operators.MapFunctionValues(simulation.theta[0].S,0.0,8.0,Operators.constant,0.0);
-        /// Phase G2
-        simulation.theta[0].G2= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support2),step);
-        Operators.MapFunctionValues(simulation.theta[0].G2,0.0,support2,Operators.constant,0.0);
-        /// Phase M
-        simulation.theta[0].M= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),step);
-        Operators.MapFunctionValues(simulation.theta[0].M,0.0,2.0,Operators.constant,0.0); 
-        
-        for (int i=0;i<simulation.theta[0].phaseNb;i++){
-//             Operators.plotFunction(simulation.theta[0].getPhase(i));
-            simulation.theta[0].setPhase(i,Operators.MultiplyFunctions(simulation.theta[0].getPhase(i),Operators.PowerOfFunction(Operators.CropFunction(simulation.theta[0].dyn.getPhase(i).SolutionFilter), -1.0) ));
-        }  
+        StableSolution.StableInitialCondition(simulation.theta[0]);
+//            ///// Initial conditions
+//        /// Phase G0
+//        simulation.theta[0].G0 = Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),step);        
+//        Operators.MapFunctionValues(simulation.theta[0].G0,0.0,8.0,Operators.constant,0.0);
+//        /// Phase G1
+//        simulation.theta[0].G1= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),step);
+//        Operators.MapFunctionValues(simulation.theta[0].G1,0.0,10.0,Operators.constant,1.0);
+//        /// Phase S
+//        simulation.theta[0].S= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(8.0),step);
+//        Operators.MapFunctionValues(simulation.theta[0].S,0.0,8.0,Operators.constant,0.0);
+//        /// Phase G2
+//        simulation.theta[0].G2= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support2),step);
+//        Operators.MapFunctionValues(simulation.theta[0].G2,0.0,support2,Operators.constant,0.0);
+//        /// Phase M
+//        simulation.theta[0].M= Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),step);
+//        Operators.MapFunctionValues(simulation.theta[0].M,0.0,2.0,Operators.constant,0.0); 
+//        
+//        for (int i=0;i<simulation.theta[0].phaseNb;i++){
+////             Operators.plotFunction(simulation.theta[0].getPhase(i));
+//            simulation.theta[0].setPhase(i,Operators.MultiplyFunctions(simulation.theta[0].getPhase(i),Operators.PowerOfFunction(Operators.CropFunction(simulation.theta[0].dyn.getPhase(i).SolutionFilter), -1.0) ));
+//        }  
     
-//       
-        
-//        GUI win1 =new GUI();    
-//        win1.SetFunction(simulation.theta[0].S);
-//        win1.setVisible(true);
-FunctionStructure population=Operators.createFunction(0.0, simulationTime-simulation.timeStep, simulation.timeStep);
+        FunctionStructure population=Operators.createFunction(0.0, simulationTime-simulation.timeStep, simulation.timeStep);
         for (int i=0;i<(Math.round(simulationTime/simulation.timeStep));i++){            
             SimulationStructureOperators.ComputeSimulationNextValue(simulation);
             population.values[i]=SimulationStructureOperators.GetSimulationPopulationSize(simulation, i*simulation.timeStep);
-//            System.out.println("i = "+i);
         }
         Operators.plotFunction(population);
-//        System.err.format("DeathBG1 = %f \n", simulation.solution[0].probaDeathBeforeG1);
-//        System.err.format("SBG2 = %f \n", simulation.solution[0].probaSBeforeG0);
-//        FunctionStructure tempProb=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].transitionProbabilities[3]);
-//        FunctionStructure     tempCumul=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].oneMinusCumulativeFunctions[3]);
-//        FunctionStructure    tempCumulComp=TranslateFunction(simulation.solution[0].theta[1].min, simulation.solution[0].oneMinusCumulativeFunctions[2]);
-//        FunctionStructure temp=MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,simulation.solution[0].probaSBeforeG0),tempProb),PowerOfFunction(tempCumul, -simulation.solution[0].probaDeathBeforeG1));
-//        double nextVal=IntegrateFunction( MultiplyFunctions( simulation.solution[0].theta[1], MultiplyFunctions( MultiplyFunctions(PowerOfFunction(tempCumulComp,simulation.solution[0].probaSBeforeG0),tempProb),PowerOfFunction(tempCumul, -simulation.solution[0].probaDeathBeforeG1))),tempProb.min,tempProb.max);
-//           
-//        System.err.format("nextVal = %f \n", nextVal);
-////         Display Function
+
+
        
 //        GUI win2 =new GUI();
 //        win2.SetFunction(simulation.solution[0].theta[1]);
@@ -171,5 +160,10 @@ FunctionStructure population=Operators.createFunction(0.0, simulationTime-simula
         GUISimulation win4 =new GUISimulation();
         win4.SetFunction(simulation);
         win4.setVisible(true);
+//    double test=Operators.InverseLaplaceTransform(0.5, simulation.theta[0].dyn.S.density.get("G2"));
+//    Operators.LaplaceTransform(0.1,simulation.theta[0].dyn.G2.density.get("M") );
+//      double test=StableSolution.SolveEquation(simulation.theta[0].dyn);
+//        System.out.println("sol="+test);
+        
     }
 }

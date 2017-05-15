@@ -112,8 +112,9 @@ public class Operators {
           //p[0]=pO2,p[1]=alpha,p[2]=beta,p[3]=m,p[4]=k,p[5]=phase
           double z=(1+p[2]/p[3]*dose*OMF.op(p[0],p[3],p[4]));
           double proba=Math.exp(-p[1]*dose*OMF.op(p[0],p[3],p[4])*z);
+//                System.out.println("proba="+proba);
             if (p[5]==3){
-                return 0.9*proba;
+                return proba;
             }
           else{
               return proba;
@@ -386,6 +387,36 @@ public class Operators {
         transl.min+=t;
         transl.max+=t;
     return transl;
+    } 
+    
+    public static double LaplaceTransform(double lambda, FunctionStructure fct){
+        FunctionStructure expo=Operators.createFunction(fct.min,fct.max,fct.step);
+        MapFunctionValues(expo,expo.min,expo.max,Operators.exp, -lambda);
+//        Operators.plotFunction(MultiplyFunctions(fct, expo));
+        double l=IntegrateFunction(MultiplyFunctions(fct, expo),fct.min,fct.max);
+          return l;
+    } 
+    
+    public static double InverseLaplaceTransform(double x, FunctionStructure fct){
+        double step=0.001;
+        double epsilon=0.005;
+        double lambda=0.0;
+        double laplace=LaplaceTransform(lambda, fct);
+//        puisque l'on ne manipule que des fonctions positives, la transformée de laplace est décroissante
+        if (laplace<x){
+            System.out.println("Inversion laplace impossible");
+            return -1.0;
+        }
+        while (Math.abs(x-laplace)>epsilon){
+            System.out.println("laplace="+laplace+", lambda="+lambda+", x="+x+", step="+step);
+            while (laplace>x){
+                lambda+=step;
+                laplace=LaplaceTransform(lambda, fct);
+            }
+            lambda-=step;
+            step/=2;
+        }
+          return lambda;
     } 
     
     public static void DoubleArraySizeToLeft(FunctionStructure fct){
