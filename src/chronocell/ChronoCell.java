@@ -36,14 +36,14 @@ public class ChronoCell {
         Numbers.minStep=0.00001;
         
         
-        
-        
+        FunctionStructure compare=Operators.createFunction(1.0, 100.0, 1.0);
+        for (int frac=1;frac<2;frac++){
         // Parameters
             SimulationStructure simulation=new SimulationStructure();
             simulation.timeStep=(0.1);
-            double simulationTime =30.0;
-            int fractions=1;
-            double totalDose =0.0;
+            double simulationTime =336.0;
+            int fractions=frac;
+            double totalDose =45.0;
             double intervalBetweenDose=simulationTime/(fractions+1);
             double fractionDose=totalDose/fractions;
             simulation.treat= new TreatmentStructure();
@@ -142,13 +142,13 @@ public class ChronoCell {
 //            simulation.theta[0].setPhase(i,Operators.MultiplyFunctions(simulation.theta[0].getPhase(i),Operators.PowerOfFunction(Operators.CropFunction(simulation.theta[0].dyn.getPhase(i).SolutionFilter), -1.0) ));
 //        }  
     
-        FunctionStructure population=Operators.createFunction(0.0, simulationTime-simulation.timeStep, simulation.timeStep);
+//        FunctionStructure population=Operators.createFunction(0.0, simulationTime-simulation.timeStep, simulation.timeStep);
         for (int i=0;i<(Math.round(simulationTime/simulation.timeStep));i++){            
             SimulationStructureOperators.ComputeSimulationNextValue(simulation);
-            population.values[i]=SimulationStructureOperators.GetSimulationPopulationSize(simulation, i*simulation.timeStep);
+//            population.values[i]=SimulationStructureOperators.GetSimulationPopulationSize(simulation, i*simulation.timeStep);
         }
-        Operators.plotFunction(population);
-
+//        Operators.plotFunction(population);
+//        compare.values[frac]=SimulationStructureOperators.GetSimulationPopulationSize(simulation, simulationTime);
 
        
 //        GUI win2 =new GUI();
@@ -166,4 +166,7 @@ public class ChronoCell {
 //        System.out.println("sol="+test);
         
     }
+//        Operators.plotFunction(compare);
+    }
+    
 }
