@@ -5,6 +5,8 @@
  */
 package chronocell;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author goby
@@ -12,5 +14,6 @@ package chronocell;
 public class CellPopulation {
     double size=0.0;
     CellDynamics dynamics=new CellDynamics();
-    ThetaStructure theta=new ThetaStructure();
+    ArrayList<ThetaStructure> theta=new ArrayList();
+//    ThetaStructure theta=new ThetaStructure();
 }

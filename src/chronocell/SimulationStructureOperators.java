@@ -14,14 +14,17 @@ import static chronocell.Operators.survivalProbability;
  */
 public class SimulationStructureOperators {
     
-     public static void ApplyTreatment(int treatNb,SimulationStructure simulation){
+     public static void ApplyTreatment(int treatNb,SimulationStructure simulation,CellPopulation pop){
         System.out.println("traitement "+treatNb+" au temps "+simulation.currentTime+", dose = "+simulation.treat.doses[treatNb]);
-//        simulation.theta[simulation.currentSolution+1]=new ThetaStructure();
+        
         simulation.theta[simulation.currentSolution+1].dyn=simulation.theta[simulation.currentSolution].dyn;
         simulation.currentSolution+=1;
 //        FunctionStructure ind=new FunctionStructure();
-        for (int i=0;i<simulation.theta[simulation.currentSolution].phaseNb;i++){
-            FunctionStructure temp = Operators.copyFunction(simulation.theta[simulation.currentSolution-1].getPhase(i));
+//        for (int i=0;i<simulation.theta[simulation.currentSolution].phaseNb;i++){
+        ThetaStructure theta=new ThetaStructure();
+        pop.theta.add(theta);
+        for (int i=0;i<pop.theta.get(simulation.currentSolution).phaseNb;i++){
+            FunctionStructure temp = Operators.copyFunction(pop.theta.get(simulation.currentSolution-1).getPhase(i));
 //            if (i==2){Operators.plotFunction(temp);
 //            try {Thread.sleep(10000);} catch(InterruptedException ex) {    Thread.currentThread().interrupt();}
 //            Operators.plotFunction(Operators.AffineFunctionTransformation(survivalProbability.op(simulation.treat.doses[treatNb],i), 0.0,temp));
@@ -32,16 +35,16 @@ public class SimulationStructureOperators {
 //            simulation.theta[simulation.currentSolution].setPhase(i,simulation.theta[simulation.currentSolution-1].getPhase(i));
 //           if (i==2){Operators.plotFunction(temp);
 //           try {Thread.sleep(10000);} catch(InterruptedException ex) {    Thread.currentThread().interrupt();}} 
-           simulation.theta[simulation.currentSolution].setPhase(i,temp);
+           pop.theta.get(simulation.currentSolution).setPhase(i,temp);
 //           if (i==2){Operators.plotFunction(simulation.theta[simulation.currentSolution].getPhase(i));}
         }
 //        try {Thread.sleep(1000000);} catch(InterruptedException ex) {    Thread.currentThread().interrupt();}
     }
     
-    public static void ComputeSimulationNextValue(SimulationStructure simulation){
+    public static void ComputeSimulationNextValue(SimulationStructure simulation,CellPopulation pop){
 //            System.err.format("current.time= %f, treatTime= %f \n",simulation.currentTime, simulation.treat.times[simulation.nextTreatment]);
             if (simulation.currentTime>=simulation.treat.times[simulation.nextTreatment]){
-                ApplyTreatment(simulation.nextTreatment,simulation);
+                ApplyTreatment(simulation.nextTreatment,simulation,pop);
                 simulation.nextTreatment+=1;
             }
 //        ComputeSolutionNextValue(simulation.solution[simulation.nextTreatment]);
