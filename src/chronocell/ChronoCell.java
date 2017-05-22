@@ -33,6 +33,13 @@ public class ChronoCell {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        CellPopulation pop=new CellPopulation();
+        pop.size=1.0;
+        
+        
+        
+        
         Numbers.minStep=0.00001;
         
         
@@ -87,7 +94,15 @@ public class ChronoCell {
         dynamics.G1.density.put("S", G1ToS);
         dynamics.S.density.put("G2", SToG2);
         dynamics.G2.density.put("M", G2ToM);
-        dynamics.M.density.put("G1", MToG1);    
+        dynamics.M.density.put("G1", MToG1); 
+        
+        pop.dynamics.G0.density.put("Death", G0ToDeath);
+        pop.dynamics.G0.density.put("G1", G0ToG1);
+        pop.dynamics.G1.density.put("G0", G1ToG0);
+        pop.dynamics.G1.density.put("S", G1ToS);
+        pop.dynamics.S.density.put("G2", SToG2);
+        pop.dynamics.G2.density.put("M", G2ToM);
+        pop.dynamics.M.density.put("G1", MToG1); 
         
         
    

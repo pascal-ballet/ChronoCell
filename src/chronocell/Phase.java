@@ -19,5 +19,4 @@ public class Phase {
     Hashtable<String,FunctionStructure> alpha = new Hashtable<String,FunctionStructure>();
     FunctionStructure SolutionFilter = new FunctionStructure();
     FunctionStructure ThetaConvolution = new FunctionStructure();
-    Hashtable<String,Double> weight = new Hashtable<String,Double>();
 }
