@@ -83,7 +83,8 @@ public class ChronoCell {
         CellPopulation pop=new CellPopulation();
         // Taille initiale
         pop.size=1.0;
-        // Dynamique        
+        // Dynamique  
+        pop.dynamics.phaseNb=5;
         pop.dynamics.G0.density.put("Death",Operators.copyFunction(G0ToDeath));
         pop.dynamics.G0.density.put("G1", Operators.copyFunction(G0ToG1));
         pop.dynamics.G1.density.put("G0", Operators.copyFunction(G1ToG0));
@@ -96,6 +97,7 @@ public class ChronoCell {
         
         // Premier jeux de fonctions theta
         ThetaStructure initTheta= new ThetaStructure();
+//        initTheta.phaseNb=pop.dynamics.phaseNb;
         StableSolution.StableInitialCondition(initTheta,pop.dynamics);
         pop.theta.add(initTheta);
         pop.currentTheta=0;
@@ -103,7 +105,7 @@ public class ChronoCell {
         
          // treatment
         double simulationTime =336.0;
-        int fractions=5;
+        int fractions=10;
         double totalDose =45.0;
         double intervalBetweenDose=simulationTime/(fractions+1);
         double fractionDose=totalDose/fractions;
@@ -119,10 +121,16 @@ public class ChronoCell {
         
         
         CellPopulationOperators.simulateCellPopulation(pop,simulation.treat, simulationTime);
+        FunctionStructure populationSize=Operators.createFunction(0.0, simulationTime, step);
+        for (int i=0;i<=Math.round(simulationTime/step);i++){
+            populationSize.values[i]=CellPopulationOperators.GetPopulationSize(pop, step*i);
+        }
         
-        GUISimulation win =new GUISimulation();
+        GUIPopulation win =new GUIPopulation();
         win.SetFunction(pop);
         win.setVisible(true);
+        
+        Operators.plotFunction(populationSize);
  
     }
     

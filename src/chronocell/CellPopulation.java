@@ -12,7 +12,6 @@ import java.util.ArrayList;
  * @author goby
  */
 public class CellPopulation {
-    int phaseNb=5;
     double size=0.0;
     CellDynamics dynamics=new CellDynamics();
     ArrayList<ThetaStructure> theta=new ArrayList();
