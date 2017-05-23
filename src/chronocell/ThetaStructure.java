@@ -11,7 +11,8 @@ package chronocell;
  */
 public class ThetaStructure {
     int phaseNb=5;
-    CellDynamics dyn= new CellDynamics();
+    double startingTime=0.0;
+//    CellDynamics dyn= new CellDynamics();
     FunctionStructure G0 = new FunctionStructure(), G1 = new FunctionStructure(),S = new FunctionStructure(),G2 = new FunctionStructure(),M = new FunctionStructure();
     //FunctionStructure[] tab= new FunctionStructure[] {G0,G1,S,G2,M};
     

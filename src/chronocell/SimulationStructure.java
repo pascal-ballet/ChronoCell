@@ -25,4 +25,5 @@ public class SimulationStructure {
     int currentSolution=0;
     TreatmentStructure treat=null;
     ThetaStructure[] theta=null;
+    CellPopulation pop=null;
     }

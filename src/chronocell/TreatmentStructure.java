@@ -12,4 +12,5 @@ package chronocell;
 public class TreatmentStructure {
     double[] times=null;
     double[] doses=null;
+    int nextDose=0;
 }

@@ -96,62 +96,34 @@ public class ChronoCell {
         
         // Premier jeux de fonctions theta
         ThetaStructure initTheta= new ThetaStructure();
-        StableSolution.StableInitialCondition(initTheta);
+        StableSolution.StableInitialCondition(initTheta,pop.dynamics);
         pop.theta.add(initTheta);
+        pop.currentTheta=0;
         
         
+         // treatment
+        double simulationTime =336.0;
+        int fractions=5;
+        double totalDose =45.0;
+        double intervalBetweenDose=simulationTime/(fractions+1);
+        double fractionDose=totalDose/fractions;
+        simulation.treat= new TreatmentStructure();
+        simulation.treat.times= new double[fractions+1];
+        simulation.treat.doses= new double[fractions+1];
+        for (int i=0;i<fractions;i++){
+            simulation.treat.times[i]=(i+1)*intervalBetweenDose;
+            simulation.treat.doses[i]=fractionDose;
+        }
+        simulation.treat.times[fractions]=Double.NaN;
+        simulation.treat.doses[fractions]=0.0;
         
         
-        
-        
-        
-        
-            
-            
-            
-    //Network creation
-        CellDynamics dynamics=new CellDynamics();
-//        
-        
-        dynamics.G0.density.put("Death", G0ToDeath);
-        dynamics.G0.density.put("G1", G0ToG1);
-        dynamics.G1.density.put("G0", G1ToG0);
-        dynamics.G1.density.put("S", G1ToS);
-        dynamics.S.density.put("G2", SToG2);
-        dynamics.G2.density.put("M", G2ToM);
-        dynamics.M.density.put("G1", MToG1); 
-        
-//       
-   
-        // treatment
-            double simulationTime =336.0;
-            int fractions=5;
-            double totalDose =45.0;
-            double intervalBetweenDose=simulationTime/(fractions+1);
-            double fractionDose=totalDose/fractions;
-            simulation.treat= new TreatmentStructure();
-            simulation.treat.times= new double[fractions+1];
-            simulation.treat.doses= new double[fractions+1];
-            for (int i=0;i<fractions;i++){
-                simulation.treat.times[i]=(i+1)*intervalBetweenDose;
-                simulation.treat.doses[i]=fractionDose;
-            }
-            simulation.treat.times[fractions]=Double.NaN;
-            simulation.treat.doses[fractions]=0.0;
-            simulation.theta= new ThetaStructure[simulation.treat.times.length];
-            for (int i=0;i<simulation.treat.times.length;i++){
-                simulation.theta[i] = new ThetaStructure();
-            }
-            simulation.theta[0].dyn=dynamics;  
-              
-        CellDynamicsOperators.DynamicsFilling(simulation.theta[0].dyn);
-        
-        StableSolution.StableInitialCondition(simulation.theta[0]);
-        SimulationStructureOperators.run(simulation, simulationTime);
+        CellPopulationOperators.simulateCellPopulation(pop,simulation.treat, simulationTime);
         
         GUISimulation win =new GUISimulation();
-        win.SetFunction(simulation);
+        win.SetFunction(pop);
         win.setVisible(true);
+ 
     }
     
 }

@@ -324,21 +324,21 @@ public class GUISimulation extends javax.swing.JFrame {
             }
         });
     }
-    SimulationStructure sim;
-    public void SetFunction(SimulationStructure simulation){
-        sim=simulation;
-        jSlider1.setMaximum((int) (Math.round(sim.currentTime/sim.timeStep)));
+    CellPopulation pop;
+    public void SetFunction(CellPopulation population){
+        pop=population;
+        jSlider1.setMaximum((int) (Math.round(pop.time/pop.timeStep)));
 //        System.err.format("slider max %d\n", (int) (Math.round(sim.currentTime/sim.timeStep)));
     }
     @Override
     public void paint(Graphics g){
         super.paint(g);
-        jLabel4.setText(String.format("%f", jSlider1.getValue()*sim.timeStep));
+        jLabel4.setText(String.format("%f", jSlider1.getValue()*pop.timeStep));
         FunctionStructure[] tempFunction=new FunctionStructure[5];
         for (int phase=1;phase<5;phase++){
-            tempFunction[phase] =Operators.createFunction(0.0,sim.theta[sim.currentSolution].dyn.getPhase(phase).SolutionFilter.max,sim.timeStep);
+            tempFunction[phase] =Operators.createFunction(0.0,pop.dynamics.getPhase(phase).SolutionFilter.max,pop.timeStep);
             for (int i=0;i<tempFunction[phase].maxIndex;i++){
-                tempFunction[phase].values[i]=SimulationStructureOperators.GetSimulationValue(sim, phase, jSlider1.getValue()*tempFunction[phase].step,i*tempFunction[phase].step);
+                tempFunction[phase].values[i]=CellPopulationOperators.GetPhaseValue(pop, phase, jSlider1.getValue()*tempFunction[phase].step,i*tempFunction[phase].step);
             }
             FillPanelFunction(tempFunction[phase], phase);
         }
@@ -374,7 +374,7 @@ public class GUISimulation extends javax.swing.JFrame {
         GetLabelFromItsTollTipText(jp, "X min").setText((new Double(fun.min)).toString()); // X min
         GetLabelFromItsTollTipText(jp, "X MAX").setText((new Double(fun.max)).toString()); // X MAX
         GetLabelFromItsTollTipText(jp, "Y MAX").setText((new Double(maxVal1)).toString()); // Y MAX
-        GetLabelFromItsTollTipText(jp, "PHASE").setText(sim.theta[sim.currentSolution].dyn.getPhase(pos).name + " "); // PHASE
+        GetLabelFromItsTollTipText(jp, "PHASE").setText(pop.dynamics.getPhase(pos).name + " "); // PHASE
     }
     
     private JLabel GetLabelFromItsTollTipText(JPanel p, String txt) {

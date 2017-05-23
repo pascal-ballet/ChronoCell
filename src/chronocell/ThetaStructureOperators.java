@@ -16,9 +16,9 @@ import static chronocell.Operators.TranslateFunction;
  * @author goby
  */
 public class ThetaStructureOperators {
-    public static void ComputeThetaNextValues(ThetaStructure theta){
+    public static void ComputeThetaNextValues(ThetaStructure theta,CellDynamics dyn){
         // If solutions' support is filled, increase the size of array sol.values
-        for (int i=0;i<theta.phaseNb;i++){
+        for (int i=0;i<dyn.phaseNb;i++){
             if (theta.getPhase(i).minIndex==0){
                 DoubleArraySizeToLeft(theta.getPhase(i));
             }
@@ -28,8 +28,7 @@ public class ThetaStructureOperators {
         double nextVal= 0.0;
         FunctionStructure tempConvolution= new FunctionStructure();
         // phase G0
-            tempConvolution=TranslateFunction(theta.G0.min, theta.dyn.G0.ThetaConvolution);
-//            nextVal=theta.dyn.G1.weight.get("G0")*IntegrateFunction(MultiplyFunctions(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
+            tempConvolution=TranslateFunction(theta.G0.min, dyn.G0.ThetaConvolution);
             nextVal=IntegrateFunction(MultiplyFunctions(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
             theta.G0.min=theta.G0.min-theta.G0.step;
             theta.G0.minIndex-=1;
@@ -38,17 +37,17 @@ public class ThetaStructureOperators {
             
         // phase G1
             // from G0
-            tempConvolution=TranslateFunction(theta.G1.min, theta.dyn.G1.ThetaConvolution);
+            tempConvolution=TranslateFunction(theta.G1.min, dyn.G1.ThetaConvolution);
             nextVal=IntegrateFunction(MultiplyFunctions(theta.G0,tempConvolution),tempConvolution.min,tempConvolution.max);
             // from M
-            tempConvolution=TranslateFunction(theta.G1.min, theta.dyn.M.density.get("G1"));
+            tempConvolution=TranslateFunction(theta.G1.min, dyn.M.density.get("G1"));
             nextVal+=2*IntegrateFunction(MultiplyFunctions(theta.M,tempConvolution),tempConvolution.min,tempConvolution.max);
             theta.G1.min=theta.G1.min-theta.G1.step;
             theta.G1.minIndex-=1;
             theta.G1.values[theta.G1.minIndex]=nextVal;
             
         // phase S
-            tempConvolution=TranslateFunction(theta.S.min, theta.dyn.S.ThetaConvolution);
+            tempConvolution=TranslateFunction(theta.S.min, dyn.S.ThetaConvolution);
            
             nextVal=IntegrateFunction(MultiplyFunctions(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
             theta.S.min=theta.S.min-theta.S.step;
@@ -56,7 +55,7 @@ public class ThetaStructureOperators {
             theta.S.values[theta.S.minIndex]=nextVal;
             
         // phase G2
-           tempConvolution=TranslateFunction(theta.G2.min, theta.dyn.S.density.get("G2"));
+           tempConvolution=TranslateFunction(theta.G2.min, dyn.S.density.get("G2"));
            
             nextVal=IntegrateFunction(MultiplyFunctions(theta.S,tempConvolution),tempConvolution.min,tempConvolution.max);
             theta.G2.min=theta.G2.min-theta.G2.step;
@@ -64,7 +63,7 @@ public class ThetaStructureOperators {
             theta.G2.values[theta.G2.minIndex]=nextVal;
            
         // phase M
-           tempConvolution=TranslateFunction(theta.M.min, theta.dyn.G2.density.get("M"));
+           tempConvolution=TranslateFunction(theta.M.min, dyn.G2.density.get("M"));
            
            nextVal=IntegrateFunction(MultiplyFunctions(theta.G2,tempConvolution),tempConvolution.min,tempConvolution.max);
            theta.M.min=theta.M.min-theta.M.step;

@@ -12,6 +12,7 @@ import java.util.Hashtable;
  * @author goby
  */
 public class CellDynamics {
+    int phaseNb=5;
     Phase G0= PhaseOperators.createPhase("G0");
     Phase G1= PhaseOperators.createPhase("G1");
     Phase S= PhaseOperators.createPhase("S");
