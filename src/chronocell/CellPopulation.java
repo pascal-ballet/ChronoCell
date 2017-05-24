@@ -19,6 +19,6 @@ public class CellPopulation {
     double time=0.0;
     double timeStep=0.1;
     // paramètres environementaux
-    double pO2=20.0,alpha=0.044,beta=0.089,m=3.0;
+    double pO2=0.0,alpha=0.044,beta=0.089,m=3.0;
     int k=3;
 }

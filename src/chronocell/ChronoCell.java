@@ -34,13 +34,10 @@ public class ChronoCell {
      */
     public static void main(String[] args) {
         Numbers.minStep=0.00001;
-        // Parameters
-        SimulationStructure simulation=new SimulationStructure();
-        simulation.timeStep=(0.1);
-        // Paramètres à placer
-            // uitliser le timeStep de simulationStructure
         
-        double pO2=20.0,C=1.0,B=0.075,M=26.3;
+        
+        SimulationStructure simulation=new SimulationStructure();
+        simulation.timeStep=0.1;
         
         // Dynamique initiale des phases
         double support0=30.0,support2=15.0;
@@ -85,6 +82,7 @@ public class ChronoCell {
         pop.size=1.0;
         // Dynamique  
         pop.dynamics.phaseNb=5;
+        pop.pO2=simulation.pO2;
         pop.dynamics.G0.density.put("Death",Operators.copyFunction(G0ToDeath));
         pop.dynamics.G0.density.put("G1", Operators.copyFunction(G0ToG1));
         pop.dynamics.G1.density.put("G0", Operators.copyFunction(G1ToG0));
@@ -109,6 +107,7 @@ public class ChronoCell {
         double totalDose =45.0;
         double intervalBetweenDose=simulationTime/(fractions+1);
         double fractionDose=totalDose/fractions;
+        simulation.pop=CellPopulationOperators.copyCellPopulation(pop);
         simulation.treat= new TreatmentStructure();
         simulation.treat.times= new double[fractions+1];
         simulation.treat.doses= new double[fractions+1];

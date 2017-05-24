@@ -18,7 +18,6 @@ public class CellDynamics {
     Phase S= PhaseOperators.createPhase("S");
     Phase G2= PhaseOperators.createPhase("G2");
     Phase M= PhaseOperators.createPhase("M");
-//    Phase phases[]={G0,G1,S,G2,M};
     
     public Phase getPhase(int i){
         switch(i){

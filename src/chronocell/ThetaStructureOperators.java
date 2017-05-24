@@ -55,7 +55,7 @@ public class ThetaStructureOperators {
             theta.S.values[theta.S.minIndex]=nextVal;
             
         // phase G2
-           tempConvolution=TranslateFunction(theta.G2.min, dyn.S.density.get("G2"));
+           tempConvolution=TranslateFunction(theta.G2.min, dyn.G2.ThetaConvolution);
            
             nextVal=IntegrateFunction(MultiplyFunctions(theta.S,tempConvolution),tempConvolution.min,tempConvolution.max);
             theta.G2.min=theta.G2.min-theta.G2.step;
@@ -63,11 +63,22 @@ public class ThetaStructureOperators {
             theta.G2.values[theta.G2.minIndex]=nextVal;
            
         // phase M
-           tempConvolution=TranslateFunction(theta.M.min, dyn.G2.density.get("M"));
+           tempConvolution=TranslateFunction(theta.M.min, dyn.M.ThetaConvolution);
            
            nextVal=IntegrateFunction(MultiplyFunctions(theta.G2,tempConvolution),tempConvolution.min,tempConvolution.max);
            theta.M.min=theta.M.min-theta.M.step;
             theta.M.minIndex-=1;
            theta.M.values[theta.M.minIndex]=nextVal;
     }
+    
+    public static ThetaStructure copyTheta(ThetaStructure theta){
+      ThetaStructure copy=new ThetaStructure();
+      copy.startingTime=theta.startingTime;
+      copy.G0=Operators.copyFunction(theta.G0);
+      copy.G1=Operators.copyFunction(theta.G1);
+      copy.S=Operators.copyFunction(theta.S);
+      copy.G2=Operators.copyFunction(theta.G2);
+      copy.M=Operators.copyFunction(theta.M);    
+      return copy;
+    };
 }

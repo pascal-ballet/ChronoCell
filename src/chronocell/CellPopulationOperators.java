@@ -7,6 +7,7 @@ package chronocell;
 
 import static chronocell.Operators.survivalProbability;
 import java.time.Clock;
+import java.util.ArrayList;
 //import static chronocell.SimulationStructureOperators.ApplyTreatment;
 
 /**
@@ -73,4 +74,23 @@ public class CellPopulationOperators {
 //            population.values[i]=SimulationStructureOperators.GetSimulationPopulationSize(simulation, i*simulation.timeStep);
         }
     };
+    
+    public static CellPopulation copyCellPopulation(CellPopulation pop){
+        CellPopulation copy=new CellPopulation();
+        copy.size=pop.size;
+        copy.dynamics=CellDynamicsOperators.copyDynamics(pop.dynamics);
+        for (int i=0;i<pop.theta.size();i++){
+            copy.theta.add(ThetaStructureOperators.copyTheta(pop.theta.get(i)));
+        }
+        copy.currentTheta=pop.currentTheta;
+        copy.time=pop.time;
+        copy.timeStep=pop.timeStep;
+        copy.pO2=pop.pO2;
+        copy.alpha=pop.alpha;
+        copy.beta=pop.beta;
+        copy.m=pop.m;
+        copy.k=pop.k;
+        return copy;
+    };
+    
 }
