@@ -74,10 +74,10 @@ public class SimulationStructureOperators {
 //        return pop;
 //    };
     
-//    public static void run(SimulationStructure simu,double time){
-//        for (int i=0;i<(Math.round(time/simu.timeStep));i++){            
-//            SimulationStructureOperators.ComputeSimulationNextValue(simu);
-////            population.values[i]=SimulationStructureOperators.GetSimulationPopulationSize(simulation, i*simulation.timeStep);
-//        }
-//    };
+    public static void run(SimulationStructure simu){
+        for (int i=0;i<(Math.round(simu.duration/simu.timeStep));i++){            
+            CellPopulationOperators.ComputeOneTimeStep(simu.pop,simu.treat);
+//            population.values[i]=SimulationStructureOperators.GetSimulationPopulationSize(simulation, i*simulation.timeStep);
+        }
+    };
 }

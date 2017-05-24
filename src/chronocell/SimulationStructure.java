@@ -20,6 +20,7 @@ public class SimulationStructure {
     double pO2=5.0;
     double timeStep=0.0;
     double currentTime=0.0;
+    double duration=0.0;
     int nextTreatment=0;
     // superflu mais pratique pôur coder
     int currentSolution=0;
