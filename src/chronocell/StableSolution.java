@@ -80,7 +80,8 @@ public class StableSolution {
         
         for (int i=0;i<dyn.phaseNb;i++){
 //             Operators.plotFunction(simulation.theta[0].getPhase(i));
-            theta.setPhase(i,Operators.AffineFunctionTransformation(LaplaceCoef[i],0.0,expo));
-        }  
+            theta.setPhase(i,Operators.AffineFunctionTransformation(10*LaplaceCoef[i],0.0,expo));
+        } 
+//        theta.setPhase(1,Operators.AffineFunctionTransformation(10.0*LaplaceCoef[1],0.0,expo));
     }
 }

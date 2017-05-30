@@ -45,11 +45,12 @@ public class CellPopulationOperators {
 //            thetaNumber+=1;
 //        }
 // moche, à réparer
-        for (int i=0;i<pop.currentTheta;i++){
+        for (int i=1;i<=pop.currentTheta;i++){
             if (T>=pop.theta.get(i).startingTime){
                 thetaNumber+=1;
             }
         }
+//        System.out.println("theta= "+thetaNumber);
         return Operators.GetFunctionValue(pop.theta.get(thetaNumber).getPhase(phase),t-T)
               *Operators.GetFunctionValue(pop.dynamics.getPhase(phase).SolutionFilter,t);
     };

@@ -114,7 +114,7 @@ public class Operators {
           double proba=Math.exp(-p[1]*dose*OMF.op(p[0],p[3],p[4])*z);
 //                System.out.println("proba="+proba);
             if (p[5]==3){
-                return 0.8*proba;
+                return 0.0*proba;
             }
           else{
               return proba;
