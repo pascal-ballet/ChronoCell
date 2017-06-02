@@ -36,11 +36,11 @@ public class ChronoCell {
     public static void main(String[] args) {
         Numbers.minStep=0.00001;
         double step=0.1;
-        double C=1.0;
-        double B=0.075;
-        double alpha=0.044,beta=0.089;
-        double m=3.0,k=3.0;
-        double pO2=20.0;
+//        double C=1.0;
+//        double B=0.075;
+//        double alpha=0.044,beta=0.089;
+//        double m=3.0,k=3.0;
+//        double pO2=20.0;
     
         
         
@@ -73,7 +73,7 @@ public class ChronoCell {
              // G2->M
             FunctionStructure G2ToM=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support2),step); 
 //            Operators.MapFunctionValues(G2ToM,3.0,support2,Operators.continuousGeometricDistribution,3.0,pO2,C,B,m);
-            Operators.MapFunctionValues(G2ToM,3.0,support2,Operators.gaussian,3.0,1.0);
+            Operators.MapFunctionValues(G2ToM,3.0,support2,Operators.gaussian,13.0,1.0);
             G2ToM=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G2ToM, G2ToM.min, G2ToM.max),0, G2ToM);
              // M->G1
             FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),step); 
@@ -134,11 +134,14 @@ public class ChronoCell {
         
 //        CellPopulation popTemp=new CellPopulation();
         
-        
+        TreatmentStructure worst=new TreatmentStructure();
+        TreatmentStructure best=new TreatmentStructure();
+        double temp=0.0;
+        double Max=300.0, Min=300;
 //        for (int h1=1;h1<2;h1++){
-        int h1=15,h2=50,h3=100;
-//            for (int h2=h1+1;h2<=duration-1;h2+=4){
-//                for (int h3=h2+1;h3<=duration;h3+=4){
+        int h1=15;//,h2=50,h3=100;
+            for (int h2=h1+1;h2<=duration-1;h2+=1){
+                for (int h3=h2+1;h3<=duration;h3+=1){
             
                 SimulationStructure simulation=new SimulationStructure();
                 simulation.duration=duration;
@@ -156,11 +159,20 @@ public class ChronoCell {
                 simulation.treat.times[fractions]=Double.NaN;
                 simulation.treat.doses[fractions]=0.0;        
                 SimulationStructureOperators.run(simulation);
-                results.add(CellPopulationOperators.GetPopulationSize(simulation.pop, simulation.pop.time));
+                temp=CellPopulationOperators.GetPopulationSize(simulation.pop, simulation.pop.time);
+                results.add(temp);
+                if (temp<Min){
+                    best=simulation.treat;
+                    Min=temp;
+                }
+                if (temp>Max){
+                    worst=simulation.treat;
+                    Max=temp;
+                }
 //                popTemp=simulation.pop;
 //                System.out.println("size="+CellPopulationOperators.GetPopulationSize(simulation.pop, simulation.pop.time));
-//                }
-//            }
+                }
+            }
 //        }
 //        
         FunctionStructure comp=Operators.createFunction(0.0,(double) results.size(), 1.0);
@@ -168,6 +180,9 @@ public class ChronoCell {
             comp.values[i]=results.get(i);
         }
         Operators.plotFunction(comp);
+        System.out.println("min= "+Operators.GetFunctionMinValue(comp)+"max= "+Operators.GetFunctionMaxValue(comp));
+        System.out.println("Best :"+best.times[0]+","+best.times[1]+","+best.times[2]+".");
+        System.out.println("Worst :"+worst.times[0]+","+worst.times[1]+","+worst.times[2]+".");
 //        simulation2.duration =120.0;
 //        fractions=5;
 //        totalDose =45.0;
@@ -196,9 +211,9 @@ public class ChronoCell {
 //        win.SetFunction(simulation1.pop);
 //        win.setVisible(true);
 //        
-        GUIPopulation win2 =new GUIPopulation();
-        win2.SetFunction(simulation.pop);
-        win2.setVisible(true);
+//        GUIPopulation win2 =new GUIPopulation();
+//        win2.SetFunction(simulation.pop);
+//        win2.setVisible(true);
 //        
 //        Operators.plotFunction(simulation.pop.theta.get(0).G1);
 //        Operators.plotFunction(simulation.pop.theta.get(0).S);
