@@ -106,10 +106,10 @@ public class ChronoCell {
         pop.theta.add(initTheta);
         pop.currentTheta=0;
         
-        ArrayList<Double> results=new ArrayList<>();
+//        ArrayList<Double> results=new ArrayList<>();
         
          // treatment
-        double duration =168.0;
+        double duration =300.0;
         int fractions=4;
         double totalDose =45.0;
 //        double intervalBetweenDose=simulation1.duration/(fractions+1);
@@ -136,57 +136,94 @@ public class ChronoCell {
         
         TreatmentStructure worst=new TreatmentStructure();
         TreatmentStructure best=new TreatmentStructure();
+        best.times= new double[fractions+1];
+        best.doses= new double[fractions+1];
+        worst.times= new double[fractions+1];
+        worst.doses= new double[fractions+1];
         double temp=0.0;
-        double Max=0.0, Min=1000.0;
+        double Max=0.0, Min=100000.0;
 //        for (int h1=1;h1<2;h1++){
         int h1=1;//,h2=50,h3=100;
-            for (int h2=h1+1;h2<=duration-2;h2+=1){
-                for (int h3=h2+1;h3<=duration-1;h3+=1){
-                    for (int h4=h3+1;h4<=duration;h4+=1){
-            
+        best.times[0]=h1;
+        best.doses[0]=fractionDose;
+        for (int c=1;c<best.times.length;c++){
+            best.times[c]=Double.NaN;
+            best.doses[c]=fractionDose;
+        }
+        double lastBestTime=0.0;
+        for (int c=1;c<best.times.length-1;c++){
+//                System.out.println(" c= "+c);
+            boolean firstRound=true;
+            for (int h=((int) best.times[c-1])+8;h<=best.times[c-1]+96;h+=1){
                 SimulationStructure simulation=new SimulationStructure();
                 simulation.duration=duration;
                 simulation.timeStep=step;
                 simulation.pop=CellPopulationOperators.copyCellPopulation(pop);
-                simulation.treat= new TreatmentStructure();
-                simulation.treat.times= new double[fractions+1];
-                simulation.treat.doses= new double[fractions+1];
-                simulation.treat.times[0]=(double) h1;
-                simulation.treat.times[1]=(double) h2;
-                simulation.treat.times[2]=(double) h3;
-                simulation.treat.times[3]=(double) h4;
-                simulation.treat.doses[0]=fractionDose;
-                simulation.treat.doses[1]=fractionDose;
-                simulation.treat.doses[2]=fractionDose;
-                simulation.treat.doses[3]=fractionDose;
-                simulation.treat.times[fractions]=Double.NaN;
-                simulation.treat.doses[fractions]=0.0;        
+                best.times[c]=h;
+                best.nextDose=0;
+                simulation.treat= best;
                 SimulationStructureOperators.run(simulation);
                 temp=CellPopulationOperators.GetPopulationSize(simulation.pop, simulation.pop.time);
-                results.add(temp);
+                if (firstRound==true){
+                    lastBestTime=h;
+                    Min=temp;
+                    firstRound=false;
+                }
                 if (temp<Min){
-                    best=simulation.treat;
+                    lastBestTime=h;
                     Min=temp;
                 }
+            }
+            best.times[c]=lastBestTime;
+        }
+        
+        worst.times[0]=h1;
+        worst.doses[0]=fractionDose;
+        for (int c=1;c<worst.times.length;c++){
+            worst.times[c]=Double.NaN;
+            worst.doses[c]=fractionDose;
+        }
+        double lastWorstTime=0.0;
+        for (int c=1;c<worst.times.length-1;c++){
+//                System.out.println(" c= "+c);
+            boolean firstRound=true;
+            for (int h=((int) worst.times[c-1])+8;h<=worst.times[c-1]+96;h+=1){
+                SimulationStructure simulation=new SimulationStructure();
+                simulation.duration=duration;
+                simulation.timeStep=step;
+                simulation.pop=CellPopulationOperators.copyCellPopulation(pop);
+                worst.times[c]=h;
+                worst.nextDose=0;
+                simulation.treat= worst;
+//                System.out.println("Worst :"+worst.times[0]+","+worst.times[1]+","+worst.times[2]+","+worst.times[3]+".");
+                SimulationStructureOperators.run(simulation);
+//                System.out.println("nextdose"+simulation.treat.nextDose);
+                temp=CellPopulationOperators.GetPopulationSize(simulation.pop, simulation.pop.time);
+                if (firstRound==true){
+                    lastWorstTime=h;
+                    Max=temp;
+                    firstRound=false;
+                }
                 if (temp>Max){
-                    worst=simulation.treat;
+                    lastWorstTime=h;
                     Max=temp;
                 }
-//                popTemp=simulation.pop;
-//                System.out.println("size="+CellPopulationOperators.GetPopulationSize(simulation.pop, simulation.pop.time));
-                }
             }
+            worst.times[c]=lastWorstTime;
+//            System.out.println("Min = "+Min);
         }
 //        
-        FunctionStructure comp=Operators.createFunction(0.0,(double) results.size(), 1.0);
-        for (int i=0;i<comp.maxIndex;i++){
-            comp.values[i]=results.get(i);
-        }
-        comp=Operators.CropFunction(comp);
-        Operators.plotFunction(comp);
-        System.out.println("min= "+Operators.GetFunctionMinValue(comp)+"max= "+Operators.GetFunctionMaxValue(comp));
-        System.out.println("Best :"+best.times[0]+","+best.times[1]+","+best.times[2]+".");
-        System.out.println("Worst :"+worst.times[0]+","+worst.times[1]+","+worst.times[2]+".");
+//        FunctionStructure comp=Operators.createFunction(0.0,(double) results.size(), 1.0);
+//        for (int i=0;i<comp.maxIndex;i++){
+//            comp.values[i]=results.get(i);
+//        }
+//        comp=Operators.CropFunction(comp);
+//        Operators.plotFunction(comp);
+        System.out.println("min= "+Min);
+        System.out.println("Best :"+best.times[0]+","+best.times[1]+","+best.times[2]+","+best.times[3]+".");
+        System.out.println("max= "+Max);
+        System.out.println("Worst :"+worst.times[0]+","+worst.times[1]+","+worst.times[2]+","+worst.times[3]+".");
+//        System.out.println("Worst :"+worst.times[0]+","+worst.times[1]+","+worst.times[2]+".");
 //        simulation2.duration =120.0;
 //        fractions=5;
 //        totalDose =45.0;

@@ -29,6 +29,7 @@ public class CellPopulationOperators {
     }
     
     public static void ComputeOneTimeStep(CellPopulation pop,TreatmentStructure treat){
+//        System.out.println("nextDOse="+treat.nextDose);
             if (pop.time>=treat.times[treat.nextDose]){
                 ApplyTreatment(treat.doses[treat.nextDose],pop);
                 treat.nextDose+=1;
