@@ -110,7 +110,7 @@ public class ChronoCell {
         
          // treatment
         double duration =168.0;
-        int fractions=3;
+        int fractions=4;
         double totalDose =45.0;
 //        double intervalBetweenDose=simulation1.duration/(fractions+1);
         double fractionDose=totalDose/fractions;
@@ -137,11 +137,12 @@ public class ChronoCell {
         TreatmentStructure worst=new TreatmentStructure();
         TreatmentStructure best=new TreatmentStructure();
         double temp=0.0;
-        double Max=300.0, Min=300;
+        double Max=0.0, Min=1000.0;
 //        for (int h1=1;h1<2;h1++){
-        int h1=15;//,h2=50,h3=100;
-            for (int h2=h1+1;h2<=duration-1;h2+=1){
-                for (int h3=h2+1;h3<=duration;h3+=1){
+        int h1=1;//,h2=50,h3=100;
+            for (int h2=h1+1;h2<=duration-2;h2+=1){
+                for (int h3=h2+1;h3<=duration-1;h3+=1){
+                    for (int h4=h3+1;h4<=duration;h4+=1){
             
                 SimulationStructure simulation=new SimulationStructure();
                 simulation.duration=duration;
@@ -153,9 +154,11 @@ public class ChronoCell {
                 simulation.treat.times[0]=(double) h1;
                 simulation.treat.times[1]=(double) h2;
                 simulation.treat.times[2]=(double) h3;
+                simulation.treat.times[3]=(double) h4;
                 simulation.treat.doses[0]=fractionDose;
                 simulation.treat.doses[1]=fractionDose;
                 simulation.treat.doses[2]=fractionDose;
+                simulation.treat.doses[3]=fractionDose;
                 simulation.treat.times[fractions]=Double.NaN;
                 simulation.treat.doses[fractions]=0.0;        
                 SimulationStructureOperators.run(simulation);
@@ -173,12 +176,13 @@ public class ChronoCell {
 //                System.out.println("size="+CellPopulationOperators.GetPopulationSize(simulation.pop, simulation.pop.time));
                 }
             }
-//        }
+        }
 //        
         FunctionStructure comp=Operators.createFunction(0.0,(double) results.size(), 1.0);
         for (int i=0;i<comp.maxIndex;i++){
             comp.values[i]=results.get(i);
         }
+        comp=Operators.CropFunction(comp);
         Operators.plotFunction(comp);
         System.out.println("min= "+Operators.GetFunctionMinValue(comp)+"max= "+Operators.GetFunctionMaxValue(comp));
         System.out.println("Best :"+best.times[0]+","+best.times[1]+","+best.times[2]+".");
