@@ -224,7 +224,7 @@ public class ChronoCell {
                     simulation.pop=CellPopulationOperators.copyCellPopulation(pop);
                     worst.times[c]=h;
                     worst.nextDose=0;
-                    simulation.treat= worst;
+                    simulation.treat=worst;
     //                System.out.println("Worst :"+worst.times[0]+","+worst.times[1]+","+worst.times[2]+","+worst.times[3]+".");
                     SimulationStructureOperators.run(simulation);
     //                System.out.println("nextdose"+simulation.treat.nextDose);
