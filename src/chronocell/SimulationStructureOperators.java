@@ -81,4 +81,27 @@ public class SimulationStructureOperators {
 //            population.values[i]=SimulationStructureOperators.GetSimulationPopulationSize(simulation, i*simulation.timeStep);
         }
     };
+    
+    public static void plotSimulation(SimulationStructure simu){
+        GUIPopulation win =new GUIPopulation();
+        win.SetFunction(simu.pop);
+        win.setVisible(true);
+    };
+    
+    public static void plotPopulationEvolution(SimulationStructure simu){
+        FunctionStructure populationSize=Operators.createFunction(0.0, simu.duration, simu.timeStep);
+        for (int i=0;i<=Math.round(simu.duration/simu.timeStep);i++){
+            populationSize.values[i]=CellPopulationOperators.GetPopulationSize(simu.pop, simu.timeStep*i);
+        }
+        Operators.plotFunction(populationSize);
+    };
+    
+    
+    public static double cumulatedPopulation(SimulationStructure simu){
+        FunctionStructure populationSize=Operators.createFunction(0.0, simu.duration, simu.timeStep);
+        for (int i=0;i<=Math.round(simu.duration/simu.timeStep);i++){
+            populationSize.values[i]=CellPopulationOperators.GetPopulationSize(simu.pop, simu.timeStep*i);
+        }
+        return Operators.IntegrateFunction(populationSize, populationSize.min, populationSize.max);
+    };
 }

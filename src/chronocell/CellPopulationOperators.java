@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class CellPopulationOperators {
     public static void ApplyTreatment(double dose,CellPopulation pop){
-        System.out.println("traitement au temps "+pop.time+", dose = "+dose);
+//        System.out.println("traitement au temps "+pop.time+", dose = "+dose);
         ThetaStructure theta=new ThetaStructure();
         theta.startingTime=pop.time;
         for (int i=0;i<pop.dynamics.phaseNb;i++){
