@@ -83,12 +83,36 @@ public class Operators {
     };
     
         
+    public static FunctionInterface exponentialDistribution = new FunctionInterface(){
+      public double op(double x,double ... p){
+          // p[0] coefficient, p[1] décalage
+          if (x >= p[1]){
+            return Math.exp(-p[0]*(x-p[1]));
+          }  
+          else {
+              return 0;
+          }
+      }
+    };   
+    
     public static FunctionInterface exp = new FunctionInterface(){
       public double op(double x,double ... p){
           // p[0] coefficient
           return Math.exp(p[0]*x);
           }  
     };
+     
+    public static FunctionInterface boundedExponentialDistribution = new FunctionInterface(){
+      public double op(double x,double ... p){
+          // p[0] coefficient, p[1] décalage, p[2] borne sup
+          if ((x >= p[1]) && (x<= p[2])) {
+            return Math.exp(-p[0]*(x-p[1]))/(1.0-Math.exp((p[1]-p[2])/p[0]));
+          }  
+          else {
+              return 0;
+          }
+      }
+    };   
     
     public static FunctionInterface continuousGeometricDistribution = new FunctionInterface(){
       public double op(double x,double ... p){
@@ -107,6 +131,26 @@ public class Operators {
       }  
     };
 
+    
+        public static FunctionInterface piecewiseLinear = new FunctionInterface(){
+      public double op(double x,double ... p){
+          //f(p[2*i])=p[2*i+1]
+          int n=p.length/2;
+          if (x<p[0]){
+              return p[1];
+          }
+          if (x>=p[2*n-2]){
+              return p[2*n-1];
+          }
+          for (int i=0;i<n;i++){
+              if ((x>=p[2*i])&&(x<p[2*i+2])){
+                  return p[2*i+1]+(x-p[2*i])*(p[2*i+3]-p[2*i+1])/(p[2*i+2]-p[2*i]);
+              }
+          }
+          return 0;
+        }  
+    };
+    
     public static FunctionInterface survivalProbability = new FunctionInterface(){
       public double op(double dose,double ... p){
           //p[0]=pO2,p[1]=alpha,p[2]=beta,p[3]=m,p[4]=k,p[5]=phase
@@ -114,13 +158,22 @@ public class Operators {
           double proba=Math.exp(-p[1]*dose*OMF.op(p[0],p[3],p[4])*z);
 //                System.out.println("proba="+proba);
             if ((p[5]==3)||(p[5]==4)){
-                return 0.7*proba;
+                return 0.0*proba;
             }
           else{
-              return proba;
+              return 1.0;//proba;
           }
         }  
     };
+    
+//    public static FunctionInterface survivalFunction = new FunctionInterface(){
+//      public double op(double x,double ... p){
+//          //p[0]=dose,p[1]=phase,p[2]=pO2 ?
+//          switch ((int) p[1]){
+//              case 1: ;
+//          }
+//        }  
+//    };
     
     public static FunctionInterface OMF = new FunctionInterface(){
       public double op(double x,double ... p){
