@@ -20,8 +20,15 @@ public class SurvivalProbabilities {
 // Chaque colone correspond à un dosage, chaque ligne à un temps dans le cycle
 // On décompose ces données en une courbe pour chaque phase, en fonction de son avancement (donc une courbe définie sur [0,1]
 // que l'on va ensuite transformer en fonction du temps aléatoire passé dans la phase
-       public static void survivalProbabilities(double[][] data, double dose,String phase,FunctionStructure curve){
-           
+       public static void survivalProbabilities(double dose,int phase,CellDynamics dynamics, FunctionStructure curve){
+           // il faut ici utiliser la distribution de la durée de la phase, à définir dans dynamics
+           FunctionStructure duree= Operators.copyFunction(dynamics.getPhase(phase).SolutionFilter); // pour l'instant ça n'a aucun sens
+           FunctionStructure OneMinCumulDuree= Operators.copyFunction(dynamics.getPhase(phase).SolutionFilter); // pour l'instant ça n'a aucun sens
+           // créer la piecewise issue des data 
+           for (int i=curve.minIndex;i<curve.maxIndex;i++){
+               
+           }
+           Operators.curve
        }
 //    
 //        Hashtable<String,FunctionStructure> survivalRaw = new Hashtable<String,FunctionStructure>(); 

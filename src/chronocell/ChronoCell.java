@@ -41,36 +41,55 @@ public class ChronoCell {
     /**
      * @param args the command line arguments
      */
+    
+    public static Hashtable<String,double[][]> survivalData = new Hashtable<String,double[][]>(); 
+    
     public static void main(String[] args) {
         Numbers.minStep=0.00001;
         double precision=0.01;
         double step=0.1;
         
-        //-------------- Probabilités de survie (lecture dans un .csv)
-        // Chaque colone correspond à un dosage, chaque ligne à un temps dans le cycle
-        // les temps sont des temps de références, mais on les normalise pour avoir une courbe définie sur [0,1] que l'on distribuera plus tard
-        
-        
-        
-        Hashtable<String,double[][]> survivalData = new Hashtable<String,double[][]>();
-        double[][] temp;        
+    //-------------- Probabilités de survie (lecture dans un .csv)
+    // Chaque colone correspond à un dosage, chaque ligne à un temps dans le cycle
+    // les temps sont des temps de références, mais on les normalise pour avoir une courbe définie sur [0,1] que l'on distribuera plus tard
+
+    
+    double[][] temp;        
        try{
            temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G1.csv");
-           // normalisation des tableaux 
+           // normalisation 
             for (int i=1;i<temp.length;i++){
-                temp[i][0]=temp[i][0]/temp[i][temp[i].length];
+                temp[i][0]=temp[i][0]/(temp[i][temp.length-1]);
+                System.out.println(temp[i][0]);
             }
            survivalData.put("G1",temp);
            survivalData.put("S", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/S.csv"));
+           // normalisation 
+            for (int i=1;i<temp.length;i++){
+                temp[i][0]=temp[i][0]/(temp[i][temp.length-1]);
+                System.out.println(temp[i][0]);
+            }
+           survivalData.put("S",temp);
            survivalData.put("G2", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G2.csv"));
+           // normalisation 
+            for (int i=1;i<temp.length;i++){
+                temp[i][0]=temp[i][0]/(temp[i][temp.length-1]);
+                System.out.println(temp[i][0]);
+            }
+           survivalData.put("G2",temp);
            survivalData.put("M", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/M.csv"));
+           // normalisation 
+            for (int i=1;i<temp.length;i++){
+                temp[i][0]=temp[i][0]/(temp[i][temp.length-1]);
+                System.out.println(temp[i][0]);
+            }
+           survivalData.put("M",temp);
         }
         catch(Exception e){
             e.printStackTrace();
             return;
-        }
-       
-        System.out.println(survivalData.get("G1")[0].length);
+    }
+
         
 //-------------- Dynamique initiale des phases ---------------------------------
             double support0=40.0,support2=15.0;

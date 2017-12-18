@@ -21,6 +21,10 @@ public class CellPopulationOperators {
         theta.startingTime=pop.time;
         for (int i=0;i<pop.dynamics.phaseNb;i++){
             FunctionStructure temp = Operators.copyFunction(pop.theta.get(pop.currentTheta).getPhase(i));
+            // on crée la fonction de survie
+            FunctionStructure survival = Operators.createFunction(temp.min, temp.max, temp.step);
+            // Pour l'instant, on transmet le numero de la phase et toute la dynamique car certaines phases mènent à une phase, d'autre à deux
+            SurvivalProbabilities.survivalProbabilities(dose,i,pop.dynamics, survival);
             temp=Operators.AffineFunctionTransformation(survivalProbability.op(dose,pop.pO2,pop.alpha,pop.beta,pop.m,pop.k,i), 0.0,temp);
             theta.setPhase(i,temp);
         }
