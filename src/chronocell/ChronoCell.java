@@ -14,17 +14,20 @@
 //          * check every loop that involves <fct.maxIndex
 //          * implement initial population size
 //          * adapt survival probability to inner cell time
+//          * move survival distribution to a java class
 package chronocell;
-
+import java.util.*;
 import static chronocell.Operators.IntegrateFunction;
 import static chronocell.Operators.MultiplyFunctions;
 import static chronocell.Operators.PowerOfFunction;
 import static chronocell.Operators.TranslateFunction;
 import java.util.ArrayList;
-import static chronocell.csvToArrayList.csvToArrayList;
+import static chronocell.CsvToArrayList.readTXTFile;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Hashtable;
+import javax.print.attribute.HashAttributeSet;
 //import java.math.BigDecimal;
 //import java.math.BigInteger;
 //import java.math.MathContext;
@@ -43,36 +46,31 @@ public class ChronoCell {
         double precision=0.01;
         double step=0.1;
         
-//-------------- Probabilités de survie (lecture dans un .csv)
-    double[][] proba = new double[8][10];
-    BufferedReader crunchifyBuffer = null;
-    try {
-        String crunchifyLine;
-	crunchifyBuffer = new BufferedReader(new FileReader("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/test.csv"));
-			
-	// How to read file in java line by line?
-        int i=0;
-	while ((crunchifyLine = crunchifyBuffer.readLine()) != null) {
-            ArrayList<String> temp= csvToArrayList(crunchifyLine);
-            for (int j=0;j<10;j++){
-                proba[i][j]=Double.parseDouble(temp.get(j));
-                System.out.println(proba[i][j]);
+        //-------------- Probabilités de survie (lecture dans un .csv)
+        // Chaque colone correspond à un dosage, chaque ligne à un temps dans le cycle
+        // les temps sont des temps de références, mais on les normalise pour avoir une courbe définie sur [0,1] que l'on distribuera plus tard
+        
+        
+        
+        Hashtable<String,double[][]> survivalData = new Hashtable<String,double[][]>();
+        double[][] temp;        
+       try{
+           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G1.csv");
+           // normalisation des tableaux 
+            for (int i=1;i<temp.length;i++){
+                temp[i][0]=temp[i][0]/temp[i][temp[i].length];
             }
-//            System.out.println("Raw CSV data: " + crunchifyLine);
-//            System.out.println("Converted ArrayList data: " + csvToArrayList(crunchifyLine) + "\n");
+           survivalData.put("G1",temp);
+           survivalData.put("S", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/S.csv"));
+           survivalData.put("G2", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G2.csv"));
+           survivalData.put("M", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/M.csv"));
         }
-			
-        } catch (IOException e) {
-                e.printStackTrace();
-        } finally {
-            try {
-                if (crunchifyBuffer != null) crunchifyBuffer.close();
-            } catch (IOException crunchifyException) {
-                    crunchifyException.printStackTrace();
-            }
+        catch(Exception e){
+            e.printStackTrace();
+            return;
         }
-    
-            
+       
+        System.out.println(survivalData.get("G1")[0].length);
         
 //-------------- Dynamique initiale des phases ---------------------------------
             double support0=40.0,support2=15.0;
