@@ -15,6 +15,7 @@
 //          * implement initial population size
 //          * adapt survival probability to inner cell time
 //          * move survival distribution to a java class
+//          * reprendre l'exploitation des données de radiosensib. : rendre toute dose possible
 package chronocell;
 import java.util.*;
 import static chronocell.Operators.IntegrateFunction;
