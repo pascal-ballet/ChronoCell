@@ -134,7 +134,7 @@ public class Operators {
     
         public static FunctionInterface piecewiseLinear = new FunctionInterface(){
       public double op(double x,double ... p){
-          //f(p[2*i])=p[2*i+1]
+          //p [0], puis f(p[2*i])=p[2*i+1] , p[p.length]
           int n=p.length/2;
           if (x<p[0]){
               return p[1];
