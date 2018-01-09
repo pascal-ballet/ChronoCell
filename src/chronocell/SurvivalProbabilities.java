@@ -26,20 +26,25 @@ public class SurvivalProbabilities {
            FunctionStructure OneMinCumulDuree= Operators.copyFunction(dynamics.getPhase(phase).timeOneMinCumul); 
            // créer la piecewise issue des data 
            // On commence par situer le dosage dans le tableau
-           int iDose=0;
-           while(dose>data.getPhase(phase)[iDose][0]) iDose++;
+           int iDose=1;
+           
+           while(dose>data.getPhase(phase)[iDose][0]){ iDose++;
+           }
            iDose--;
+           //System.out.println("tableau"+data.getPhase(phase)[iDose][0]+"dose"+dose);
            // la dose est comprise entre la ligne i et la ligne i+1
            // à terme il faudrait interpoler, mais on peut commencer simplement par une approximation de la dose par celle de la ligne i
            double[] p=new double[(data.getPhase(phase)[0].length-1)*2];
-           for (int j=0;j<p.length;j++){
+           for (int j=0;j<p.length/2;j++){
                p[2*j]=data.getPhase(phase)[0][j];
                p[2*j+1]=data.getPhase(phase)[iDose][j];
            }
            //FunctionStructure survivalProbabilitiesData=Operators.createFunction(0.0, 1.0, duree.step);
            //Operators.MapFunctionValues(survivalProbabilitiesData, 0.0, 1.0, Operators.piecewiseLinear, p);
            FunctionStructure survival=Operators.createFunction(duree.min,duree.max,duree.step);
-           for (double t=survival.min;t<=survival.max;t=t+survival.step){
+           double t=survival.min;
+           for (int i=survival.minIndex;i<=survival.maxIndex;i++){
+                t+=survival.step;
                 FunctionStructure temp=Operators.AffineFunctionTransformation(1/Operators.GetFunctionValue(OneMinCumulDuree,t),0.0,duree);
                 // création de la fonction t/s (on pourrait créer 1/s et en prendre des trasnformation affine, mais le gain n'est pas clair
                 FunctionStructure homo=Operators.createFunction(t, duree.max, duree.step);
@@ -56,6 +61,6 @@ public class SurvivalProbabilities {
 //        FunctionStructure survivalG1=Operators.createFunction(Numbers.CGN(0.0), Numbers.CGN(1.0), step);
 //        Operators.MapFunctionValues(survivalG1,0.0,1.0,Operators.piecewiseLinear,0.0,);
 //        survivalRaw.put("G1", );
-}
+
     
 
