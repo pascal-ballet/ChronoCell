@@ -6,6 +6,7 @@
 package chronocell;
 
 import static chronocell.Operators.survivalProbability;
+import static chronocell.SurvivalProbabilities.survivalProbabilities;
 import java.time.Clock;
 import java.util.ArrayList;
 //import static chronocell.SimulationStructureOperators.ApplyTreatment;
@@ -15,17 +16,17 @@ import java.util.ArrayList;
  * @author goby
  */
 public class CellPopulationOperators {
-    public static void ApplyTreatment(double dose,CellPopulation pop){
+    public static void ApplyTreatment(double dose,CellPopulation pop,SurvivalDataStructure data){
 //        System.out.println("traitement au temps "+pop.time+", dose = "+dose);
         ThetaStructure theta=new ThetaStructure();
         theta.startingTime=pop.time;
         for (int i=0;i<pop.dynamics.phaseNb;i++){
             FunctionStructure temp = Operators.copyFunction(pop.theta.get(pop.currentTheta).getPhase(i));
             // on crée la fonction de survie
-            FunctionStructure survival = Operators.createFunction(temp.min, temp.max, temp.step);
+            //FunctionStructure survival = Operators.createFunction(temp.min, temp.max, temp.step);
             // Pour l'instant, on transmet le numero de la phase et toute la dynamique car certaines phases mènent à une phase, d'autre à deux
-            SurvivalProbabilities.survivalProbabilities(dose,i,pop.dynamics, survival);
-            temp=Operators.AffineFunctionTransformation(survivalProbability.op(dose,pop.pO2,pop.alpha,pop.beta,pop.m,pop.k,i), 0.0,temp);
+            FunctionStructure survival = SurvivalProbabilities.survivalProbabilities(dose, i, pop.dynamics, data);
+            temp=Operators.MultiplyFunctions(survival,temp);
             theta.setPhase(i,temp);
         }
         pop.theta.add(theta);
@@ -57,14 +58,14 @@ public class CellPopulationOperators {
         }
 //        System.out.println("theta= "+thetaNumber);
         return Operators.GetFunctionValue(pop.theta.get(thetaNumber).getPhase(phase),t-T)
-              *Operators.GetFunctionValue(pop.dynamics.getPhase(phase).SolutionFilter,t);
+              *Operators.GetFunctionValue(pop.dynamics.getPhase(phase).solutionFilter,t);
     };
     
     public static double GetPopulationSize(CellPopulation pop, double T){
         FunctionStructure temp=null;
         double size=0.0;
         for (int phase=0;phase<pop.dynamics.phaseNb;phase++){
-            temp=Operators.createFunction(0.0,pop.dynamics.getPhase(phase).SolutionFilter.max,pop.timeStep);
+            temp=Operators.createFunction(0.0,pop.dynamics.getPhase(phase).solutionFilter.max,pop.timeStep);
             for (int i=temp.minIndex;i<temp.maxIndex;i++){
                 temp.values[i]=GetPhaseValue(pop, phase, T,i*temp.step);
             }
