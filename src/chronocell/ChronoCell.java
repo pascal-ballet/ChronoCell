@@ -173,8 +173,8 @@ public class ChronoCell {
         
 //-------------- treatment -----------------------------------------------------
             double duration =300.0;
-            int fractions=1;
-            double totalDose =5.0;
+            int fractions=2;
+            double totalDose =1.0;
             double fractionDose=totalDose/fractions;
             SimulationStructure simulation=new SimulationStructure();
             simulation.duration=duration;
@@ -183,10 +183,10 @@ public class ChronoCell {
             simulation.treat= new TreatmentStructure();
             simulation.treat.times= new double[fractions+1];
             simulation.treat.doses= new double[fractions+1];
-            simulation.treat.times[0]=10;
-//            simulation.treat.times[1]=200;
+            simulation.treat.times[0]=50;
+            simulation.treat.times[1]=200;
             simulation.treat.doses[0]=fractionDose;
-//            simulation.treat.doses[1]=fractionDose;
+            simulation.treat.doses[1]=fractionDose;
             simulation.treat.times[fractions]=Double.NaN;
             simulation.treat.doses[fractions]=0.0;        
             SimulationStructureOperators.run(simulation);
