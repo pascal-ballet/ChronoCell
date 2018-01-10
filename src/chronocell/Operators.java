@@ -101,6 +101,13 @@ public class Operators {
           return Math.exp(p[0]*x);
           }  
     };
+      
+    public static FunctionInterface homographie = new FunctionInterface(){
+      public double op(double x,double ... p){
+          // p[0]=a,p[1]=b,p[2]=c,p[3]=d
+          return (p[0]*x+p[1])/(p[2]*x+p[3]);
+          }  
+    };
      
     public static FunctionInterface boundedExponentialDistribution = new FunctionInterface(){
       public double op(double x,double ... p){
@@ -198,6 +205,7 @@ public class Operators {
         return comp;
     }
     
+       
      
     public static double GetFunctionValue(FunctionStructure fct,double x){
         double y=0.0;

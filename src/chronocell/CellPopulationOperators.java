@@ -20,6 +20,7 @@ public class CellPopulationOperators {
 //        System.out.println("traitement au temps "+pop.time+", dose = "+dose);
         ThetaStructure theta=new ThetaStructure();
         theta.startingTime=pop.time;
+        System.out.println("temps de traitement"+pop.time);
         for (int i=0;i<pop.dynamics.phaseNb;i++){
             FunctionStructure temp = Operators.copyFunction(pop.theta.get(pop.currentTheta).getPhase(i));
             // on crée la fonction de survie
@@ -36,7 +37,7 @@ public class CellPopulationOperators {
     public static void ComputeOneTimeStep(CellPopulation pop,TreatmentStructure treat){
 //        System.out.println("nextDOse="+treat.nextDose);
             if (pop.time>=treat.times[treat.nextDose]){
-                ApplyTreatment(treat.doses[treat.nextDose],pop);
+                ApplyTreatment(treat.doses[treat.nextDose],pop,ChronoCell._survivalData);
                 treat.nextDose+=1;
             }
         ThetaStructureOperators.ComputeThetaNextValues(pop.theta.get(pop.currentTheta),pop.dynamics);

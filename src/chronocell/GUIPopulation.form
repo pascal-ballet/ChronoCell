@@ -72,7 +72,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="lblYMax1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="120" max="32767" attributes="0"/>
+                      <EmptySpace pref="83" max="32767" attributes="0"/>
                       <Component id="lblPhaseName1" min="-2" pref="195" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
@@ -156,7 +156,7 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="lblYMax2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="197" max="32767" attributes="0"/>
+                      <EmptySpace pref="160" max="32767" attributes="0"/>
                       <Component id="lblPhaseName2" min="-2" pref="118" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -230,7 +230,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="lblYMax3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="120" max="32767" attributes="0"/>
+                      <EmptySpace pref="83" max="32767" attributes="0"/>
                       <Component id="lblPhaseName3" min="-2" pref="195" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
@@ -309,7 +309,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="lblYMax4" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="120" max="32767" attributes="0"/>
+                      <EmptySpace pref="83" max="32767" attributes="0"/>
                       <Component id="lblPhaseName4" min="-2" pref="195" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
@@ -426,7 +426,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="jButton1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jButton1"/>
+            <Property name="text" type="java.lang.String" value="Treatment"/>
           </Properties>
         </Component>
       </SubComponents>

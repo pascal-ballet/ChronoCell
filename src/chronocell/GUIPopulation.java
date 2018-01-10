@@ -93,7 +93,7 @@ public class GUIPopulation extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(lblYMax1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
                 .addComponent(lblPhaseName1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(lblXMin1)
@@ -142,7 +142,7 @@ public class GUIPopulation extends javax.swing.JFrame {
                 .addComponent(lblXMax2))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(lblYMax2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 197, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
                 .addComponent(lblPhaseName2, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -183,7 +183,7 @@ public class GUIPopulation extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(lblYMax3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
                 .addComponent(lblPhaseName3, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(lblXMin3)
@@ -228,7 +228,7 @@ public class GUIPopulation extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(lblYMax4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
                 .addComponent(lblPhaseName4, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(lblXMin4)
@@ -274,7 +274,7 @@ public class GUIPopulation extends javax.swing.JFrame {
         jLabel4.setText("0");
         jPanel6.add(jLabel4);
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Treatment");
         jPanel6.add(jButton1);
 
         getContentPane().add(jPanel6, java.awt.BorderLayout.LINE_END);
@@ -340,7 +340,7 @@ public class GUIPopulation extends javax.swing.JFrame {
         jLabel4.setText(String.format("%f", jSlider1.getValue()*pop.timeStep));
         FunctionStructure[] tempFunction=new FunctionStructure[5];
         for (int phase=1;phase<5;phase++){
-            tempFunction[phase] =Operators.createFunction(0.0,pop.dynamics.getPhase(phase).SolutionFilter.max,pop.timeStep);
+            tempFunction[phase] =Operators.createFunction(0.0,pop.dynamics.getPhase(phase).solutionFilter.max,pop.timeStep);
             for (int i=0;i<tempFunction[phase].maxIndex;i++){
                 tempFunction[phase].values[i]=CellPopulationOperators.GetPhaseValue(pop, phase, jSlider1.getValue()*tempFunction[phase].step,i*tempFunction[phase].step);
             }

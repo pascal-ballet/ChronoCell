@@ -15,7 +15,7 @@
 //          * implement initial population size
 //          * adapt survival probability to inner cell time
 //          * move survival distribution to a java class
-//          * reprendre l'exploitation des données de radiosensib. : rendre toute dose possible
+//          * reprendre l'exploitation des données de radiosensib. : interpoler les données de data en fonction de la dose
 package chronocell;
 import java.util.*;
 import static chronocell.Operators.IntegrateFunction;
@@ -43,7 +43,8 @@ public class ChronoCell {
      * @param args the command line arguments
      */
     
-    public static Hashtable<String,double[][]> survivalData = new Hashtable<String,double[][]>(); 
+//    public static Hashtable<String,double[][]> survivalData = new Hashtable<String,double[][]>(); 
+    public static SurvivalDataStructure _survivalData = new SurvivalDataStructure();
     
     public static void main(String[] args) {
         Numbers.minStep=0.00001;
@@ -51,47 +52,57 @@ public class ChronoCell {
         double step=0.1;
         
     //-------------- Probabilités de survie (lecture dans un .csv)
-    // Chaque colone correspond à un dosage, chaque ligne à un temps dans le cycle
+    // Chaque ligne correspond à un dosage(sauf la première), chaque colonne à un temps dans le cycle
     // les temps sont des temps de références, mais on les normalise pour avoir une courbe définie sur [0,1] que l'on distribuera plus tard
 
     
     double[][] temp;        
        try{
+           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G0.csv");
+           // normalisation 
+            for (int j=1;j<temp[0].length;j++){
+                temp[0][j]=temp[0][j]/(temp[0][temp[0].length-1]);
+                System.out.println(temp[0][j]);
+            }
+           
+           _survivalData.G0=temp;
            temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G1.csv");
            // normalisation 
-            for (int i=1;i<temp.length;i++){
-                temp[i][0]=temp[i][0]/(temp[i][temp.length-1]);
-                System.out.println(temp[i][0]);
+            for (int j=1;j<temp[0].length;j++){
+                temp[0][j]=temp[0][j]/(temp[0][temp[0].length-1]);
+                System.out.println(temp[0][j]);
             }
-           survivalData.put("G1",temp);
-           survivalData.put("S", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/S.csv"));
+           
+           _survivalData.G1=temp;
+           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/S.csv");
+//           survivalData.put("S", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/S.csv"));
            // normalisation 
-            for (int i=1;i<temp.length;i++){
-                temp[i][0]=temp[i][0]/(temp[i][temp.length-1]);
-                System.out.println(temp[i][0]);
+            for (int j=1;j<temp[0].length;j++){
+                temp[0][j]=temp[0][j]/(temp[0][temp[0].length-1]);
+                System.out.println(temp[0][j]);
             }
-           survivalData.put("S",temp);
-           survivalData.put("G2", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G2.csv"));
+           _survivalData.S=temp;
+           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G2.csv");
            // normalisation 
-            for (int i=1;i<temp.length;i++){
-                temp[i][0]=temp[i][0]/(temp[i][temp.length-1]);
-                System.out.println(temp[i][0]);
+            for (int j=1;j<temp[0].length;j++){
+                temp[0][j]=temp[0][j]/(temp[0][temp[0].length-1]);
+                System.out.println(temp[0][j]);
             }
-           survivalData.put("G2",temp);
-           survivalData.put("M", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/M.csv"));
+           _survivalData.G2=temp;
+           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/M.csv");
            // normalisation 
-            for (int i=1;i<temp.length;i++){
-                temp[i][0]=temp[i][0]/(temp[i][temp.length-1]);
-                System.out.println(temp[i][0]);
+            for (int j=1;j<temp[0].length;j++){
+                temp[0][j]=temp[0][j]/(temp[0][temp[0].length-1]);
+                System.out.println(temp[0][j]);
             }
-           survivalData.put("M",temp);
+           _survivalData.M=temp;
         }
         catch(Exception e){
             e.printStackTrace();
             return;
     }
 
-        
+    System.out.println(_survivalData.G1[0][0]);    
 //-------------- Dynamique initiale des phases ---------------------------------
             double support0=40.0,support2=15.0;
             // G0->Death
@@ -167,7 +178,7 @@ public class ChronoCell {
 //-------------- treatment -----------------------------------------------------
             double duration =300.0;
             int fractions=2;
-            double totalDose =45.0;
+            double totalDose =10.0;
             double fractionDose=totalDose/fractions;
             SimulationStructure simulation=new SimulationStructure();
             simulation.duration=duration;
@@ -176,8 +187,8 @@ public class ChronoCell {
             simulation.treat= new TreatmentStructure();
             simulation.treat.times= new double[fractions+1];
             simulation.treat.doses= new double[fractions+1];
-            simulation.treat.times[0]=Double.NaN;
-            simulation.treat.times[1]=Double.NaN;
+            simulation.treat.times[0]=100;
+            simulation.treat.times[1]=200;
             simulation.treat.doses[0]=fractionDose;
             simulation.treat.doses[1]=fractionDose;
             simulation.treat.times[fractions]=Double.NaN;
