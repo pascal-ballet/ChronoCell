@@ -16,6 +16,8 @@
 //          * adapt survival probability to inner cell time
 //          * move survival distribution to a java class
 //          * reprendre l'exploitation des données de radiosensib. : interpoler les données de data en fonction de la dose
+//          * écrire proprement la formule de calcul de la proba de survie (pb à la borne inférieure)
+//          * survival d'intégrale non unitaire : vérifier la formule, et l'implémentation
 package chronocell;
 import java.util.*;
 import static chronocell.Operators.IntegrateFunction;
@@ -61,16 +63,14 @@ public class ChronoCell {
            temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G0.csv");
            // normalisation 
             for (int j=1;j<temp[0].length;j++){
-                temp[0][j]=temp[0][j]/(temp[0][temp[0].length-1]);
-                System.out.println(temp[0][j]);
+                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
             }
            
            _survivalData.G0=temp;
            temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G1.csv");
            // normalisation 
             for (int j=1;j<temp[0].length;j++){
-                temp[0][j]=temp[0][j]/(temp[0][temp[0].length-1]);
-                System.out.println(temp[0][j]);
+                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
             }
            
            _survivalData.G1=temp;
@@ -78,22 +78,19 @@ public class ChronoCell {
 //           survivalData.put("S", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/S.csv"));
            // normalisation 
             for (int j=1;j<temp[0].length;j++){
-                temp[0][j]=temp[0][j]/(temp[0][temp[0].length-1]);
-                System.out.println(temp[0][j]);
+                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
             }
            _survivalData.S=temp;
            temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G2.csv");
            // normalisation 
             for (int j=1;j<temp[0].length;j++){
-                temp[0][j]=temp[0][j]/(temp[0][temp[0].length-1]);
-                System.out.println(temp[0][j]);
+                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
             }
            _survivalData.G2=temp;
            temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/M.csv");
            // normalisation 
             for (int j=1;j<temp[0].length;j++){
-                temp[0][j]=temp[0][j]/(temp[0][temp[0].length-1]);
-                System.out.println(temp[0][j]);
+                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
             }
            _survivalData.M=temp;
         }
@@ -101,8 +98,7 @@ public class ChronoCell {
             e.printStackTrace();
             return;
     }
-
-    System.out.println(_survivalData.G1[0][0]);    
+  
 //-------------- Dynamique initiale des phases ---------------------------------
             double support0=40.0,support2=15.0;
             // G0->Death
@@ -177,8 +173,8 @@ public class ChronoCell {
         
 //-------------- treatment -----------------------------------------------------
             double duration =300.0;
-            int fractions=2;
-            double totalDose =10.0;
+            int fractions=1;
+            double totalDose =5.0;
             double fractionDose=totalDose/fractions;
             SimulationStructure simulation=new SimulationStructure();
             simulation.duration=duration;
@@ -187,10 +183,10 @@ public class ChronoCell {
             simulation.treat= new TreatmentStructure();
             simulation.treat.times= new double[fractions+1];
             simulation.treat.doses= new double[fractions+1];
-            simulation.treat.times[0]=100;
-            simulation.treat.times[1]=200;
+            simulation.treat.times[0]=10;
+//            simulation.treat.times[1]=200;
             simulation.treat.doses[0]=fractionDose;
-            simulation.treat.doses[1]=fractionDose;
+//            simulation.treat.doses[1]=fractionDose;
             simulation.treat.times[fractions]=Double.NaN;
             simulation.treat.doses[fractions]=0.0;        
             SimulationStructureOperators.run(simulation);

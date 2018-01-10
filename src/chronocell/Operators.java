@@ -190,10 +190,15 @@ public class Operators {
     };  
       
     public static void MapFunctionValues(FunctionStructure fct,double min, double max,FunctionInterface g,double ... p){
-        for (int i=(int) Math.round(min/fct.step);i<=(int) Math.round(max/fct.step);i++){
-            
-            // vérifier i-fct.minIndex
-            fct.values[i]=g.op((i-fct.minIndex)*fct.step+fct.min,p);
+//        int minIdx=Math.max((int) Math.round(min/fct.step), fct.minIndex);
+//        int maxIdx=Math.min((int) Math.round(max/fct.step), fct.maxIndex);
+//        for (int i=minIdx;i<=maxIdx;i++){
+//            
+//            // vérifier i-fct.minIndex
+//            fct.values[i]=g.op((i-fct.minIndex)*fct.step+fct.min,p);
+//        }
+        for (double x=min;x<=max;x+=fct.step){
+            SetFunctionValue(fct, x, g.op(x, p));
         }
     }
     
@@ -215,7 +220,14 @@ public class Operators {
         return y;
     }
     
-         
+       
+    public static void SetFunctionValue(FunctionStructure fct,double x, double y){
+//        double y=0.0;
+        if ((x>=fct.min) && (x<=fct.max)){
+            fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))]=y;
+            }
+    }
+    
     public static double GetFunctionMaxValue(FunctionStructure fct){
         double maxVal=fct.values[fct.minIndex];
         for (int i=fct.minIndex+1;i<=fct.maxIndex;i++){
