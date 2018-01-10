@@ -17,7 +17,7 @@
 //          * move survival distribution to a java class
 //          * reprendre l'exploitation des données de radiosensib. : interpoler les données de data en fonction de la dose
 //          * écrire proprement la formule de calcul de la proba de survie (pb à la borne inférieure)
-//          * survival d'intégrale non unitaire : vérifier la formule, et l'implémentation
+//          * survival non borné par 1, vérifier implémentation.
 package chronocell;
 import java.util.*;
 import static chronocell.Operators.IntegrateFunction;
