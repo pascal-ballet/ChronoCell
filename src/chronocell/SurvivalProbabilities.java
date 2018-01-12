@@ -39,10 +39,10 @@ public class SurvivalProbabilities {
                p[2*j]=data.getPhase(phase)[0][j+1];
                p[2*j+1]=data.getPhase(phase)[iDose][j+1];
            }
-           FunctionStructure test=Operators.createFunction(0.0, 1.0, duree.step);
-           Operators.PrintFunction("test", test, true);
-           Operators.MapFunctionValues(test,0.0,1.0, Operators.piecewiseLinear, p);
-           Operators.PrintFunction("test", test, true);
+//           FunctionStructure test=Operators.createFunction(0.0, 1.0, duree.step);
+//           Operators.PrintFunction("test", test, true);
+//           Operators.MapFunctionValues(test,0.0,1.0, Operators.piecewiseLinear, p);
+//           Operators.PrintFunction("test", test, true);
 //           Operators.plotFunction(test);
            FunctionStructure survival=Operators.createFunction(duree.min,duree.max,duree.step);
            // Il faut initialiser la valeur de la proba de survie pour t=0, car celle-ci ne peut pas se calculer par une intégrale, puisque quel que soit
@@ -64,12 +64,14 @@ public class SurvivalProbabilities {
 //                    Operators.PrintFunction("homog", homo, true);
 //                    Operators.plotFunction(homo);
 //                }
-                temp=Operators.MultiplyFunctions(Operators.ComposeFunctionInterfaceFunctionStructure(homo, Operators.piecewiseLinear, p),temp);
+                temp=Operators.MultiplyFunctions(Operators.ComposeFunctionInterfaceWithFunction(Operators.piecewiseLinear,homo,homo.min,homo.max,p),temp);
                 survival.values[i]=Operators.IntegrateFunction(temp, t, temp.max);
                 t+=survival.step;
                }
            }
-           Operators.plotFunction(survival);
+//           if (phase==3){
+//           Operators.plotFunction(survival,"survival 3");
+//           }
            return survival;
        }
        

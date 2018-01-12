@@ -16,8 +16,9 @@ public class GUI extends javax.swing.JFrame {
     /**
      * Creates new form GUI
      */
-    public GUI(FunctionStructure fct) {
+    public GUI(FunctionStructure fct, String name) {
 //        f = fct;
+        setTitle(name);
         SetFunction(fct);
         initComponents();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -128,18 +129,21 @@ public class GUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI(null).setVisible(true);
+                new GUI(null,null).setVisible(true);
             }
         });
     }
     FunctionStructure f;
     public void SetFunction(FunctionStructure fct){
         f=fct;
-//        Operators.PrintFunction("gui0", f, false);
+        
+//Operators.PrintFunction(fct, "fct", true);
+        Operators.PrintFunction( f,"gui0", false);
     }
     @Override
     public void paint(Graphics g){
-//        Operators.PrintFunction("gui", f, false);
+        
+        Operators.PrintFunction( f,"gui1", false);
         super.paint(g);
         Graphics gp=jPanel1.getGraphics();
 //        double minVal=Operators.GetFunctionMinValue(f);
@@ -148,8 +152,12 @@ public class GUI extends javax.swing.JFrame {
         
          
 //        System.out.println("maxval "+maxVal);
+//Operators.PrintFunction(f, "f", true);
         for (int i=f.minIndex;i<=f.maxIndex-1;i++){
+            
             int absciss1=(int) Math.round((i-f.minIndex)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+1));
+//            System.out.println("i after "+(i));
+//            System.out.println(f.toString());
             int absciss2=(int) Math.round((i-f.minIndex+1)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+1));
             int ordinate1=(int) Math.round((jPanel1.getHeight()/(minVal-maxVal))*(f.values[i]-maxVal));
             int ordinate2=(int) Math.round(jPanel1.getHeight()/(minVal-maxVal)*(f.values[i+1]-maxVal));

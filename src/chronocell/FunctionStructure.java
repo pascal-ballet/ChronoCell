@@ -11,9 +11,17 @@ package chronocell;
  * @author goby
  */
 public class FunctionStructure {
-    double min=0.0,max=0.0,step=1.0;
-    int minIndex=0,maxIndex=0;
-    double[] values=null;    
+    String name=null;
+    // Description du support de la fonction
+    double min=0.0,max=0.0;
+    // pas de la discretisation
+    double step=1.0;
+    // Tableau des valeurs
+    double[] values=null;
+    // Le tableau peut être plus grand que nécessaire, les minIndex et maxIndex servent à indiquer les indices en dehors desquels ont est sûr d'avoir des valeurs nulles
+    // à des fins d'optimisation
+    // Attention cependant, les index doivent toujours correspondre aux extrémitées du support
+    int minIndex=0,maxIndex=0;    
 }
 
 

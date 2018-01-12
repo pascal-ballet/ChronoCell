@@ -76,7 +76,7 @@ public class SimulationStructureOperators {
     
     public static void run(SimulationStructure simu){
         for (int i=0;i<(Math.round(simu.duration/simu.timeStep));i++){   
-//            System.out.println("i="+i);
+//            System.out.println("simuTime= "+simu.pop.time+", simuNumber= "+simu.pop.currentTheta);
             CellPopulationOperators.ComputeOneTimeStep(simu.pop,simu.treat);
 //            population.values[i]=SimulationStructureOperators.GetSimulationPopulationSize(simulation, i*simulation.timeStep);
         }
@@ -93,7 +93,7 @@ public class SimulationStructureOperators {
         for (int i=0;i<=Math.round(simu.duration/simu.timeStep);i++){
             populationSize.values[i]=CellPopulationOperators.GetPopulationSize(simu.pop, simu.timeStep*i);
         }
-        Operators.plotFunction(populationSize);
+        Operators.plotFunction(populationSize,"Population Size");
     };
     
     

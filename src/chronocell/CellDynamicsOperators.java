@@ -24,9 +24,12 @@ public class CellDynamicsOperators {
         dyn.G0.oneMinCumul.put("Death", Operators.CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.G0.cumul.get("Death"))));
         dyn.G0.oneMinCumul.put("G1", Operators.CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.G0.cumul.get("G1"))));
         ///// time in phase
+//        Operators.plotFunction(dyn.G0.density.get("G1"));
         dyn.G0.timeDensity=Operators.AddFunctions(Operators.MultiplyFunctions(dyn.G0.density.get("G1"), dyn.G0.oneMinCumul.get("Death")),
         Operators.MultiplyFunctions(dyn.G0.density.get("Death"), dyn.G0.oneMinCumul.get("G1")));
         dyn.G0.timeOneMinCumul=Operators.MultiplyFunctions(dyn.G0.oneMinCumul.get("Death"), dyn.G0.oneMinCumul.get("G1"));
+        
+//        Operators.plotFunction(dyn.G0.density.get("G1"));
        // G1
         dyn.G1.cumul.put("G0",Operators.CumulativeFunction(dyn.G1.density.get("G0")));
         dyn.G1.cumul.put("S",Operators.CumulativeFunction(dyn.G1.density.get("S")) );

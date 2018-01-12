@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+// Checked: FunctionStructure.java
+// Current: Operators.java         
 
-
-// Todo :   * Implement constant solution for initial condition (if extinction, take Laplace transform for lambda=0).
+// Todo :   * généraliser l'utilisation de setFunctionValue
+//          * vérifier que les compositions de focntions n'utilisent pas des valeurs nulles en dehors du support (exp(0)=1 par exemple)
+//          * Implement constant solution for initial condition (if extinction, take Laplace transform for lambda=0).
 //          * CRUCIAL : check dependency on timestep ! -> solve dirac problem
 //          *  write properly solutions for initial condition to solve the shift of time between bifurcations
 //          * improve to transition probabilities that can evolve along time and depend on pO2
@@ -26,6 +29,7 @@ import static chronocell.Operators.PowerOfFunction;
 import static chronocell.Operators.TranslateFunction;
 import java.util.ArrayList;
 import static chronocell.CsvToArrayList.readTXTFile;
+//import com.oracle.webservices.internal.api.message.MessageContextFactory;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -40,15 +44,24 @@ import javax.print.attribute.HashAttributeSet;
  * @author pascal
  */
 public class ChronoCell {
-
+    
     /**
      * @param args the command line arguments
      */
-    
+   
 //    public static Hashtable<String,double[][]> survivalData = new Hashtable<String,double[][]>(); 
     public static SurvivalDataStructure _survivalData = new SurvivalDataStructure();
     
     public static void main(String[] args) {
+        
+         FunctionStructure f= Operators.createFunction(0, 10, 0.3);
+         f.name="fonctionTest";
+        Operators.MapFunctionValues(f, 2.00001, 8.3333444, Operators.constant, 1.0);
+        Operators.PrintFunction(f, f.name, true);
+        f=Operators.checkAndAdjustSupport(f);
+        Operators.PrintFunction(f, f.name, true);
+        f=Operators.SetFunctionValue(f,-1.0,11.0);
+        Operators.PrintFunction(f, f.toString(), true);
         Numbers.minStep=0.00001;
         double precision=0.01;
         double step=0.1;
@@ -126,7 +139,7 @@ public class ChronoCell {
 //            Operators.MapFunctionValues(SToG2,5.0,8.0,Operators.gaussian,6.0,2.0);
             SToG2=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(SToG2, SToG2.min, SToG2.max),0, SToG2);
              // G2->M
-            Operators.plotFunction(SToG2);
+//            Operators.plotFunction(SToG2);
             FunctionStructure G2ToM=Operators.createFunction(0.0,Numbers.CGN(support0),step); 
 //            Operators.MapFunctionValues(G2ToM,3.0,support2,Operators.continuousGeometricDistribution,3.0,pO2,C,B,m);
             Operators.MapFunctionValues(G2ToM,0.0,support0,Operators.boundedExponentialDistribution,3.6,0.0,support0);
@@ -142,7 +155,7 @@ public class ChronoCell {
             CellPopulation pop=new CellPopulation();
             pop.timeStep=step;
             // Taille initiale
-            pop.size=100.0;
+            pop.size=1.0;
             // Dynamique  
             pop.dynamics.phaseNb=5;
             pop.pO2=20.0;
@@ -163,17 +176,17 @@ public class ChronoCell {
             pop.theta.add(initTheta);
             pop.currentTheta=0;
             
-            Operators.MapFunctionValues(pop.theta.get(0).G0,pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-            Operators.MapFunctionValues(pop.theta.get(0).S,pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-            Operators.MapFunctionValues(pop.theta.get(0).G2,pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-            Operators.MapFunctionValues(pop.theta.get(0).M,pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            Operators.MapFunctionValues(pop.theta.get(0).G0,pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            Operators.MapFunctionValues(pop.theta.get(0).S,pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            Operators.MapFunctionValues(pop.theta.get(0).G2,pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            Operators.MapFunctionValues(pop.theta.get(0).M,pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
         
         // Un traitement
         ArrayList<Double> results=new ArrayList<>();
         
 //-------------- treatment -----------------------------------------------------
-            double duration =300.0;
-            int fractions=2;
+            double duration =200.0;
+            int fractions=1;
             double totalDose =1.0;
             double fractionDose=totalDose/fractions;
             SimulationStructure simulation=new SimulationStructure();
@@ -183,15 +196,17 @@ public class ChronoCell {
             simulation.treat= new TreatmentStructure();
             simulation.treat.times= new double[fractions+1];
             simulation.treat.doses= new double[fractions+1];
-            simulation.treat.times[0]=50;
-            simulation.treat.times[1]=200;
+            simulation.treat.times[0]=Double.NaN;
+//            simulation.treat.times[1]=200;
             simulation.treat.doses[0]=fractionDose;
-            simulation.treat.doses[1]=fractionDose;
+//            simulation.treat.doses[1]=fractionDose;
             simulation.treat.times[fractions]=Double.NaN;
             simulation.treat.doses[fractions]=0.0;        
             SimulationStructureOperators.run(simulation);
-            SimulationStructureOperators.plotSimulation(simulation);
-        
+//            SimulationStructureOperators.plotSimulation(simulation);
+//            for (int ii=0;ii<5;ii++){
+//            Operators.plotFunction(simulation.pop.theta.get(1).getPhase(ii),String.valueOf(ii));
+//            }
 //            FunctionStructure comp=Operators.createFunction(0.0,(double) results.size(), 1.0);
 //            for (int i=0;i<comp.maxIndex;i++){
 //                comp.values[i]=results.get(i);

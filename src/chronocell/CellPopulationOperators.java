@@ -27,7 +27,24 @@ public class CellPopulationOperators {
             //FunctionStructure survival = Operators.createFunction(temp.min, temp.max, temp.step);
             // Pour l'instant, on transmet le numero de la phase et toute la dynamique car certaines phases mènent à une phase, d'autre à deux
             FunctionStructure survival = SurvivalProbabilities.survivalProbabilities(dose, i, pop.dynamics, data);
-            temp=Operators.MultiplyFunctions(survival,temp);
+//            if (i==3){
+//                Operators.plotFunction(survival,"surv before");
+//            }
+            survival=Operators.TranslateFunction(-pop.time, survival);
+//            if (i==3){
+////                Operators.plotFunction(survival,"surv");
+////                Operators.PrintFunction(survival,"surv",true);
+//            }
+//            if (i==3){
+////                Operators.plotFunction(temp,"temp before");
+//                Operators.PrintFunction(temp,"temp before",false);
+//            }
+            temp=Operators.MultiplyFunctionRaw(temp,temp);
+//            temp=Operators.AffineFunctionTransformation(0.5, 0.0, temp);
+//            if (i==3){
+////                Operators.plotFunction(temp,temp.toString());
+////                Operators.PrintFunction(temp,"temp after",false);
+//            }
             theta.setPhase(i,temp);
         }
         pop.theta.add(theta);
