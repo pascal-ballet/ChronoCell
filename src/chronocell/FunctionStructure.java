@@ -22,6 +22,9 @@ public class FunctionStructure {
     // à des fins d'optimisation
     // Attention cependant, les index doivent toujours correspondre aux extrémitées du support
     int minIndex=0,maxIndex=0;    
+    // Valeurs par défaut à gauche et à droite du support
+    double left=0.0;
+    double right=0.0;
 }
 
 

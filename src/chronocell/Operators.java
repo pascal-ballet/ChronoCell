@@ -12,6 +12,7 @@ package chronocell;
 
 
 public class Operators {
+    
     // creation d'une fonction nulle sur un support défini
     public static FunctionStructure createFunction(double min,double max,double step){
         FunctionStructure fct=new FunctionStructure();
@@ -31,7 +32,7 @@ public class Operators {
         return fct;
     }
     
-    public static int checIndex(FunctionStructure fct){
+    public static int checkIndex(FunctionStructure fct){
         //check vaut 1 en cas de problème
         int check=0;
         // On recherche l'indice le plus grand tel que toutes les valeurs avant cet indice sont nulles
@@ -48,7 +49,7 @@ public class Operators {
         return check;
     }
     
-     public static FunctionStructure checkAndAdjustSupport(FunctionStructure fct){
+     public static void checkAndAdjustSupport(FunctionStructure fct){
         // On recherche l'indice le plus grand tel que toutes les valeurs avant cet indice sont nulles
         int minIdx=0;
         while (fct.values[minIdx]==0) minIdx++;
@@ -58,7 +59,7 @@ public class Operators {
         // En cas de différence, on le signale
         if ((minIdx!=fct.minIndex)||(minIdx!=fct.minIndex)) System.out.println("modification des index et du support de la fonction : "+fct.name);
         // on crée la nouvelle fonction
-        FunctionStructure fct2=Operators.copyFunction(fct);
+        FunctionStructure fct2=Operators.createFunctionCopy(fct);
         fct2.min=Numbers.CGN(minIdx*fct.step);
         fct2.max=Numbers.CGN(maxIdx*fct.step);
         double[] newVal= new double[maxIdx-minIdx+1];
@@ -66,14 +67,17 @@ public class Operators {
         fct2.values=newVal;
         fct2.minIndex=0;
         fct2.maxIndex=maxIdx-minIdx;
-        return fct2;
+         copyFunction(fct, fct2);
      }
     
-    public static FunctionStructure copyFunction(FunctionStructure fct){
+    public static FunctionStructure createFunctionCopy(FunctionStructure fct){
         FunctionStructure cpy=new FunctionStructure();
-        cpy.min=Numbers.CGN(fct.min);
-        cpy.max=Numbers.CGN(fct.max);
-        cpy.step=Numbers.CGN(fct.step);
+        cpy.name=fct.name;
+        cpy.min=fct.min;
+        cpy.max=fct.max;
+        cpy.left=fct.left;
+        cpy.right=fct.right;
+        cpy.step=fct.step;
         cpy.minIndex=fct.minIndex;
         cpy.maxIndex=fct.maxIndex;
         cpy.values=new double[fct.values.length];
@@ -83,26 +87,44 @@ public class Operators {
         return cpy;
     }
     
+    public static void copyFunction(FunctionStructure fct,FunctionStructure fct2){
+        fct.name=fct2.name;
+        fct.min=fct2.min;
+        fct.max=fct2.max;
+        fct.left=fct2.left;
+        fct.right=fct2.right;
+        fct.step=fct2.step;
+        fct.minIndex=fct2.minIndex;
+        fct.maxIndex=fct2.maxIndex;
+        fct.values=new double[fct2.values.length];
+        for (int i=0;i<fct.values.length;i++){
+            fct.values[i]=fct2.values[i];
+        }
+    }
+    
            
      
     public static double GetFunctionValue(FunctionStructure fct,double x){
-        double y=0.0;
-        if ((x>=fct.min) && (x<=fct.max)){
-            y=fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))];
-            }
-        return y;
+        // On utilise les valeurs par défaut à gauche et à droite
+        if (x<fct.min) return fct.left;
+        if (x>fct.max) return fct.right;
+        return fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))];
     }
     
-    public static FunctionStructure ResizeFunctionSupport(FunctionStructure fct,double min, double max){
+    public static void ResizeFunctionSupport(FunctionStructure fct,double min, double max){
         // typiquement le type de fonction dont on pourra évaluer l'intérêt de la coder directement avec les tableau de valeurs
-        min=Numbers.CGN(min);
-        max=Numbers.CGN(max);
-        FunctionStructure fct2=createFunction(min, max, fct.step);
-        for (double x=fct.min;x<=fct.max;x+=fct2.step) SetFunctionValue(fct2, x,GetFunctionValue(fct, x) );
-        return fct2;
+        double newMin=Numbers.CGN((Math.round(min/fct.step))*fct.step);
+        double newMax=Numbers.CGN((Math.round(max/fct.step))*fct.step);
+        FunctionStructure fct2=createFunction(newMin, newMax, fct.step);
+        fct2.name=fct.name;
+        fct2.left=fct.left;
+        fct2.right=fct.right;
+        for (double x=fct2.min;x<=fct2.max;x+=fct2.step) SetFunctionValue(fct2, x,GetFunctionValue(fct, x) );
+        copyFunction(fct,fct2);
     }
- /////********************************************************    vérfier à partir de là      
-    public static FunctionStructure SetFunctionValue(FunctionStructure fct,double x, double y){
+ /////La fonction suivante modifie, à priori toutes les valeurs de fct, puisque l'on redéfinit son support. Ce n'est pas forcément cohérent (modifier toutes les valeurs
+    // pour en placer une excatement. La suivante règle ce problème en modifiant le x pour garder la même discrétisation
+    public static FunctionStructure SetFunctionValueOld(FunctionStructure fct,double x, double y){
         // Si x est dans le support, rien de spécial
         if ((x>=fct.min) && (x<=fct.max)){
             fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))]=y;
@@ -110,29 +132,50 @@ public class Operators {
         // sinon, il faut agrandir le support à gauche ou à droite
         else if(x<fct.min) {
             System.out.println("gauche");
-            fct=ResizeFunctionSupport(fct, x, fct.max);
+            ResizeFunctionSupport(fct, x, fct.max);
             fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))]=y;
         }
         else if(x>fct.max){
             System.out.println("droite");
-            fct=ResizeFunctionSupport(fct, fct.min,x);
+            ResizeFunctionSupport(fct, fct.min,x);
             fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))]=y;
         }
         return fct;
     }
  
+     public static void SetFunctionValue(FunctionStructure fct,double x, double y){
+        // Si x est dans le support, rien de spécial
+        if ((x>=fct.min) && (x<=fct.max)){
+            fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))]=y;
+            }
+        // sinon, il faut agrandir le support à gauche ou à droite
+        else if(x<fct.min) {
+            // On cherchela première valeur de la grille en dessous de x
+            System.out.println("gauche");
+            double newMin=Numbers.CGN((Math.round(x/fct.step))*fct.step);
+            ResizeFunctionSupport(fct, newMin, fct.max);
+            fct.values[0]=y;
+        }
+        else if(x>fct.max){
+            System.out.println("droite");
+            double newMax=Numbers.CGN((Math.round(x/fct.step))*fct.step);
+            ResizeFunctionSupport(fct, fct.min,newMax);
+            fct.values[fct.values.length-1]=y;
+        }
+    }   
+    
    public static void MapFunctionValues(FunctionStructure fct,double min, double max,FunctionInterface g,double ... p){
        // laisser l'appelant ajuster à la grille ?
         min=Numbers.CGN(min);
         max=Numbers.CGN(max);
         // la boucle sur les valeurs de x semble plus propre que de travailler avec le tableau des valeurs.
         for (double x=min;x<=max;x+=fct.step){
-            SetFunctionValue(fct, x, g.op(GetFunctionValue(fct, x), p));
+            SetFunctionValue(fct, x, g.op( x, p));
         }
     }
-    
+    ////////////////////////************************************************
     public static FunctionStructure ComposeFunctionInterfaceWithFunction(FunctionInterface g,FunctionStructure fct,double min,double max,double ... p){
-        FunctionStructure comp = copyFunction(fct);
+        FunctionStructure comp = createFunctionCopy(fct);
         // Attention, ici le support de la fonction n'intervient pas, car rien ne dit que g(0)=0... 
         // Vérifier analytiquement que l'on ne perd pas des parties de fonction à cause de la troncature dûe au support
         min=Numbers.CGN(min);
@@ -287,7 +330,7 @@ public class Operators {
      
     
     public static FunctionStructure PowerOfFunction(FunctionStructure fct1,double pow){
-        FunctionStructure power=copyFunction(fct1);
+        FunctionStructure power=createFunctionCopy(fct1);
         for (int i=power.minIndex;i<=power.maxIndex;i++){
                 power.values[i]=Math.pow(fct1.values[i],pow);
                
@@ -318,7 +361,7 @@ public class Operators {
     } 
     
         public static FunctionStructure MultiplyFunctionByCumulative(FunctionStructure fct,FunctionStructure cumul){
-        FunctionStructure prod=copyFunction(fct);
+        FunctionStructure prod=createFunctionCopy(fct);
         double min=Math.max(fct.min, cumul.min);
         for (int i=prod.minIndex;i<=prod.maxIndex;i++){
             if (prod.min+i*prod.step <= cumul.max){
@@ -329,7 +372,7 @@ public class Operators {
     }
         
             public static FunctionStructure MultiplyFunctionByOneMinusCumulative(FunctionStructure fct,FunctionStructure cumul){
-        FunctionStructure prod=copyFunction(fct);
+        FunctionStructure prod=createFunctionCopy(fct);
         double max=Math.min(fct.max, cumul.max);
         for (int i=prod.minIndex;i<=prod.maxIndex;i++){
             if (prod.min+i*prod.step >= cumul.min){
@@ -368,7 +411,7 @@ public class Operators {
     } 
     
     public static FunctionStructure AffineFunctionTransformation(double a, double b, FunctionStructure fct){
-        FunctionStructure transf=Operators.copyFunction(fct);
+        FunctionStructure transf=Operators.createFunctionCopy(fct);
 //        PrintFunction("affineTranform",transf);
         for (int i=transf.minIndex;i<=transf.maxIndex;i++){
             transf.values[i]=fct.values[i]*a+b;
@@ -379,7 +422,7 @@ public class Operators {
     
     public static FunctionStructure TranslateFunction(double t, FunctionStructure fct){
 //        PrintFunction(fct);
-        FunctionStructure transl=copyFunction(fct);
+        FunctionStructure transl=createFunctionCopy(fct);
         transl.min+=t;
         transl.max+=t;
     return transl;

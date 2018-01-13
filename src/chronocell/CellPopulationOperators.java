@@ -22,7 +22,7 @@ public class CellPopulationOperators {
         theta.startingTime=pop.time;
         System.out.println("temps de traitement"+pop.time);
         for (int i=0;i<pop.dynamics.phaseNb;i++){
-            FunctionStructure temp = Operators.copyFunction(pop.theta.get(pop.currentTheta).getPhase(i));
+            FunctionStructure temp = Operators.createFunctionCopy(pop.theta.get(pop.currentTheta).getPhase(i));
             // on crée la fonction de survie
             //FunctionStructure survival = Operators.createFunction(temp.min, temp.max, temp.step);
             // Pour l'instant, on transmet le numero de la phase et toute la dynamique car certaines phases mènent à une phase, d'autre à deux

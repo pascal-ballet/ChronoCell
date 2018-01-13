@@ -76,11 +76,11 @@ public class ThetaStructureOperators {
     public static ThetaStructure copyTheta(ThetaStructure theta){
       ThetaStructure copy=new ThetaStructure();
       copy.startingTime=theta.startingTime;
-      copy.G0=Operators.copyFunction(theta.G0);
-      copy.G1=Operators.copyFunction(theta.G1);
-      copy.S=Operators.copyFunction(theta.S);
-      copy.G2=Operators.copyFunction(theta.G2);
-      copy.M=Operators.copyFunction(theta.M);    
+      copy.G0=Operators.createFunctionCopy(theta.G0);
+      copy.G1=Operators.createFunctionCopy(theta.G1);
+      copy.S=Operators.createFunctionCopy(theta.S);
+      copy.G2=Operators.createFunctionCopy(theta.G2);
+      copy.M=Operators.createFunctionCopy(theta.M);    
       return copy;
     };
 }

@@ -26,8 +26,8 @@ public class PhaseOperators {
         copy.oneMinCumul=copyHashtable(phase.oneMinCumul);
         copy.alpha=copyHashtable(phase.alpha);
         
-        copy.solutionFilter=Operators.copyFunction(phase.solutionFilter);
-        copy.thetaConvolution=Operators.copyFunction(phase.thetaConvolution);
+        copy.solutionFilter=Operators.createFunctionCopy(phase.solutionFilter);
+        copy.thetaConvolution=Operators.createFunctionCopy(phase.thetaConvolution);
         return phase;
     }
     

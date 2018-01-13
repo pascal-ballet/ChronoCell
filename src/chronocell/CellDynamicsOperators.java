@@ -43,26 +43,26 @@ public class CellDynamicsOperators {
         dyn.S.cumul.put("G2",Operators.CumulativeFunction(dyn.S.density.get("G2")) );
         dyn.S.oneMinCumul.put("G2", Operators.CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.S.cumul.get("G2"))));
         ///// time in phase
-        dyn.S.timeDensity=Operators.copyFunction(dyn.S.density.get("G2"));
-        dyn.S.timeOneMinCumul=Operators.copyFunction(dyn.S.oneMinCumul.get("G2"));
+        dyn.S.timeDensity=Operators.createFunctionCopy(dyn.S.density.get("G2"));
+        dyn.S.timeOneMinCumul=Operators.createFunctionCopy(dyn.S.oneMinCumul.get("G2"));
         // G2
         dyn.G2.cumul.put("M",Operators.CumulativeFunction(dyn.G2.density.get("M")) );
         dyn.G2.oneMinCumul.put("M", Operators.CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.G2.cumul.get("M"))));
         ///// time in phase
-        dyn.G2.timeDensity=Operators.copyFunction(dyn.G2.density.get("M"));
-        dyn.G2.timeOneMinCumul=Operators.copyFunction(dyn.G2.oneMinCumul.get("M"));
+        dyn.G2.timeDensity=Operators.createFunctionCopy(dyn.G2.density.get("M"));
+        dyn.G2.timeOneMinCumul=Operators.createFunctionCopy(dyn.G2.oneMinCumul.get("M"));
         // M
         dyn.M.cumul.put("G1",Operators.CumulativeFunction(dyn.M.density.get("G1")) );
         dyn.M.oneMinCumul.put("G1", Operators.CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0,dyn.M.cumul.get("G1"))));
         ///// time in phase
-        dyn.M.timeDensity=Operators.copyFunction(dyn.M.density.get("G1"));
-        dyn.M.timeOneMinCumul=Operators.copyFunction(dyn.M.oneMinCumul.get("G1"));
+        dyn.M.timeDensity=Operators.createFunctionCopy(dyn.M.density.get("G1"));
+        dyn.M.timeOneMinCumul=Operators.createFunctionCopy(dyn.M.oneMinCumul.get("G1"));
         // Solutions filters
         dyn.G0.solutionFilter=Operators.MultiplyFunctions(dyn.G0.oneMinCumul.get("Death"),dyn.G0.oneMinCumul.get("G1"));
         dyn.G1.solutionFilter=Operators.MultiplyFunctions(dyn.G1.oneMinCumul.get("G0"),dyn.G1.oneMinCumul.get("S"));
-        dyn.S.solutionFilter=Operators.copyFunction(dyn.S.oneMinCumul.get("G2"));
-        dyn.G2.solutionFilter=Operators.copyFunction(dyn.G2.oneMinCumul.get("M"));
-        dyn.M.solutionFilter=Operators.copyFunction(dyn.M.oneMinCumul.get("G1"));
+        dyn.S.solutionFilter=Operators.createFunctionCopy(dyn.S.oneMinCumul.get("G2"));
+        dyn.G2.solutionFilter=Operators.createFunctionCopy(dyn.G2.oneMinCumul.get("M"));
+        dyn.M.solutionFilter=Operators.createFunctionCopy(dyn.M.oneMinCumul.get("G1"));
 //      phase G0, to be convolved with theta1
         dyn.G0.thetaConvolution=Operators.MultiplyFunctions(dyn.G1.density.get("G0"),dyn.G1.oneMinCumul.get("S"));
 //      phase G1, part to be convolved with theta0
@@ -70,9 +70,9 @@ public class CellDynamicsOperators {
 //      phase S, to be convolved with theta1
         dyn.S.thetaConvolution=Operators.MultiplyFunctions(dyn.G1.density.get("S"),dyn.G1.oneMinCumul.get("G0"));
 //      phase G2  
-        dyn.G2.thetaConvolution=Operators.copyFunction(dyn.S.density.get("G2"));
+        dyn.G2.thetaConvolution=Operators.createFunctionCopy(dyn.S.density.get("G2"));
 //      phase M 
-        dyn.M.thetaConvolution=Operators.copyFunction(dyn.G2.density.get("M"));
+        dyn.M.thetaConvolution=Operators.createFunctionCopy(dyn.G2.density.get("M"));
 //      
         
         

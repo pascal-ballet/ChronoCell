@@ -56,12 +56,19 @@ public class ChronoCell {
         
          FunctionStructure f= Operators.createFunction(0, 10, 0.3);
          f.name="fonctionTest";
+         f.right=10.0;
         Operators.MapFunctionValues(f, 2.00001, 8.3333444, Operators.constant, 1.0);
         Operators.PrintFunction(f, f.name, true);
-        f=Operators.checkAndAdjustSupport(f);
+        Operators.ResizeFunctionSupport(f, -2, 12.0);
         Operators.PrintFunction(f, f.name, true);
-        f=Operators.SetFunctionValue(f,-1.0,11.0);
+        Operators.checkAndAdjustSupport(f);
+        Operators.PrintFunction(f, f.name, true);
+        Operators.SetFunctionValue(f,11.3,11.0);
+        System.out.println("right: "+f.right);
         Operators.PrintFunction(f, f.toString(), true);
+        System.out.println("val: "+Operators.GetFunctionValue(f, 60));
+        Operators.MapFunctionValues(f, -10, 12, Operators.exp, 2.0);
+        Operators.PrintFunction(f, f.name, true);
         Numbers.minStep=0.00001;
         double precision=0.01;
         double step=0.1;
@@ -159,13 +166,13 @@ public class ChronoCell {
             // Dynamique  
             pop.dynamics.phaseNb=5;
             pop.pO2=20.0;
-            pop.dynamics.G0.density.put("Death",Operators.copyFunction(G0ToDeath));
-            pop.dynamics.G0.density.put("G1", Operators.copyFunction(G0ToG1));
-            pop.dynamics.G1.density.put("G0", Operators.copyFunction(G1ToG0));
-            pop.dynamics.G1.density.put("S", Operators.copyFunction(G1ToS));
-            pop.dynamics.S.density.put("G2", Operators.copyFunction(SToG2));
-            pop.dynamics.G2.density.put("M", Operators.copyFunction(G2ToM));
-            pop.dynamics.M.density.put("G1", Operators.copyFunction(MToG1)); 
+            pop.dynamics.G0.density.put("Death",Operators.createFunctionCopy(G0ToDeath));
+            pop.dynamics.G0.density.put("G1", Operators.createFunctionCopy(G0ToG1));
+            pop.dynamics.G1.density.put("G0", Operators.createFunctionCopy(G1ToG0));
+            pop.dynamics.G1.density.put("S", Operators.createFunctionCopy(G1ToS));
+            pop.dynamics.S.density.put("G2", Operators.createFunctionCopy(SToG2));
+            pop.dynamics.G2.density.put("M", Operators.createFunctionCopy(G2ToM));
+            pop.dynamics.M.density.put("G1", Operators.createFunctionCopy(MToG1)); 
             // Complétions des différentes fonctions utiles pour la dynamique
             CellDynamicsOperators.DynamicsFilling(pop.dynamics);
         

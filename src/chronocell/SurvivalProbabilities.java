@@ -22,8 +22,8 @@ public class SurvivalProbabilities {
 // que l'on va ensuite transformer en fonction du temps aléatoire passé dans la phase
        public static FunctionStructure survivalProbabilities(double dose,int phase,CellDynamics dynamics, SurvivalDataStructure data){
            // il faut ici utiliser la distribution de la durée de la phase, à définir dans dynamics
-           FunctionStructure duree= Operators.copyFunction(dynamics.getPhase(phase).timeDensity); 
-           FunctionStructure OneMinCumulDuree= Operators.copyFunction(dynamics.getPhase(phase).timeOneMinCumul); 
+           FunctionStructure duree= Operators.createFunctionCopy(dynamics.getPhase(phase).timeDensity); 
+           FunctionStructure OneMinCumulDuree= Operators.createFunctionCopy(dynamics.getPhase(phase).timeOneMinCumul); 
            // créer la piecewise issue des data 
            // On commence par situer le dosage dans le tableau
            int iDose=1;
