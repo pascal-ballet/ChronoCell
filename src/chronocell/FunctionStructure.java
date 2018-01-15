@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package chronocell;
+import chronocell.Operators.FunctionInterface;
 
 
 /**
@@ -25,6 +26,130 @@ public class FunctionStructure {
     // Valeurs par défaut à gauche et à droite du support
     double left=0.0;
     double right=0.0;
+    
+    public double closestGridPoint(double x){
+        return Numbers.CGN((Math.round(x/step))*step);
+    }
+    
+        public int indexOfPoint(double x){
+        return minIndex+ (int) Numbers.CGN(Math.round((x-min)/step));
+    }
+        
+          public double GetFunctionValue(double x){
+        // On utilise les valeurs par défaut à gauche et à droite
+        if (x<min) return left;
+        if (x>max) return right;
+        return values[indexOfPoint(x)];
+    }
+      
+     public void SetFunctionValue(double x, double y){
+         y=Numbers.CGN(y);
+         System.out.println("setFunction value : x="+x+", y= "+y+", min= "+min+", max= "+max+", left= "+left+", right= "+right);
+        // Si x est dans le support, rien de spécial
+        double xGrid=closestGridPoint(x);
+        if ((xGrid>=min) && (xGrid<=max)){
+            values[indexOfPoint(x)]=y;
+            System.out.println("valeur");
+            return;
+            }
+        // si x est en dehors du support mais que y est égal à left (ou right), on ne fait rien
+        if (((xGrid<min)&&(y==left))||((xGrid>max)&&(y==right))){
+            System.out.println("rien à faire");
+            return;
+        }
+        // sinon, il faut agrandir le support à gauche ou à droite
+        if(xGrid<min) {
+            // On cherchela première valeur de la grille en dessous de x
+            System.out.println("gauche");
+            ResizeFunctionSupport(xGrid, max);
+            values[0]=y;
+            return;
+        }
+        if(xGrid>max){
+            System.out.println("droite");
+            ResizeFunctionSupport(min,xGrid);
+            values[values.length-1]=y;
+            return;
+        }
+    } 
+     
+     public void SetFunctionValuesFromInterface(double min, double max, FunctionInterface g,double ... p){
+       // laisser l'appelant ajuster à la grille ?
+        min=Numbers.CGN(min);
+        max=Numbers.CGN(max);
+        // la boucle sur les valeurs de x semble plus propre que de travailler avec le tableau des valeurs.
+        for (double x=min;x<=max;x+=step){
+            SetFunctionValue(x, g.op( x, p));
+        }
+    }
+     
+     public void ResizeFunctionSupport(double newMin, double newMax){
+        // typiquement le type de fonction dont on pourra évaluer l'intérêt de la coder directement avec les tableau de valeurs
+        newMin=closestGridPoint(newMin);
+        newMax=closestGridPoint(newMax);
+        int size=(int) Math.round(1+(newMax-newMin)/step);
+        double[] newValues=new double[size];
+        for (int i=0;i<size;i++){
+            newValues[i]=GetFunctionValue(newMin+ i*step);
+        }
+        values=newValues;
+        min=newMin;
+        max=newMax;
+        minIndex=0;
+        maxIndex=size-1;
+//        for (double x=fct2.min;x<=fct2.max;x+=fct2.step) SetFunctionValue(fct2, x,GetFunctionValue(x) );
+//        copyFunction(fct,fct2);
+    }
+     
+    public int checkIndex(){
+        //check vaut 1 en cas de problème
+        int check=0;
+        // On recherche l'indice le plus grand tel que toutes les valeurs avant cet indice sont nulles
+        int minIdx=0;
+        while (values[minIdx]==0) minIdx++;
+        // On recherche l'indice le plus petit tel que toutes les valeurs après cet indice sont nulles
+        int maxIdx=values.length-1;
+        while (values[maxIdx]==0) maxIdx--;
+        // En cas de différence, on modifie check et on affiche une alerte (optionnel)
+        if ((minIdx!=minIndex)||(minIdx!=minIndex)){
+            System.out.println("index erronées pour la fonction : "+name);
+            check=1;
+        }
+        return check;
+    }
+    
+    
+    // Fonction qui redéfinit le support en fonction des valeurs qui seraient redondantes avec les left et right
+    // à reprendre proprement 
+    public  void checkAndAdjustSupport(){
+        // On recherche l'indice le plus petit tel que toutes les valeurs après cet indice sont égales à right
+        int maxIdx=values.length-1;
+        int minIdx=0;
+        while (values[maxIdx]==right){
+            System.out.println("maxIdx=right "+maxIdx);
+            if (maxIdx>0) maxIdx--;
+            else break;
+        }
+            System.out.println("maxIdx= "+maxIdx);
+        // On recherche l'indice le plus grand tel que toutes les valeurs avant cet indice sont égales à left
+        while ((values[minIdx]==left)&&(minIdx<maxIdx)) minIdx++;
+            System.out.println("minIdx= "+minIdx);
+        
+        // En cas de différence, on le signale
+        if ((minIdx!=minIndex)||(maxIdx!=maxIndex)) {
+            System.out.println("modification des index et du support de la fonction : "+name);
+            double newMin=Numbers.CGN(min+minIdx*step);
+            double newMax=Numbers.CGN(min+maxIdx*step);
+            double[] newVal= new double[maxIdx-minIdx+1];
+            for (int i=0;i<newVal.length;i++) newVal[i]=values[minIdx+i];
+            values=newVal;
+            minIndex=0;
+            maxIndex=maxIdx-minIdx;
+            min=newMin;
+            max=newMax;
+            }
+     }
+    
 }
 
 

@@ -51,15 +51,15 @@ public class SurvivalProbabilities {
            double t=survival.min+survival.step;
            for (int i=survival.minIndex+1;i<=survival.maxIndex;i++){
                // Si la fonction de répartition vaut 1, 1-F vaut 0, mais alors la densité est aussi nulle et il suffit de renvoyer 0 tout de suite 
-               if (Operators.GetFunctionValue(OneMinCumulDuree,t)==0){
+               if (OneMinCumulDuree.GetFunctionValue(t)==0){
                    survival.values[i]=0;
                }
                else {
                //System.out.println("division par"+Operators.GetFunctionValue(OneMinCumulDuree,t));
-                FunctionStructure temp=Operators.AffineFunctionTransformation(1/Operators.GetFunctionValue(OneMinCumulDuree,t),0.0,duree);
+                FunctionStructure temp=Operators.AffineFunctionTransformation(1/OneMinCumulDuree.GetFunctionValue(t),0.0,duree);
                 // création de la fonction t/s (on pourrait créer 1/s et en prendre des trasnformation affine, mais le gain n'est pas clair
                 FunctionStructure homo=Operators.createFunction(t, duree.max, duree.step);
-                Operators.MapFunctionValues(homo, homo.min,homo.max , Operators.homographie, 0.0,t,1.0,0.0);
+                homo.SetFunctionValuesFromInterface(homo.min,homo.max , Operators.homographie, 0.0,t,1.0,0.0);
 //                if(t==0.2) { 
 //                    Operators.PrintFunction("homog", homo, true);
 //                    Operators.plotFunction(homo);

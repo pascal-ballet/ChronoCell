@@ -75,8 +75,8 @@ public class CellPopulationOperators {
             }
         }
 //        System.out.println("theta= "+thetaNumber);
-        return Operators.GetFunctionValue(pop.theta.get(thetaNumber).getPhase(phase),t-T)
-              *Operators.GetFunctionValue(pop.dynamics.getPhase(phase).solutionFilter,t);
+        return pop.theta.get(thetaNumber).getPhase(phase).GetFunctionValue(t-T)
+              *pop.dynamics.getPhase(phase).solutionFilter.GetFunctionValue(t);
     };
     
     public static double GetPopulationSize(CellPopulation pop, double T){

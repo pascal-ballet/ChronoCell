@@ -76,7 +76,7 @@ public class StableSolution {
             supportMax=dyn.M.oneMinCumul.get("G1").max;
         }
         expo=Operators.createFunction(0.0, supportMax, dyn.G0.density.get("G1").step);
-        Operators.MapFunctionValues(expo,expo.min,expo.max,Operators.exp, -lambda);
+        expo.SetFunctionValuesFromInterface(expo.min,expo.max,Operators.exp, -lambda);
         
         for (int i=0;i<dyn.phaseNb;i++){
 //             Operators.plotFunction(simulation.theta[0].getPhase(i));

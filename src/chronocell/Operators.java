@@ -32,43 +32,7 @@ public class Operators {
         return fct;
     }
     
-    public static int checkIndex(FunctionStructure fct){
-        //check vaut 1 en cas de problème
-        int check=0;
-        // On recherche l'indice le plus grand tel que toutes les valeurs avant cet indice sont nulles
-        int minIdx=0;
-        while (fct.values[minIdx]==0) minIdx++;
-        // On recherche l'indice le plus petit tel que toutes les valeurs après cet indice sont nulles
-        int maxIdx=fct.values.length-1;
-        while (fct.values[maxIdx]==0) maxIdx--;
-        // En cas de différence, on modifie check et on affiche une alerte (optionnel)
-        if ((minIdx!=fct.minIndex)||(minIdx!=fct.minIndex)){
-            System.out.println("index erronées pour la fonction : "+fct.name);
-            check=1;
-        }
-        return check;
-    }
-    
-     public static void checkAndAdjustSupport(FunctionStructure fct){
-        // On recherche l'indice le plus grand tel que toutes les valeurs avant cet indice sont nulles
-        int minIdx=0;
-        while (fct.values[minIdx]==0) minIdx++;
-        // On recherche l'indice le plus petit tel que toutes les valeurs après cet indice sont nulles
-        int maxIdx=fct.values.length-1;
-        while (fct.values[maxIdx]==0) maxIdx--;
-        // En cas de différence, on le signale
-        if ((minIdx!=fct.minIndex)||(minIdx!=fct.minIndex)) System.out.println("modification des index et du support de la fonction : "+fct.name);
-        // on crée la nouvelle fonction
-        FunctionStructure fct2=Operators.createFunctionCopy(fct);
-        fct2.min=Numbers.CGN(minIdx*fct.step);
-        fct2.max=Numbers.CGN(maxIdx*fct.step);
-        double[] newVal= new double[maxIdx-minIdx+1];
-        for (int i=0;i<newVal.length;i++) newVal[i]=fct.values[minIdx+i];
-        fct2.values=newVal;
-        fct2.minIndex=0;
-        fct2.maxIndex=maxIdx-minIdx;
-         copyFunction(fct, fct2);
-     }
+/// Creéation d'une copie exacte d'une fonction
     
     public static FunctionStructure createFunctionCopy(FunctionStructure fct){
         FunctionStructure cpy=new FunctionStructure();
@@ -87,6 +51,8 @@ public class Operators {
         return cpy;
     }
     
+    // copie d'une fonction sur une autre (écrase)
+    
     public static void copyFunction(FunctionStructure fct,FunctionStructure fct2){
         fct.name=fct2.name;
         fct.min=fct2.min;
@@ -104,76 +70,7 @@ public class Operators {
     
            
      
-    public static double GetFunctionValue(FunctionStructure fct,double x){
-        // On utilise les valeurs par défaut à gauche et à droite
-        if (x<fct.min) return fct.left;
-        if (x>fct.max) return fct.right;
-        return fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))];
-    }
-    
-    public static void ResizeFunctionSupport(FunctionStructure fct,double min, double max){
-        // typiquement le type de fonction dont on pourra évaluer l'intérêt de la coder directement avec les tableau de valeurs
-        double newMin=Numbers.CGN((Math.round(min/fct.step))*fct.step);
-        double newMax=Numbers.CGN((Math.round(max/fct.step))*fct.step);
-        FunctionStructure fct2=createFunction(newMin, newMax, fct.step);
-        fct2.name=fct.name;
-        fct2.left=fct.left;
-        fct2.right=fct.right;
-        for (double x=fct2.min;x<=fct2.max;x+=fct2.step) SetFunctionValue(fct2, x,GetFunctionValue(fct, x) );
-        copyFunction(fct,fct2);
-    }
- /////La fonction suivante modifie, à priori toutes les valeurs de fct, puisque l'on redéfinit son support. Ce n'est pas forcément cohérent (modifier toutes les valeurs
-    // pour en placer une excatement. La suivante règle ce problème en modifiant le x pour garder la même discrétisation
-    public static FunctionStructure SetFunctionValueOld(FunctionStructure fct,double x, double y){
-        // Si x est dans le support, rien de spécial
-        if ((x>=fct.min) && (x<=fct.max)){
-            fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))]=y;
-            }
-        // sinon, il faut agrandir le support à gauche ou à droite
-        else if(x<fct.min) {
-            System.out.println("gauche");
-            ResizeFunctionSupport(fct, x, fct.max);
-            fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))]=y;
-        }
-        else if(x>fct.max){
-            System.out.println("droite");
-            ResizeFunctionSupport(fct, fct.min,x);
-            fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))]=y;
-        }
-        return fct;
-    }
- 
-     public static void SetFunctionValue(FunctionStructure fct,double x, double y){
-        // Si x est dans le support, rien de spécial
-        if ((x>=fct.min) && (x<=fct.max)){
-            fct.values[fct.minIndex+ (int) Numbers.CGN(Math.round((x-fct.min)/fct.step))]=y;
-            }
-        // sinon, il faut agrandir le support à gauche ou à droite
-        else if(x<fct.min) {
-            // On cherchela première valeur de la grille en dessous de x
-            System.out.println("gauche");
-            double newMin=Numbers.CGN((Math.round(x/fct.step))*fct.step);
-            ResizeFunctionSupport(fct, newMin, fct.max);
-            fct.values[0]=y;
-        }
-        else if(x>fct.max){
-            System.out.println("droite");
-            double newMax=Numbers.CGN((Math.round(x/fct.step))*fct.step);
-            ResizeFunctionSupport(fct, fct.min,newMax);
-            fct.values[fct.values.length-1]=y;
-        }
-    }   
-    
-   public static void MapFunctionValues(FunctionStructure fct,double min, double max,FunctionInterface g,double ... p){
-       // laisser l'appelant ajuster à la grille ?
-        min=Numbers.CGN(min);
-        max=Numbers.CGN(max);
-        // la boucle sur les valeurs de x semble plus propre que de travailler avec le tableau des valeurs.
-        for (double x=min;x<=max;x+=fct.step){
-            SetFunctionValue(fct, x, g.op( x, p));
-        }
-    }
-    ////////////////////////************************************************
+
     public static FunctionStructure ComposeFunctionInterfaceWithFunction(FunctionInterface g,FunctionStructure fct,double min,double max,double ... p){
         FunctionStructure comp = createFunctionCopy(fct);
         // Attention, ici le support de la fonction n'intervient pas, car rien ne dit que g(0)=0... 
@@ -181,12 +78,11 @@ public class Operators {
         min=Numbers.CGN(min);
         max=Numbers.CGN(max);
         for (double x=min;x<=max;x+=fct.step){
-            Operators.SetFunctionValue(fct, x, g.op(x, p));
+            System.out.println("x= "+x+", exp(x)= "+g.op(fct.GetFunctionValue(x), p));
+            comp.SetFunctionValue(x, g.op(fct.GetFunctionValue(x), p));
         }
-        // ancienne version utilisant les tableaux de valeurs
-//        for (int i=0;i<comp.values.length;i++){
-//            comp.values[i]=g.op(fct.values[i],p);
-//        }
+        comp.left=g.op(fct.left,p);
+        comp.right=g.op(fct.right,p);
         return comp;
     }
     
@@ -224,6 +120,7 @@ public class Operators {
         System.out.println("minVal="+GetFunctionMinValue(fct)+", maxVal="+GetFunctionMaxValue(fct));
 //        System.out.println("**** Integral ="+IntegrateFunction(fct, fct.min, fct.max));
         if (displayValues==true){
+            System.out.println("left= "+fct.left+", right= "+fct.right);
             double x;
             for (int i=fct.minIndex;i<=fct.maxIndex;i++){
                 x=Numbers.CGN(fct.min+(i-fct.minIndex)*fct.step);
@@ -310,7 +207,7 @@ public class Operators {
         // increase fct's support
         FunctionStructure prim=createFunction(0, fct.max, fct.step);
         for (int i =prim.minIndex+1;i<=prim.maxIndex;i++){
-            prim.values[i]=prim.values[i-1]+GetFunctionValue(fct, (i-1)*fct.step)*prim.step;
+            prim.values[i]=prim.values[i-1]+fct.GetFunctionValue((i-1)*fct.step)*prim.step;
         }
         /// normalization (crado ? rependre la boucle précédente pour être sûr de ne jamais dépasser 1 par le calcul ?)
 //        cum=AffineFunctionTransformation(1.0/GetFunctionMaxValue(cum),0, cum);
@@ -321,7 +218,7 @@ public class Operators {
         // increase fct's support
         FunctionStructure cum=createFunction(0, fct.max, fct.step);
         for (int i =cum.minIndex+1;i<=cum.maxIndex;i++){
-            cum.values[i]=cum.values[i-1]+GetFunctionValue(fct, (i-1)*fct.step)*cum.step;
+            cum.values[i]=cum.values[i-1]+fct.GetFunctionValue( (i-1)*fct.step)*cum.step;
         }
         /// normalization (crado ? rependre la boucle précédente pour être sûr de ne jamais dépasser 1 par le calcul ?)
         cum=AffineFunctionTransformation(1.0/GetFunctionMaxValue(cum),0, cum);
@@ -353,7 +250,7 @@ public class Operators {
             prod=Operators.createFunction(Math.max(fct1.min, fct2.min), Math.min(fct1.max, fct2.max), Numbers.LeastCommonStep(fct1.step,fct2.step));
 //            System.out.println("step1 ="+fct1.step+", step2 ="+fct2.step+", lqs ="+Numbers.LeastCommonStep(fct1.step,fct2.step));
             for (int i=prod.minIndex;i<=prod.maxIndex;i++){
-                prod.values[i]=GetFunctionValue(fct1, prod.min+i*prod.step)*GetFunctionValue(fct2, prod.min+i*prod.step);
+                prod.values[i]=fct1.GetFunctionValue( prod.min+i*prod.step)*fct2.GetFunctionValue( prod.min+i*prod.step);
             }
         }
         
@@ -365,7 +262,7 @@ public class Operators {
         double min=Math.max(fct.min, cumul.min);
         for (int i=prod.minIndex;i<=prod.maxIndex;i++){
             if (prod.min+i*prod.step <= cumul.max){
-                prod.values[i]=fct.values[i]*GetFunctionValue(cumul,prod.min+i*prod.step);
+                prod.values[i]=fct.values[i]*cumul.GetFunctionValue(prod.min+i*prod.step);
                     }
         }
         return prod;
@@ -376,7 +273,7 @@ public class Operators {
         double max=Math.min(fct.max, cumul.max);
         for (int i=prod.minIndex;i<=prod.maxIndex;i++){
             if (prod.min+i*prod.step >= cumul.min){
-                prod.values[i]=fct.values[i]*GetFunctionValue(cumul,prod.min+i*prod.step);
+                prod.values[i]=fct.values[i]*cumul.GetFunctionValue(prod.min+i*prod.step);
                     }
         }
         return prod;
@@ -391,7 +288,7 @@ public class Operators {
         else{
             prod=Operators.createFunction(fct1.min, fct1.max,Numbers.LeastCommonStep(fct1.step,fct2.step));
             for (int i=prod.minIndex;i<=prod.maxIndex;i++){
-                prod.values[i]=GetFunctionValue(fct1, prod.min+i*prod.step)*GetFunctionValue(fct2, prod.min+i*prod.step);
+                prod.values[i]=fct1.GetFunctionValue( prod.min+i*prod.step)*fct2.GetFunctionValue( prod.min+i*prod.step);
             }
         }
     return prod;
@@ -404,7 +301,7 @@ public class Operators {
         double x;
             for (int i=sum.minIndex;i<=sum.maxIndex;i++){
                 x=sum.min+(i-sum.minIndex)*sum.step;
-                sum.values[i]=GetFunctionValue(fct1,x)+GetFunctionValue(fct2,x);
+                sum.values[i]=fct1.GetFunctionValue(x)+fct2.GetFunctionValue(x);
 
             }
         return sum;
@@ -430,7 +327,7 @@ public class Operators {
     
     public static double LaplaceTransform(double lambda, FunctionStructure fct){
         FunctionStructure expo=Operators.createFunction(fct.min,fct.max,fct.step);
-        MapFunctionValues(expo,expo.min,expo.max,Operators.exp, -lambda);
+        expo.SetFunctionValuesFromInterface(expo.min,expo.max,Operators.exp, -lambda);
 //        Operators.plotFunction(MultiplyFunctions(fct, expo));
         double l=IntegrateFunction(MultiplyFunctions(fct, expo),fct.min,fct.max);
           return l;
