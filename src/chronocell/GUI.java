@@ -16,9 +16,9 @@ public class GUI extends javax.swing.JFrame {
     /**
      * Creates new form GUI
      */
-    public GUI(FunctionStructure fct, String name) {
+    public GUI(FunctionStructure fct) {
 //        f = fct;
-        setTitle(name);
+        setTitle(fct.name);
         SetFunction(fct);
         initComponents();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -129,7 +129,7 @@ public class GUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI(null,null).setVisible(true);
+                new GUI(null).setVisible(true);
             }
         });
     }
@@ -138,33 +138,40 @@ public class GUI extends javax.swing.JFrame {
         f=fct;
         
 //Operators.PrintFunction(fct, "fct", true);
-        Operators.PrintFunction( f,"gui0", false);
+//        Operators.PrintFunction( f,"gui0", false);
     }
     @Override
     public void paint(Graphics g){
         
-        Operators.PrintFunction( f,"gui1", false);
+//        Operators.PrintFunction( f,"gui1", false);
         super.paint(g);
         Graphics gp=jPanel1.getGraphics();
 //        double minVal=Operators.GetFunctionMinValue(f);
-        double minVal=0;
-        double maxVal=Operators.GetFunctionMaxValue(f);
+        double minVal=f.getMinValue();
+        double maxVal=f.getMaxValue();
         
          
 //        System.out.println("maxval "+maxVal);
 //Operators.PrintFunction(f, "f", true);
+        int absciss1=0;
+        int absciss2=Math.round(jPanel1.getWidth()/(f.maxIndex-f.minIndex+2));
+        int ordinate1=(int) Math.round((jPanel1.getHeight()/(minVal-maxVal))*(f.left-maxVal));
+        int ordinate2=(int) Math.round(jPanel1.getHeight()/(minVal-maxVal)*(f.values[0]-maxVal));
+        gp.drawLine(absciss1,ordinate1, absciss2,ordinate2);
         for (int i=f.minIndex;i<=f.maxIndex-1;i++){
-            
-            int absciss1=(int) Math.round((i-f.minIndex)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+1));
-//            System.out.println("i after "+(i));
-//            System.out.println(f.toString());
-            int absciss2=(int) Math.round((i-f.minIndex+1)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+1));
-            int ordinate1=(int) Math.round((jPanel1.getHeight()/(minVal-maxVal))*(f.values[i]-maxVal));
-            int ordinate2=(int) Math.round(jPanel1.getHeight()/(minVal-maxVal)*(f.values[i+1]-maxVal));
+            absciss1=(int) Math.round((i+1-f.minIndex)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+2));
+            absciss2=(int) Math.round((i+1-f.minIndex+1)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+2));
+            ordinate1=(int) Math.round((jPanel1.getHeight()/(minVal-maxVal))*(f.values[i]-maxVal));
+            ordinate2=(int) Math.round(jPanel1.getHeight()/(minVal-maxVal)*(f.values[i+1]-maxVal));
             gp.drawLine(absciss1,ordinate1, absciss2,ordinate2);
         }
-        lblXMin.setText((new Double(f.min)).toString());
-        lblXMax.setText((new Double(f.max)).toString());
+        absciss1=(int) Math.round((f.maxIndex+1-f.minIndex)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+2));
+        absciss2=(int) Math.round((f.maxIndex+1-f.minIndex+1)*jPanel1.getWidth()/(f.maxIndex-f.minIndex+2));
+        ordinate1=(int) Math.round((jPanel1.getHeight()/(minVal-maxVal))*(f.values[f.maxIndex]-maxVal));
+        ordinate2=(int) Math.round(jPanel1.getHeight()/(minVal-maxVal)*(f.right-maxVal));
+        gp.drawLine(absciss1,ordinate1, absciss2,ordinate2);
+        lblXMin.setText((new Double(f.min-f.step)).toString());
+        lblXMax.setText((new Double(f.max+f.step)).toString());
         lblYMin.setText((new Double(minVal)).toString());
         lblYMax.setText((new Double(maxVal)).toString());
     }

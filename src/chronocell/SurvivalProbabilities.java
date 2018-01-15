@@ -56,7 +56,7 @@ public class SurvivalProbabilities {
                }
                else {
                //System.out.println("division par"+Operators.GetFunctionValue(OneMinCumulDuree,t));
-                FunctionStructure temp=Operators.AffineFunctionTransformation(1/OneMinCumulDuree.GetFunctionValue(t),0.0,duree);
+                FunctionStructure temp=Operators.createAffineFunctionTransformation(1/OneMinCumulDuree.GetFunctionValue(t),0.0,duree);
                 // création de la fonction t/s (on pourrait créer 1/s et en prendre des trasnformation affine, mais le gain n'est pas clair
                 FunctionStructure homo=Operators.createFunction(t, duree.max, duree.step);
                 homo.SetFunctionValuesFromInterface(homo.min,homo.max , Operators.homographie, 0.0,t,1.0,0.0);
@@ -64,7 +64,7 @@ public class SurvivalProbabilities {
 //                    Operators.PrintFunction("homog", homo, true);
 //                    Operators.plotFunction(homo);
 //                }
-                temp=Operators.MultiplyFunctions(Operators.ComposeFunctionInterfaceWithFunction(Operators.piecewiseLinear,homo,homo.min,homo.max,p),temp);
+                temp=Operators.createProductFunction(Operators.ComposeFunctionInterfaceWithFunction(Operators.piecewiseLinear,homo,p),temp);
                 survival.values[i]=Operators.IntegrateFunction(temp, t, temp.max);
                 t+=survival.step;
                }

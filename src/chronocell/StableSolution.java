@@ -13,12 +13,12 @@ public class StableSolution {
     public static double LaplaceEquation(double lambda,CellDynamics dyn){
         double x=0.0;
         double y=0.0;
-        x=Operators.LaplaceTransform(lambda, Operators.MultiplyFunctions(dyn.G0.density.get("G1"), dyn.G0.oneMinCumul.get("Death")));
-        x*=Operators.LaplaceTransform(lambda, Operators.MultiplyFunctions(dyn.G1.density.get("G0"), dyn.G1.oneMinCumul.get("S")));
+        x=Operators.LaplaceTransform(lambda, Operators.createProductFunction(dyn.G0.density.get("G1"), dyn.G0.oneMinCumul.get("Death")));
+        x*=Operators.LaplaceTransform(lambda, Operators.createProductFunction(dyn.G1.density.get("G0"), dyn.G1.oneMinCumul.get("S")));
         y=Operators.LaplaceTransform(lambda, dyn.S.density.get("G2"));
         y*=Operators.LaplaceTransform(lambda, dyn.G2.density.get("M"));
         y*=Operators.LaplaceTransform(lambda, dyn.M.density.get("G1"));
-        y*=Operators.LaplaceTransform(lambda, Operators.MultiplyFunctions(dyn.G1.density.get("S"), dyn.G1.oneMinCumul.get("G0")));
+        y*=Operators.LaplaceTransform(lambda, Operators.createProductFunction(dyn.G1.density.get("S"), dyn.G1.oneMinCumul.get("G0")));
         return x+2*y;
     }
     
@@ -56,9 +56,9 @@ public class StableSolution {
         double lambda=SolveEquation(dyn);
         System.out.println("sol="+LaplaceEquation(lambda, dyn)+", lambda="+lambda);
         double[] LaplaceCoef = new double[dyn.phaseNb];
-        LaplaceCoef[0]=Operators.LaplaceTransform(lambda, Operators.MultiplyFunctions(dyn.G1.density.get("G0"), dyn.G1.oneMinCumul.get("S")));
+        LaplaceCoef[0]=Operators.LaplaceTransform(lambda, Operators.createProductFunction(dyn.G1.density.get("G0"), dyn.G1.oneMinCumul.get("S")));
         LaplaceCoef[1]=1.0;
-        LaplaceCoef[2]=Operators.LaplaceTransform(lambda, Operators.MultiplyFunctions(dyn.G1.density.get("S"), dyn.G1.oneMinCumul.get("G0")));
+        LaplaceCoef[2]=Operators.LaplaceTransform(lambda, Operators.createProductFunction(dyn.G1.density.get("S"), dyn.G1.oneMinCumul.get("G0")));
         LaplaceCoef[3]=LaplaceCoef[2]*Operators.LaplaceTransform(lambda, dyn.S.density.get("G2"));
         LaplaceCoef[4]=LaplaceCoef[3]*Operators.LaplaceTransform(lambda, dyn.G2.density.get("M"));
         double supportMax=0.0;
@@ -80,7 +80,7 @@ public class StableSolution {
         
         for (int i=0;i<dyn.phaseNb;i++){
 //             Operators.plotFunction(simulation.theta[0].getPhase(i));
-            theta.setPhase(i,Operators.AffineFunctionTransformation(LaplaceCoef[i],0.0,expo));
+            theta.setPhase(i,Operators.createAffineFunctionTransformation(LaplaceCoef[i],0.0,expo));
 //            Operators.plotFunction(theta.getPhase(i));
         } 
 //        theta.setPhase(1,Operators.AffineFunctionTransformation(10.0*LaplaceCoef[1],0.0,expo));

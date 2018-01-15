@@ -93,7 +93,7 @@ public class SimulationStructureOperators {
         for (int i=0;i<=Math.round(simu.duration/simu.timeStep);i++){
             populationSize.values[i]=CellPopulationOperators.GetPopulationSize(simu.pop, simu.timeStep*i);
         }
-        Operators.plotFunction(populationSize,"Population Size");
+        Operators.plotFunction(populationSize);
     };
     
     

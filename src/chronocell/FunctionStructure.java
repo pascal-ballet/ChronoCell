@@ -41,65 +41,135 @@ public class FunctionStructure {
         if (x>max) return right;
         return values[indexOfPoint(x)];
     }
+          
+    public  double getMaxValue(){
+        double maxVal=Math.max(left, right);
+        for (int i=minIndex+1;i<=maxIndex;i++){
+            if (values[i]>maxVal){
+                maxVal=values[i];
+            }
+        }
+        return maxVal;
+    }
+    public  double getMinValue(){
+        double minVal=Math.min(left, right);
+        for (int i=minIndex+1;i<=maxIndex;i++){
+            if (values[i]<minVal){
+                minVal=values[i];
+            }
+        }
+        return minVal;
+    }
       
      public void SetFunctionValue(double x, double y){
          y=Numbers.CGN(y);
-         System.out.println("setFunction value : x="+x+", y= "+y+", min= "+min+", max= "+max+", left= "+left+", right= "+right);
-        // Si x est dans le support, rien de spécial
+//         System.out.println("setFunction value : x="+x+", y= "+y+", min= "+min+", max= "+max+", left= "+left+", right= "+right);
         double xGrid=closestGridPoint(x);
+        // Si xGrid est dans le support, rien de spécial
         if ((xGrid>=min) && (xGrid<=max)){
             values[indexOfPoint(x)]=y;
-            System.out.println("valeur");
+//            System.out.println("valeur");
             return;
             }
         // si x est en dehors du support mais que y est égal à left (ou right), on ne fait rien
         if (((xGrid<min)&&(y==left))||((xGrid>max)&&(y==right))){
-            System.out.println("rien à faire");
+//            System.out.println("rien à faire");
             return;
         }
         // sinon, il faut agrandir le support à gauche ou à droite
         if(xGrid<min) {
-            // On cherchela première valeur de la grille en dessous de x
-            System.out.println("gauche");
-            ResizeFunctionSupport(xGrid, max);
+//            System.out.println("gauche");
+            ResizeFunctionSupportLeft(xGrid);
             values[0]=y;
             return;
         }
         if(xGrid>max){
-            System.out.println("droite");
-            ResizeFunctionSupport(min,xGrid);
+//            System.out.println("droite");
+            ResizeFunctionSupportRight(xGrid);
             values[values.length-1]=y;
             return;
         }
     } 
      
-     public void SetFunctionValuesFromInterface(double min, double max, FunctionInterface g,double ... p){
+     public void SetFunctionValuesFromInterface(double start, double end, FunctionInterface g,double ... p){
        // laisser l'appelant ajuster à la grille ?
-        min=Numbers.CGN(min);
-        max=Numbers.CGN(max);
+        start=closestGridPoint(start);
+        end=closestGridPoint(end);
+        if (start<min) ResizeFunctionSupportLeft(start);
+        if (end>max) ResizeFunctionSupportRight(end);
+         System.out.println("start="+start+", end="+end);
         // la boucle sur les valeurs de x semble plus propre que de travailler avec le tableau des valeurs.
-        for (double x=min;x<=max;x+=step){
+        double x=start;
+        for (;;){
+            System.out.println("x="+x);
             SetFunctionValue(x, g.op( x, p));
+            x=closestGridPoint(x+step);
+            if (x>end) return;
         }
     }
-     
-     public void ResizeFunctionSupport(double newMin, double newMax){
+      public void ResizeFunctionSupportLeft(double newMin){
         // typiquement le type de fonction dont on pourra évaluer l'intérêt de la coder directement avec les tableau de valeurs
         newMin=closestGridPoint(newMin);
-        newMax=closestGridPoint(newMax);
-        int size=(int) Math.round(1+(newMax-newMin)/step);
+        if (newMin>=min){
+            System.out.println("Erreur, resize left but newMin >=min");
+            return;
+        }
+        int size=(int) Math.round(1+(max-newMin)/step);
+         System.out.println("newSize="+size);
         double[] newValues=new double[size];
         for (int i=0;i<size;i++){
-            newValues[i]=GetFunctionValue(newMin+ i*step);
+            newValues[i]=GetFunctionValue(newMin+ (i)*step);
+            System.out.println("newval= "+ newValues[i]);
         }
         values=newValues;
         min=newMin;
-        max=newMax;
         minIndex=0;
         maxIndex=size-1;
 //        for (double x=fct2.min;x<=fct2.max;x+=fct2.step) SetFunctionValue(fct2, x,GetFunctionValue(x) );
 //        copyFunction(fct,fct2);
-    }
+    } 
+      
+         public void ResizeFunctionSupportRight(double newMax){
+        // typiquement le type de fonction dont on pourra évaluer l'intérêt de la coder directement avec les tableau de valeurs
+        newMax=closestGridPoint(newMax);
+        if (newMax<=max){
+            System.out.println("Error, resize right but newMax <= max");
+            return;
+        }
+        int size=(int) Math.round(1+(newMax-min)/step);
+         System.out.println("newSize="+size);
+        double[] newValues=new double[size];
+        for (int i=0;i<size;i++){
+            newValues[i]=GetFunctionValue(min+ (i)*step);
+            System.out.println("newval= "+ newValues[i]);
+        }
+        values=newValues;
+        minIndex=0;
+        max=newMax;
+        maxIndex=size-1;
+//        for (double x=fct2.min;x<=fct2.max;x+=fct2.step) SetFunctionValue(fct2, x,GetFunctionValue(x) );
+//        copyFunction(fct,fct2);
+    }   
+     
+//     public void ResizeFunctionSupport(double newMin, double newMax){
+//        // typiquement le type de fonction dont on pourra évaluer l'intérêt de la coder directement avec les tableau de valeurs
+//        newMin=closestGridPoint(newMin);
+//        newMax=closestGridPoint(newMax);
+//        int size=(int) Math.round(1+(newMax-newMin)/step);
+//         System.out.println("newSize="+size);
+//        double[] newValues=new double[size];
+//        for (int i=0;i<size;i++){
+//            newValues[i]=GetFunctionValue(newMin+ (i)*step);
+//            System.out.println("newval= "+ newValues[i]);
+//        }
+//        values=newValues;
+//        min=newMin;
+//        max=newMax;
+//        minIndex=0;
+//        maxIndex=size-1;
+////        for (double x=fct2.min;x<=fct2.max;x+=fct2.step) SetFunctionValue(fct2, x,GetFunctionValue(x) );
+////        copyFunction(fct,fct2);
+//    }
      
     public int checkIndex(){
         //check vaut 1 en cas de problème
@@ -126,18 +196,18 @@ public class FunctionStructure {
         int maxIdx=values.length-1;
         int minIdx=0;
         while (values[maxIdx]==right){
-            System.out.println("maxIdx=right "+maxIdx);
+//            System.out.println("maxIdx=right "+maxIdx);
             if (maxIdx>0) maxIdx--;
             else break;
         }
-            System.out.println("maxIdx= "+maxIdx);
+//            System.out.println("maxIdx= "+maxIdx);
         // On recherche l'indice le plus grand tel que toutes les valeurs avant cet indice sont égales à left
         while ((values[minIdx]==left)&&(minIdx<maxIdx)) minIdx++;
-            System.out.println("minIdx= "+minIdx);
+//            System.out.println("minIdx= "+minIdx);
         
         // En cas de différence, on le signale
         if ((minIdx!=minIndex)||(maxIdx!=maxIndex)) {
-            System.out.println("modification des index et du support de la fonction : "+name);
+//            System.out.println("modification des index et du support de la fonction : "+name);
             double newMin=Numbers.CGN(min+minIdx*step);
             double newMax=Numbers.CGN(min+maxIdx*step);
             double[] newVal= new double[maxIdx-minIdx+1];

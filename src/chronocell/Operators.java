@@ -71,54 +71,33 @@ public class Operators {
            
      
 
-    public static FunctionStructure ComposeFunctionInterfaceWithFunction(FunctionInterface g,FunctionStructure fct,double min,double max,double ... p){
-        FunctionStructure comp = createFunctionCopy(fct);
-        // Attention, ici le support de la fonction n'intervient pas, car rien ne dit que g(0)=0... 
-        // Vérifier analytiquement que l'on ne perd pas des parties de fonction à cause de la troncature dûe au support
-        min=Numbers.CGN(min);
-        max=Numbers.CGN(max);
-        for (double x=min;x<=max;x+=fct.step){
-            System.out.println("x= "+x+", exp(x)= "+g.op(fct.GetFunctionValue(x), p));
-            comp.SetFunctionValue(x, g.op(fct.GetFunctionValue(x), p));
-        }
+    public static FunctionStructure ComposeFunctionInterfaceWithFunction(FunctionInterface g,FunctionStructure fct,double ... p){
+        FunctionStructure comp = createFunction(fct.min, fct.max, fct.step);
         comp.left=g.op(fct.left,p);
         comp.right=g.op(fct.right,p);
+        double x=fct.min;
+        for (;;){
+            comp.SetFunctionValue(x, g.op(fct.GetFunctionValue(x), p));
+            x=fct.closestGridPoint(x+fct.step);
+            if (x>fct.max) break;
+        }
         return comp;
     }
     
 
     
-    public static double GetFunctionMaxValue(FunctionStructure fct){
-        double maxVal=fct.values[fct.minIndex];
-        for (int i=fct.minIndex+1;i<=fct.maxIndex;i++){
-            if (fct.values[i]>maxVal){
-                maxVal=fct.values[i];
-            }
-        }
-        return maxVal;
-    }
-    public static double GetFunctionMinValue(FunctionStructure fct){
-        double minVal=fct.values[fct.minIndex];
-        for (int i=fct.minIndex+1;i<=fct.maxIndex;i++){
-            if (fct.values[i]<minVal){
-                minVal=fct.values[i];
-            }
-        }
-        return minVal;
-    }
     
-    public static void PrintFunction(FunctionStructure fct,String name,boolean displayValues){
-        System.out.println("");
-        System.out.println("Function "+name);
-        System.out.println(fct);
-        System.out.println("step="+fct.step);
-        System.out.println("support=["+fct.min+","+fct.max+"]");
-        System.out.println("minIndex="+fct.minIndex+", maxIndex="+fct.maxIndex);
+    
+    public static void PrintFunction(FunctionStructure fct,boolean displayValues){
+        System.out.println("*** Print Function***");
+        System.out.println("Name= "+fct.name+", Adress= "+fct);
+        System.out.println("support=["+fct.min+","+fct.max+"]"+", step="+fct.step);
+//        System.out.println("minIndex="+fct.minIndex+", maxIndex="+fct.maxIndex);
 //       for (int i=0;i<fct.values.length;i++){
 //            System.err.format("**** f(%f)=%f\n",fct.min+(i-fct.minIndex)*fct.step,fct.values[i]);
 //        }
-        System.out.println("minVal="+GetFunctionMinValue(fct)+", maxVal="+GetFunctionMaxValue(fct));
-//        System.out.println("**** Integral ="+IntegrateFunction(fct, fct.min, fct.max));
+        System.out.println("minVal="+fct.getMinValue()+", maxVal="+fct.getMaxValue());
+        System.out.println("**** Integral ="+IntegrateFunction(fct, fct.min, fct.max));
         if (displayValues==true){
             System.out.println("left= "+fct.left+", right= "+fct.right);
             double x;
@@ -129,105 +108,73 @@ public class Operators {
  
         }
     } 
-    public static void plotFunction(FunctionStructure fct,String name){
-        GUI win =new GUI(fct,name);
+    public static void plotFunction(FunctionStructure fct){
+        GUI win =new GUI(fct);//,fct.name);
 //        win.SetFunction(fct);
         win.setVisible(true);
     }
     
-    public static FunctionStructure FunctionSupport(FunctionStructure fct){
-        double min=fct.min;
-        for (int i=fct.minIndex;i<fct.maxIndex;i++){
-            /// arrondi à paramétrer
-            if (Numbers.IsZero(fct.values[i])){
-                min+=fct.step;
-            }
-            else {
-                break;
-            }
-        }
-        double max=fct.max;
-        for (int i=fct.maxIndex;i>=fct.minIndex;i--){
-            if (Numbers.IsZero(fct.values[i])){
-                max-=fct.step;
-            }
-            else {
-                break;
-            }
-        }
-        FunctionStructure ind=createFunction(min, max, fct.step);
-        for (int i=ind.minIndex;i<=ind.maxIndex;i++){
-            ind.values[i]=1.0;
-        }
-        return ind;
-    }
-    
-    public static FunctionStructure CropFunction(FunctionStructure fct){
-        FunctionStructure ind=FunctionSupport(fct);
-        fct=MultiplyFunctions(fct, ind);
-        return fct;
-    }
-    
-    public static FunctionStructure AlphaFunction(FunctionStructure f1,FunctionStructure F1,FunctionStructure F2){
-        FunctionStructure alpha,MF1,MF2,fF,temp;
-        temp=Operators.MultiplyFunctions(f1,F2);
-        // ne pas calculer si au départ le produit fF est nul. Crado, à reprendre.
-        if (Numbers.IsZero(Operators.GetFunctionMaxValue(temp))){
-            alpha=temp;
-        }
-        else {
-        fF=MultiplyFunctions(Operators.FunctionSupport(f1),Operators.FunctionSupport(F2));
-        MF1=CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0, F1));
-        MF1=PowerOfFunction(MF1,-1.0);
-        MF2=CropFunction(Operators.AffineFunctionTransformation(-1.0, 1.0, F2));
-        MF2=Operators.PowerOfFunction(MF2,-1.0);
-        temp=Operators.MultiplyFunctions(fF, MF1);
-        temp=Operators.MultiplyFunctions(temp, MF2);
-        alpha=Operators.CumulativeFunction(temp);
-        }
-        return alpha;
-    } 
+
     
       
     
      public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
         double sum=0.0;
-        int start=(int) Numbers.CGN(Math.round(fct.minIndex+(Math.max(inf, fct.min)-fct.min)/fct.step));
-        int end=(int)  Numbers.CGN(Math.round(fct.minIndex+(Math.min(sup, fct.max)-fct.min)/fct.step));
-        
-//         System.err.format("start=%d, end=%d \n",start,end);
-        for (int i=start;i<end;i++){
-            // rectangles
-            sum+=fct.values[i]*fct.step;
+        //        int start=(int) Numbers.CGN(Math.round(fct.minIndex+(Math.max(inf, fct.min)-fct.min)/fct.step));
+        //        int end=(int)  Numbers.CGN(Math.round(fct.minIndex+(Math.min(sup, fct.max)-fct.min)/fct.step));
+
+        //         System.err.format("start=%d, end=%d \n",start,end);
+        //System.out.println("inxinf="+fct.indexOfPoint(inf)+", inxsup="+fct.indexOfPoint(sup));
+        for (int i=fct.indexOfPoint(inf);i<fct.indexOfPoint(sup);i++){
+            // trapèzes
+            sum+=Numbers.CGN((fct.values[i]+fct.values[i+1])/2*fct.step);
         }
         return sum;
     } 
      
-    public static FunctionStructure Primitive(FunctionStructure fct){
-        // increase fct's support
-        FunctionStructure prim=createFunction(0, fct.max, fct.step);
-        for (int i =prim.minIndex+1;i<=prim.maxIndex;i++){
-            prim.values[i]=prim.values[i-1]+fct.GetFunctionValue((i-1)*fct.step)*prim.step;
-        }
-        /// normalization (crado ? rependre la boucle précédente pour être sûr de ne jamais dépasser 1 par le calcul ?)
-//        cum=AffineFunctionTransformation(1.0/GetFunctionMaxValue(cum),0, cum);
-        return prim;
-    } 
+     
+    public static FunctionStructure createDistributionFromFunction(FunctionStructure fct){
+        fct.left=0.0;
+        fct.right=0.0;
+        double norm=Numbers.CGN(1/IntegrateFunction(fct, fct.min, fct.max));
+        return createAffineFunctionTransformation(norm, 0, fct);
+    }  
+//    public static FunctionStructure Primitive(FunctionStructure fct){
+//        // increase fct's support
+//        FunctionStructure prim=createFunction(0, fct.max, fct.step);
+//        for (int i =prim.minIndex+1;i<=prim.maxIndex;i++){
+//            prim.values[i]=prim.values[i-1]+fct.GetFunctionValue((i-1)*fct.step)*prim.step;
+//        }
+//        /// normalization (crado ? rependre la boucle précédente pour être sûr de ne jamais dépasser 1 par le calcul ?)
+////        cum=AffineFunctionTransformation(1.0/GetFunctionMaxValue(cum),0, cum);
+//        return prim;
+//    } 
      
     public static FunctionStructure CumulativeFunction(FunctionStructure fct){
-        // increase fct's support
-        FunctionStructure cum=createFunction(0, fct.max, fct.step);
+        if ((!Numbers.IsZero(fct.left))||(!Numbers.IsZero(fct.right))){
+            System.out.println("Erreur, calcul de fonction de répartition d'une fonction qui n'est pas une distribution (support non borné)");
+        } 
+        if ((!Numbers.IsZero(Numbers.CGN(Operators.IntegrateFunction(fct, fct.min, fct.max)-1.0)))){
+            System.out.println("Attention, calcul de fonction de répartition d'une fonction qui n'est pas une distribution : intégrale ="+Numbers.CGN(Operators.IntegrateFunction(fct, fct.min, fct.max)));
+        }
+        FunctionStructure cum=createFunction(fct.min, fct.max, fct.step);
+        cum.left=0.0;
+        cum.right=1.0;
+        
         for (int i =cum.minIndex+1;i<=cum.maxIndex;i++){
-            cum.values[i]=cum.values[i-1]+fct.GetFunctionValue( (i-1)*fct.step)*cum.step;
+            cum.values[i]=cum.values[i-1]+(fct.GetFunctionValue( (i-1)*fct.step)+fct.GetFunctionValue((i)*fct.step))/2*cum.step;
         }
         /// normalization (crado ? rependre la boucle précédente pour être sûr de ne jamais dépasser 1 par le calcul ?)
-        cum=AffineFunctionTransformation(1.0/GetFunctionMaxValue(cum),0, cum);
+//        cum=AffineFunctionTransformation(1.0/cum.getMaxValue(),0, cum);
         return cum;
     } 
      
     
     public static FunctionStructure PowerOfFunction(FunctionStructure fct1,double pow){
         FunctionStructure power=createFunctionCopy(fct1);
+        fct1.name=null;
+        fct1.left=Math.pow(fct1.left,pow);
+        fct1.right=Math.pow(fct1.right,pow);
         for (int i=power.minIndex;i<=power.maxIndex;i++){
                 power.values[i]=Math.pow(fct1.values[i],pow);
                
@@ -239,8 +186,8 @@ public class Operators {
         
     return power;
     }  
-    
-    public static FunctionStructure MultiplyFunctions(FunctionStructure fct1,FunctionStructure fct2){
+//******************** Reprendre ici, modif cruciale avec le left et right
+    public static FunctionStructure createProductFunction(FunctionStructure fct1,FunctionStructure fct2){
         FunctionStructure prod=new FunctionStructure();
 //        if ((fct1.min-fct2.max)*(fct2.min-fct1.max)<0) {
         if (((fct1.max<fct2.min)||(fct2.max<fct1.min))) {
@@ -307,11 +254,11 @@ public class Operators {
         return sum;
     } 
     
-    public static FunctionStructure AffineFunctionTransformation(double a, double b, FunctionStructure fct){
+    public static FunctionStructure createAffineFunctionTransformation(double a, double b, FunctionStructure fct){
         FunctionStructure transf=Operators.createFunctionCopy(fct);
 //        PrintFunction("affineTranform",transf);
         for (int i=transf.minIndex;i<=transf.maxIndex;i++){
-            transf.values[i]=fct.values[i]*a+b;
+            transf.values[i]=Numbers.CGN(fct.values[i]*a+b);
         }
 //        PrintFunction("affineTranformAfter",transf);
     return transf;
@@ -329,7 +276,7 @@ public class Operators {
         FunctionStructure expo=Operators.createFunction(fct.min,fct.max,fct.step);
         expo.SetFunctionValuesFromInterface(expo.min,expo.max,Operators.exp, -lambda);
 //        Operators.plotFunction(MultiplyFunctions(fct, expo));
-        double l=IntegrateFunction(MultiplyFunctions(fct, expo),fct.min,fct.max);
+        double l=IntegrateFunction(createProductFunction(fct, expo),fct.min,fct.max);
           return l;
     } 
     
@@ -367,6 +314,59 @@ public class Operators {
         fct.maxIndex=2*fct.values.length-1;
         fct.values=newVal;
     }
+    
+        public static FunctionStructure FunctionSupport(FunctionStructure fct){
+        double min=fct.min;
+        for (int i=fct.minIndex;i<fct.maxIndex;i++){
+            /// arrondi à paramétrer
+            if (Numbers.IsZero(fct.values[i])){
+                min+=fct.step;
+            }
+            else {
+                break;
+            }
+        }
+        double max=fct.max;
+        for (int i=fct.maxIndex;i>=fct.minIndex;i--){
+            if (Numbers.IsZero(fct.values[i])){
+                max-=fct.step;
+            }
+            else {
+                break;
+            }
+        }
+        FunctionStructure ind=createFunction(min, max, fct.step);
+        for (int i=ind.minIndex;i<=ind.maxIndex;i++){
+            ind.values[i]=1.0;
+        }
+        return ind;
+    }
+    
+    public static FunctionStructure CropFunction(FunctionStructure fct){
+        FunctionStructure ind=FunctionSupport(fct);
+        fct=createProductFunction(fct, ind);
+        return fct;
+    }
+    
+    public static FunctionStructure AlphaFunction(FunctionStructure f1,FunctionStructure F1,FunctionStructure F2){
+        FunctionStructure alpha,MF1,MF2,fF,temp;
+        temp=Operators.createProductFunction(f1,F2);
+        // ne pas calculer si au départ le produit fF est nul. Crado, à reprendre.
+        if (Numbers.IsZero(temp.getMaxValue())){
+            alpha=temp;
+        }
+        else {
+        fF=createProductFunction(Operators.FunctionSupport(f1),Operators.FunctionSupport(F2));
+        MF1=CropFunction(Operators.createAffineFunctionTransformation(-1.0, 1.0, F1));
+        MF1=PowerOfFunction(MF1,-1.0);
+        MF2=CropFunction(Operators.createAffineFunctionTransformation(-1.0, 1.0, F2));
+        MF2=Operators.PowerOfFunction(MF2,-1.0);
+        temp=Operators.createProductFunction(fF, MF1);
+        temp=Operators.createProductFunction(temp, MF2);
+        alpha=Operators.CumulativeFunction(temp);
+        }
+        return alpha;
+    } 
     
        ///                                   Lambda part, create a new package ?
     

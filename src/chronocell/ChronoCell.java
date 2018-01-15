@@ -24,7 +24,6 @@
 package chronocell;
 import java.util.*;
 import static chronocell.Operators.IntegrateFunction;
-import static chronocell.Operators.MultiplyFunctions;
 import static chronocell.Operators.PowerOfFunction;
 import static chronocell.Operators.TranslateFunction;
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Hashtable;
 import javax.print.attribute.HashAttributeSet;
+import static chronocell.Operators.createProductFunction;
 //import java.math.BigDecimal;
 //import java.math.BigInteger;
 //import java.math.MathContext;
@@ -54,18 +54,23 @@ public class ChronoCell {
     
     public static void main(String[] args) {
         
-         FunctionStructure f= Operators.createFunction(0, 0.5, 0.1);
+         FunctionStructure f= Operators.createFunction(0, 3, 0.1);
          f.name="fonctionTest";
+         f.left=0;
          f.right=0;
-         f.left=1;
-        f.SetFunctionValuesFromInterface( 0.1, 0.2, Operators.constant, 1);
-        Operators.PrintFunction(f, f.name, true);
-        f.checkAndAdjustSupport();
-        Operators.PrintFunction(f, f.name, true);
-        f=Operators.ComposeFunctionInterfaceWithFunction(Operators.exp, f, 0, 0.7, 1);
-//        Operators.SetFunctionValue(f,11.3,11.0);
-        Operators.PrintFunction(f, f.toString(), true);
+         f.SetFunctionValuesFromInterface(1, 2, Operators.constant, 1);
+//         f=Operators.createDistributionFromFunction(f);
+        
 //        f.checkAndAdjustSupport();
+        Operators.plotFunction(f);
+//        Operators.SetFunctionValue(f,11.3,11.0);
+        Operators.PrintFunction(f,  true);
+        FunctionStructure power=Operators.PowerOfFunction(f,2);
+        power.name="power";
+        Operators.PrintFunction(power,  true);
+        Operators.plotFunction(power);
+//        Operators.PrintFunction(Operators.ComposeFunctionInterfaceWithFunction(Operators.exp, f, 1),true);
+        
 //        Operators.PrintFunction(f, f.name, true);
 //        System.out.println("val: "+Operators.GetFunctionValue(f, 60));
 //        Operators.MapFunctionValues(f, -10, 12, Operators.exp, 2.0);

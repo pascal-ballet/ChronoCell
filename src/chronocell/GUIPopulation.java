@@ -366,7 +366,7 @@ public class GUIPopulation extends javax.swing.JFrame {
         if(pos == 4) jp = jPanel4;
         Graphics gp = jp.getGraphics();
         double minVal1=0;
-        double maxVal1=Math.max(1, Operators.GetFunctionMaxValue(fun));
+        double maxVal1=Math.max(1, fun.getMaxValue());
         for (int i=fun.minIndex;i<=fun.maxIndex-1;i++){
             int absciss11=(int) Math.round((i-fun.minIndex)*jPanel1.getWidth()/(fun.maxIndex-fun.minIndex+1));
             int absciss12=(int) Math.round((i-fun.minIndex+1)*jPanel1.getWidth()/(fun.maxIndex-fun.minIndex+1));
