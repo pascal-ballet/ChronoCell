@@ -25,7 +25,7 @@ public class CellDynamicsOperators {
         dyn.G0.oneMinCumul.put("G1", Operators.CropFunction(Operators.createAffineFunctionTransformation(-1.0, 1.0,dyn.G0.cumul.get("G1"))));
         ///// time in phase
 //        Operators.plotFunction(dyn.G0.density.get("G1"));
-        dyn.G0.timeDensity=Operators.AddFunctions(Operators.createProductFunction(dyn.G0.density.get("G1"), dyn.G0.oneMinCumul.get("Death")),
+        dyn.G0.timeDensity=Operators.createSumFunction(Operators.createProductFunction(dyn.G0.density.get("G1"), dyn.G0.oneMinCumul.get("Death")),
         Operators.createProductFunction(dyn.G0.density.get("Death"), dyn.G0.oneMinCumul.get("G1")));
         dyn.G0.timeOneMinCumul=Operators.createProductFunction(dyn.G0.oneMinCumul.get("Death"), dyn.G0.oneMinCumul.get("G1"));
         
@@ -36,7 +36,7 @@ public class CellDynamicsOperators {
         dyn.G1.oneMinCumul.put("G0", Operators.createAffineFunctionTransformation(-1.0, 1.0,dyn.G1.cumul.get("G0")));
         dyn.G1.oneMinCumul.put("S", Operators.createAffineFunctionTransformation(-1.0, 1.0,dyn.G1.cumul.get("S")));
         ///// time in phase
-        dyn.G1.timeDensity=Operators.AddFunctions(Operators.createProductFunction(dyn.G1.density.get("G0"), dyn.G1.oneMinCumul.get("S")),
+        dyn.G1.timeDensity=Operators.createSumFunction(Operators.createProductFunction(dyn.G1.density.get("G0"), dyn.G1.oneMinCumul.get("S")),
         Operators.createProductFunction(dyn.G1.density.get("S"), dyn.G1.oneMinCumul.get("G0")));
         dyn.G1.timeOneMinCumul=Operators.createProductFunction(dyn.G1.oneMinCumul.get("G0"), dyn.G1.oneMinCumul.get("S"));
         // S

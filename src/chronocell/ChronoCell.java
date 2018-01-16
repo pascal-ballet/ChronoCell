@@ -57,24 +57,19 @@ public class ChronoCell {
          FunctionStructure f= Operators.createFunction(0, 3, 0.1);
          f.name="fonctionTest";
          f.left=0;
-         f.right=0;
-         f.SetFunctionValuesFromInterface(1, 2, Operators.constant, 1);
-//         f=Operators.createDistributionFromFunction(f);
+         f.right=1;
+         f.SetFunctionValuesFromInterface(0, 3, Operators.piecewiseLinear, 0,0,3,1);
+         
+         FunctionStructure g= Operators.createFunction(1, 6, 0.01);
+         g.name="fonctionTest2";
+         g.left=0;
+         g.right=5;
+         g.SetFunctionValuesFromInterface(1,6, Operators.piecewiseLinear, 1,0,6,5);
+         Operators.plotFunction(g);
+         FunctionStructure p=Operators.createProductFunction(f, g);
+         p.name="product";
+         System.out.println("laplace="+Operators.LaplaceTransform(0.1, g));
         
-//        f.checkAndAdjustSupport();
-        Operators.plotFunction(f);
-//        Operators.SetFunctionValue(f,11.3,11.0);
-        Operators.PrintFunction(f,  true);
-        FunctionStructure power=Operators.PowerOfFunction(f,2);
-        power.name="power";
-        Operators.PrintFunction(power,  true);
-        Operators.plotFunction(power);
-//        Operators.PrintFunction(Operators.ComposeFunctionInterfaceWithFunction(Operators.exp, f, 1),true);
-        
-//        Operators.PrintFunction(f, f.name, true);
-//        System.out.println("val: "+Operators.GetFunctionValue(f, 60));
-//        Operators.MapFunctionValues(f, -10, 12, Operators.exp, 2.0);
-//        Operators.PrintFunction(f, f.name, true);
         Numbers.minStep=0.00001;
         double precision=0.01;
         double step=0.1;

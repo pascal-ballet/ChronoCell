@@ -35,6 +35,10 @@ public class FunctionStructure {
         return minIndex+ (int) Numbers.CGN(Math.round((x-min)/step));
     }
         
+        public double pointWithIndex(int i){
+        return Numbers.CGN(min+ i*step);
+    }
+        
           public double GetFunctionValue(double x){
         // On utilise les valeurs par défaut à gauche et à droite
         if (x<min) return left;

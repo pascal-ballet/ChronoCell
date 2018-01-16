@@ -186,77 +186,79 @@ public class Operators {
         
     return power;
     }  
-//******************** Reprendre ici, modif cruciale avec le left et right
-    public static FunctionStructure createProductFunction(FunctionStructure fct1,FunctionStructure fct2){
-        FunctionStructure prod=new FunctionStructure();
-//        if ((fct1.min-fct2.max)*(fct2.min-fct1.max)<0) {
-        if (((fct1.max<fct2.min)||(fct2.max<fct1.min))) {
-            prod=Operators.createFunction(0,0,1);
-        }
-        else{
-            prod=Operators.createFunction(Math.max(fct1.min, fct2.min), Math.min(fct1.max, fct2.max), Numbers.LeastCommonStep(fct1.step,fct2.step));
-//            System.out.println("step1 ="+fct1.step+", step2 ="+fct2.step+", lqs ="+Numbers.LeastCommonStep(fct1.step,fct2.step));
-            for (int i=prod.minIndex;i<=prod.maxIndex;i++){
-                prod.values[i]=fct1.GetFunctionValue( prod.min+i*prod.step)*fct2.GetFunctionValue( prod.min+i*prod.step);
-            }
+    
+    public static FunctionStructure createProductFunction(FunctionStructure f1,FunctionStructure f2){
+        FunctionStructure prod=createFunction(Math.min(f1.min,f2.min ), Math.max(f1.max,f2.max ), Numbers.LeastCommonStep(f1.step, f2.step));
+        prod.left=Numbers.CGN(f1.left*f2.left);
+        prod.right=Numbers.CGN(f1.right*f2.right);
+        double x;
+        for (int i=prod.minIndex;i<=prod.maxIndex;i++){
+            x=prod.pointWithIndex(i);
+            prod.values[i]=f1.GetFunctionValue(x)*f2.GetFunctionValue(x);
         }
         
     return prod;
     } 
     
-        public static FunctionStructure MultiplyFunctionByCumulative(FunctionStructure fct,FunctionStructure cumul){
-        FunctionStructure prod=createFunctionCopy(fct);
-        double min=Math.max(fct.min, cumul.min);
-        for (int i=prod.minIndex;i<=prod.maxIndex;i++){
-            if (prod.min+i*prod.step <= cumul.max){
-                prod.values[i]=fct.values[i]*cumul.GetFunctionValue(prod.min+i*prod.step);
-                    }
-        }
-        return prod;
-    }
+//        public static FunctionStructure MultiplyFunctionByCumulative(FunctionStructure fct,FunctionStructure cumul){
+//        FunctionStructure prod=createFunctionCopy(fct);
+//        double min=Math.max(fct.min, cumul.min);
+//        for (int i=prod.minIndex;i<=prod.maxIndex;i++){
+//            if (prod.min+i*prod.step <= cumul.max){
+//                prod.values[i]=fct.values[i]*cumul.GetFunctionValue(prod.min+i*prod.step);
+//                    }
+//        }
+//        return prod;
+//    }
         
-            public static FunctionStructure MultiplyFunctionByOneMinusCumulative(FunctionStructure fct,FunctionStructure cumul){
-        FunctionStructure prod=createFunctionCopy(fct);
-        double max=Math.min(fct.max, cumul.max);
-        for (int i=prod.minIndex;i<=prod.maxIndex;i++){
-            if (prod.min+i*prod.step >= cumul.min){
-                prod.values[i]=fct.values[i]*cumul.GetFunctionValue(prod.min+i*prod.step);
-                    }
-        }
-        return prod;
-    }
+//            public static FunctionStructure MultiplyFunctionByOneMinusCumulative(FunctionStructure fct,FunctionStructure cumul){
+//        FunctionStructure prod=createFunctionCopy(fct);
+//        double max=Math.min(fct.max, cumul.max);
+//        for (int i=prod.minIndex;i<=prod.maxIndex;i++){
+//            if (prod.min+i*prod.step >= cumul.min){
+//                prod.values[i]=fct.values[i]*cumul.GetFunctionValue(prod.min+i*prod.step);
+//                    }
+//        }
+//        return prod;
+//    }
      
-    public static FunctionStructure MultiplyFunctionRaw(FunctionStructure fct1,FunctionStructure fct2){
-        FunctionStructure prod=new FunctionStructure();
-//        if ((fct1.min-fct2.max)*(fct2.min-fct1.max)<0) {
-        if (((fct1.max<fct2.min)||(fct2.max<fct1.min))) {
-            prod=Operators.createFunction(0,0,1);
-        }
-        else{
-            prod=Operators.createFunction(fct1.min, fct1.max,Numbers.LeastCommonStep(fct1.step,fct2.step));
-            for (int i=prod.minIndex;i<=prod.maxIndex;i++){
-                prod.values[i]=fct1.GetFunctionValue( prod.min+i*prod.step)*fct2.GetFunctionValue( prod.min+i*prod.step);
-            }
-        }
-    return prod;
-    }  
+//    public static FunctionStructure MultiplyFunctionRaw(FunctionStructure fct1,FunctionStructure fct2){
+//        FunctionStructure prod=new FunctionStructure();
+////        if ((fct1.min-fct2.max)*(fct2.min-fct1.max)<0) {
+//        if (((fct1.max<fct2.min)||(fct2.max<fct1.min))) {
+//            prod=Operators.createFunction(0,0,1);
+//        }
+//        else{
+//            prod=Operators.createFunction(fct1.min, fct1.max,Numbers.LeastCommonStep(fct1.step,fct2.step));
+//            for (int i=prod.minIndex;i<=prod.maxIndex;i++){
+//                prod.values[i]=fct1.GetFunctionValue( prod.min+i*prod.step)*fct2.GetFunctionValue( prod.min+i*prod.step);
+//            }
+//        }
+//    return prod;
+//    }  
     
 
     
-    public static FunctionStructure AddFunctions(FunctionStructure fct1,FunctionStructure fct2){
-        FunctionStructure sum=Operators.createFunction(Math.min(fct1.min, fct2.min), Math.max(fct1.max, fct2.max), Numbers.LeastCommonStep(fct1.step,fct2.step));
+    public static FunctionStructure createSumFunction(FunctionStructure f1,FunctionStructure f2){
+        FunctionStructure sum=Operators.createFunction(Math.min(f1.min, f2.min), Math.max(f1.max, f2.max), Numbers.LeastCommonStep(f1.step,f2.step));
         double x;
-            for (int i=sum.minIndex;i<=sum.maxIndex;i++){
-                x=sum.min+(i-sum.minIndex)*sum.step;
-                sum.values[i]=fct1.GetFunctionValue(x)+fct2.GetFunctionValue(x);
-
-            }
+        sum.left=Numbers.CGN(f1.left+f2.left);
+        sum.right=Numbers.CGN(f1.right+f2.right);
+        for (int i=sum.minIndex;i<=sum.maxIndex;i++){
+            x=sum.pointWithIndex(i);
+            sum.values[i]=Numbers.CGN(f1.GetFunctionValue(x)+f2.GetFunctionValue(x));
+        }
         return sum;
     } 
     
+    
+    
     public static FunctionStructure createAffineFunctionTransformation(double a, double b, FunctionStructure fct){
+        // crée x -> af(x)+b
         FunctionStructure transf=Operators.createFunctionCopy(fct);
 //        PrintFunction("affineTranform",transf);
+        transf.left=Numbers.CGN(fct.left*a+b);
+        transf.right=Numbers.CGN(fct.right*a+b);
         for (int i=transf.minIndex;i<=transf.maxIndex;i++){
             transf.values[i]=Numbers.CGN(fct.values[i]*a+b);
         }
@@ -267,18 +269,20 @@ public class Operators {
     public static FunctionStructure TranslateFunction(double t, FunctionStructure fct){
 //        PrintFunction(fct);
         FunctionStructure transl=createFunctionCopy(fct);
-        transl.min+=t;
-        transl.max+=t;
+        transl.min=transl.closestGridPoint(transl.min+t);
+        transl.max=transl.closestGridPoint(transl.max+t);
     return transl;
     } 
     
     public static double LaplaceTransform(double lambda, FunctionStructure fct){
         FunctionStructure expo=Operators.createFunction(fct.min,fct.max,fct.step);
-        expo.SetFunctionValuesFromInterface(expo.min,expo.max,Operators.exp, -lambda);
+        expo.SetFunctionValuesFromInterface(expo.min,expo.max,Operators.exp,-lambda);
 //        Operators.plotFunction(MultiplyFunctions(fct, expo));
         double l=IntegrateFunction(createProductFunction(fct, expo),fct.min,fct.max);
-          return l;
+          return Numbers.CGN(l+(fct.left*(1-Math.exp(-lambda*fct.min))+fct.right*Math.exp(-lambda*fct.max))/lambda);
     } 
+    
+    //*************
     
     public static double InverseLaplaceTransform(double x, FunctionStructure fct){
         double step=0.001;

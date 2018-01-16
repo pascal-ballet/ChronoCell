@@ -39,7 +39,7 @@ public class CellPopulationOperators {
 ////                Operators.plotFunction(temp,"temp before");
 //                Operators.PrintFunction(temp,"temp before",false);
 //            }
-            temp=Operators.MultiplyFunctionRaw(temp,temp);
+            temp=Operators.createProductFunction(temp,temp);
 //            temp=Operators.AffineFunctionTransformation(0.5, 0.0, temp);
 //            if (i==3){
 ////                Operators.plotFunction(temp,temp.toString());
