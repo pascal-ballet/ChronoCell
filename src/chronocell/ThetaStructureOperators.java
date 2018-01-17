@@ -5,11 +5,11 @@
  */
 package chronocell;
 
-import static chronocell.Operators.DoubleArraySizeToLeft;
 import static chronocell.Operators.IntegrateFunction;
-import static chronocell.Operators.PowerOfFunction;
 import static chronocell.Operators.TranslateFunction;
 import static chronocell.Operators.createProductFunction;
+import static chronocell.Operators.DoubleValuesArraySizeToLeft;
+import static chronocell.Operators.createPowerOfFunction;
 
 /**
  *
@@ -20,7 +20,7 @@ public class ThetaStructureOperators {
         // If solutions' support is filled, increase the size of array sol.values
         for (int i=0;i<dyn.phaseNb;i++){
             if (theta.getPhase(i).minIndex==0){
-                DoubleArraySizeToLeft(theta.getPhase(i));
+                DoubleValuesArraySizeToLeft(theta.getPhase(i));
             }
 //            theta.getPhase(i).min=theta.getPhase(i).min-theta.getPhase(i).step;
 //            theta.getPhase(i).minIndex-=1;

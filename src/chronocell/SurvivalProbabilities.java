@@ -8,6 +8,7 @@ package chronocell;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+//import java.rmi.server.Operation;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -31,7 +32,6 @@ public class SurvivalProbabilities {
            while(dose>data.getPhase(phase)[iDose][0]){ iDose++;
            }
            iDose--;
-           //System.out.println("tableau"+data.getPhase(phase)[iDose][0]+"dose"+dose);
            // la dose est comprise entre la ligne i et la ligne i+1
            // à terme il faudrait interpoler, mais on peut commencer simplement par une approximation de la dose par celle de la ligne i
            double[] p=new double[(data.getPhase(phase)[0].length-1)*2];
@@ -39,39 +39,39 @@ public class SurvivalProbabilities {
                p[2*j]=data.getPhase(phase)[0][j+1];
                p[2*j+1]=data.getPhase(phase)[iDose][j+1];
            }
-//           FunctionStructure test=Operators.createFunction(0.0, 1.0, duree.step);
-//           Operators.PrintFunction("test", test, true);
-//           Operators.MapFunctionValues(test,0.0,1.0, Operators.piecewiseLinear, p);
-//           Operators.PrintFunction("test", test, true);
-//           Operators.plotFunction(test);
+           FunctionStructure pData=Operators.createFunction(0.0, 1.0, duree.step);
+           pData.SetFunctionValuesFromInterface(0.0, 1.0, Operators.piecewiseLinear, p);
+           Operators.plotFunction(pData);
+           Operators.plotFunction(duree);
            FunctionStructure survival=Operators.createFunction(duree.min,duree.max,duree.step);
+           FunctionStructure temp=new FunctionStructure();
            // Il faut initialiser la valeur de la proba de survie pour t=0, car celle-ci ne peut pas se calculer par une intégrale, puisque quel que soit
            // leur temps de passage, elles en sont au temps 0 de ce temps relatif. Après, on risque d'avoir un problème d'intégrale non unitaire 
-           survival.values[0]=p[1];
-           double t=survival.min+survival.step;
-           for (int i=survival.minIndex+1;i<=survival.maxIndex;i++){
+//           survival.values[0]=p[1];
+//           double t=survival.min+survival.step;
+           double t=survival.min;
+           for (int i=survival.minIndex;i<=survival.maxIndex;i++){
                // Si la fonction de répartition vaut 1, 1-F vaut 0, mais alors la densité est aussi nulle et il suffit de renvoyer 0 tout de suite 
-               if (OneMinCumulDuree.GetFunctionValue(t)==0){
+               if (duree.GetFunctionValue(t)==0){
                    survival.values[i]=0;
                }
                else {
                //System.out.println("division par"+Operators.GetFunctionValue(OneMinCumulDuree,t));
-                FunctionStructure temp=Operators.createAffineFunctionTransformation(1/OneMinCumulDuree.GetFunctionValue(t),0.0,duree);
+//                temp=Operators.createAffineFunctionTransformation(1/OneMinCumulDuree.GetFunctionValue(t),0.0,duree);
                 // création de la fonction t/s (on pourrait créer 1/s et en prendre des trasnformation affine, mais le gain n'est pas clair
                 FunctionStructure homo=Operators.createFunction(t, duree.max, duree.step);
                 homo.SetFunctionValuesFromInterface(homo.min,homo.max , Operators.homographie, 0.0,t,1.0,0.0);
-//                if(t==0.2) { 
-//                    Operators.PrintFunction("homog", homo, true);
+                temp=Operators.ComposeFunctionInterfaceWithFunction(Operators.piecewiseLinear,homo,p);
+//                if(t==survival.min) { 
+////                    Operators.PrintFunction("homog", homo, true);
 //                    Operators.plotFunction(homo);
+//                    Operators.plotFunction(temp);
 //                }
-                temp=Operators.createProductFunction(Operators.ComposeFunctionInterfaceWithFunction(Operators.piecewiseLinear,homo,p),temp);
-                survival.values[i]=Operators.IntegrateFunction(temp, t, temp.max);
+                temp=Operators.createProductFunction(temp, homo);
+                survival.values[i]=Operators.IntegrateFunction(temp, t, duree.max)/OneMinCumulDuree.GetFunctionValue(t);
                 t+=survival.step;
                }
            }
-//           if (phase==3){
-//           Operators.plotFunction(survival,"survival 3");
-//           }
            return survival;
        }
        

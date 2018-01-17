@@ -101,11 +101,11 @@ public class FunctionStructure {
         end=closestGridPoint(end);
         if (start<min) ResizeFunctionSupportLeft(start);
         if (end>max) ResizeFunctionSupportRight(end);
-         System.out.println("start="+start+", end="+end);
+//         System.out.println("start="+start+", end="+end);
         // la boucle sur les valeurs de x semble plus propre que de travailler avec le tableau des valeurs.
         double x=start;
         for (;;){
-            System.out.println("x="+x);
+//            System.out.println("x="+x);
             SetFunctionValue(x, g.op( x, p));
             x=closestGridPoint(x+step);
             if (x>end) return;

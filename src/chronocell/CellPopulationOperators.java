@@ -17,16 +17,18 @@ import java.util.ArrayList;
  */
 public class CellPopulationOperators {
     public static void ApplyTreatment(double dose,CellPopulation pop,SurvivalDataStructure data){
-//        System.out.println("traitement au temps "+pop.time+", dose = "+dose);
+        System.out.println("traitement au temps "+pop.time+", dose = "+dose);
         ThetaStructure theta=new ThetaStructure();
         theta.startingTime=pop.time;
-        System.out.println("temps de traitement"+pop.time);
         for (int i=0;i<pop.dynamics.phaseNb;i++){
             FunctionStructure temp = Operators.createFunctionCopy(pop.theta.get(pop.currentTheta).getPhase(i));
             // on crée la fonction de survie
             //FunctionStructure survival = Operators.createFunction(temp.min, temp.max, temp.step);
             // Pour l'instant, on transmet le numero de la phase et toute la dynamique car certaines phases mènent à une phase, d'autre à deux
             FunctionStructure survival = SurvivalProbabilities.survivalProbabilities(dose, i, pop.dynamics, data);
+            survival.name="survival.phase"+i;
+            Operators.plotFunction(survival);
+            Operators.plotFunction(pop.dynamics.getPhase(i).timeDensity);
 //            if (i==3){
 //                Operators.plotFunction(survival,"surv before");
 //            }
@@ -39,7 +41,7 @@ public class CellPopulationOperators {
 ////                Operators.plotFunction(temp,"temp before");
 //                Operators.PrintFunction(temp,"temp before",false);
 //            }
-            temp=Operators.createProductFunction(temp,temp);
+            temp=Operators.createProductFunction(survival,temp);
 //            temp=Operators.AffineFunctionTransformation(0.5, 0.0, temp);
 //            if (i==3){
 ////                Operators.plotFunction(temp,temp.toString());
@@ -110,11 +112,11 @@ public class CellPopulationOperators {
         copy.currentTheta=pop.currentTheta;
         copy.time=pop.time;
         copy.timeStep=pop.timeStep;
-        copy.pO2=pop.pO2;
-        copy.alpha=pop.alpha;
-        copy.beta=pop.beta;
-        copy.m=pop.m;
-        copy.k=pop.k;
+//        copy.pO2=pop.pO2;
+//        copy.alpha=pop.alpha;
+//        copy.beta=pop.beta;
+//        copy.m=pop.m;
+//        copy.k=pop.k;
         return copy;
     };
     

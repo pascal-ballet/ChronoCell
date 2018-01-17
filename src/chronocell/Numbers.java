@@ -10,7 +10,7 @@ package chronocell;
  * @author goby
  */
 public class Numbers {
-    public static double minStep=0.001;
+    public static double minStep=0.0000001;
     
     private static double ClosestGridNumber(double number){
         long gridIndex=(long) Math.round(number/minStep);

@@ -3,10 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-// Checked: FunctionStructure.java
-// Current: Operators.java         
+// Checked: FunctionStructure.java, Operators.java, CellDynamicsOperators.java, CellDynamics.java
+//          CellPopulation;
+// Current:  cellpopOPerators apply treatment      
 
-// Todo :   * généraliser l'utilisation de setFunctionValue
+// Todo :   * gérer la pO2 
+//          * généraliser l'utilisation de checkAndAdjustSupport dans les fonctions 
+//          * espilon dans la transformée de laplace inverse est fixé
+//          * vérifier la pertinence de CGN
+//          * généraliser l'utilisation de setFunctionValue
 //          * vérifier que les compositions de focntions n'utilisent pas des valeurs nulles en dehors du support (exp(0)=1 par exemple)
 //          * Implement constant solution for initial condition (if extinction, take Laplace transform for lambda=0).
 //          * CRUCIAL : check dependency on timestep ! -> solve dirac problem
@@ -24,7 +29,6 @@
 package chronocell;
 import java.util.*;
 import static chronocell.Operators.IntegrateFunction;
-import static chronocell.Operators.PowerOfFunction;
 import static chronocell.Operators.TranslateFunction;
 import java.util.ArrayList;
 import static chronocell.CsvToArrayList.readTXTFile;
@@ -35,6 +39,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 import javax.print.attribute.HashAttributeSet;
 import static chronocell.Operators.createProductFunction;
+import static chronocell.Operators.createPowerOfFunction;
 //import java.math.BigDecimal;
 //import java.math.BigInteger;
 //import java.math.MathContext;
@@ -54,148 +59,136 @@ public class ChronoCell {
     
     public static void main(String[] args) {
         
-         FunctionStructure f= Operators.createFunction(0, 3, 0.1);
-         f.name="fonctionTest";
-         f.left=0;
-         f.right=1;
-         f.SetFunctionValuesFromInterface(0, 3, Operators.piecewiseLinear, 0,0,3,1);
-         
-         FunctionStructure g= Operators.createFunction(1, 6, 0.01);
-         g.name="fonctionTest2";
-         g.left=0;
-         g.right=5;
-         g.SetFunctionValuesFromInterface(1,6, Operators.piecewiseLinear, 1,0,6,5);
-         Operators.plotFunction(g);
-         FunctionStructure p=Operators.createProductFunction(f, g);
-         p.name="product";
-         System.out.println("laplace="+Operators.LaplaceTransform(0.1, g));
-        
-        Numbers.minStep=0.00001;
-        double precision=0.01;
-        double step=0.1;
+//        
         
     //-------------- Probabilités de survie (lecture dans un .csv)
     // Chaque ligne correspond à un dosage(sauf la première), chaque colonne à un temps dans le cycle
     // les temps sont des temps de références, mais on les normalise pour avoir une courbe définie sur [0,1] que l'on distribuera plus tard
 
     
-//    double[][] temp;        
-//       try{
-//           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G0.csv");
-//           // normalisation 
-//            for (int j=1;j<temp[0].length;j++){
-//                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
-//            }
-//           
-//           _survivalData.G0=temp;
-//           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G1.csv");
-//           // normalisation 
-//            for (int j=1;j<temp[0].length;j++){
-//                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
-//            }
-//           
-//           _survivalData.G1=temp;
-//           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/S.csv");
-////           survivalData.put("S", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/S.csv"));
-//           // normalisation 
-//            for (int j=1;j<temp[0].length;j++){
-//                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
-//            }
-//           _survivalData.S=temp;
-//           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G2.csv");
-//           // normalisation 
-//            for (int j=1;j<temp[0].length;j++){
-//                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
-//            }
-//           _survivalData.G2=temp;
-//           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/M.csv");
-//           // normalisation 
-//            for (int j=1;j<temp[0].length;j++){
-//                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
-//            }
-//           _survivalData.M=temp;
-//        }
-//        catch(Exception e){
-//            e.printStackTrace();
-//            return;
-//    }
+    double[][] temp;        
+       try{
+           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G0.csv");
+           // normalisation 
+            for (int j=1;j<temp[0].length;j++){
+                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
+            }
+           
+           _survivalData.G0=temp;
+           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G1.csv");
+           // normalisation 
+            for (int j=1;j<temp[0].length;j++){
+                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
+            }
+           
+           _survivalData.G1=temp;
+           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/S.csv");
+//           survivalData.put("S", CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/S.csv"));
+           // normalisation 
+            for (int j=1;j<temp[0].length;j++){
+                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
+            }
+           _survivalData.S=temp;
+           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/G2.csv");
+           // normalisation 
+            for (int j=1;j<temp[0].length;j++){
+                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
+            }
+           _survivalData.G2=temp;
+           temp=CsvToArrayList.readTXTFile("/Data/Dropbox/Boulot/Recherche/Latim/BiblioModelisationTumeur/M.csv");
+           // normalisation 
+            for (int j=1;j<temp[0].length;j++){
+                temp[0][j]=(temp[0][j]-temp[0][1])/(temp[0][temp[0].length-1]-temp[0][1]);
+            }
+           _survivalData.M=temp;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return;
+    }
 //  
 ////-------------- Dynamique initiale des phases ---------------------------------
-//            double support0=40.0,support2=15.0;
-//            // G0->Death
-//            FunctionStructure G0ToDeath=Operators.createFunction(Numbers.CGN(0.0),support0,step); 
-////            Operators.MapFunctionValues(G0ToDeath,0.0,8.0,Operators.gaussian,7.0,1.0);
-//            G0ToDeath.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,6.0,4.0,support0);
-//            G0ToDeath=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G0ToDeath, G0ToDeath.min, G0ToDeath.max),0, G0ToDeath);
-//            // G0->G1
-//            FunctionStructure G0ToG1=Operators.createFunction(Numbers.CGN(0.0),support0,step);  
-//            G0ToG1.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,3.0,2.0,support0);
-//            G0ToG1=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G0ToG1, G0ToG1.min, G0ToG1.max),0, G0ToG1);
-//            // G1->G0
-//            FunctionStructure G1ToG0=Operators.createFunction(Numbers.CGN(0.0),support0,step); 
-//            G1ToG0.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,3.0,6.0,support0);
-////            Operators.MapFunctionValues(G1ToG0,50.0,51.0,Operators.constant,1.0);
-//            G1ToG0=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G1ToG0, G1ToG0.min, G1ToG0.max),0, G1ToG0);
-//             // G1->S
-//            FunctionStructure G1ToS=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),step);
-////            Operators.MapFunctionValues(G1ToS,0.0,support0,Operators.continuousGeometricDistribution,15.0,pO2,C,B,m);
-//            G1ToS.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,4.8,4.1,support0);
-//            G1ToS=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G1ToS, G1ToS.min, G1ToS.max),0, G1ToS);
-//             // S->G2
-//            FunctionStructure SToG2=Operators.createFunction(0.0,Numbers.CGN(support0),step); 
-//            SToG2.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,3.3,4.8,support0);
-////            Operators.MapFunctionValues(SToG2,5.0,8.0,Operators.gaussian,6.0,2.0);
-//            SToG2=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(SToG2, SToG2.min, SToG2.max),0, SToG2);
-//             // G2->M
-////            Operators.plotFunction(SToG2);
-//            FunctionStructure G2ToM=Operators.createFunction(0.0,Numbers.CGN(support0),step); 
-////            Operators.MapFunctionValues(G2ToM,3.0,support2,Operators.continuousGeometricDistribution,3.0,pO2,C,B,m);
-//            G2ToM.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,3.6,0.0,support0);
-//            G2ToM=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(G2ToM, G2ToM.min, G2ToM.max),0, G2ToM);
-//             // M->G1
-//            FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),step); 
-//            MToG1.SetFunctionValuesFromInterface(2.0-step,2.0,Operators.constant,1.0);
-////            Operators.MapFunctionValues(MToG1,0.0,2.0,Operators.gaussian,1.0,1.0);
-//            MToG1=Operators.AffineFunctionTransformation(1.0/Operators.IntegrateFunction(MToG1, MToG1.min, MToG1.max),0, MToG1);
-//        
+            double support0=40.0,support2=15.0;
+            double step=0.1;
+            // G0->Death
+            FunctionStructure G0ToDeath=Operators.createFunction(Numbers.CGN(0.0),support0,step,"G0ToDeath.Density"); 
+//            Operators.MapFunctionValues(G0ToDeath,0.0,8.0,Operators.gaussian,7.0,1.0);
+            G0ToDeath.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,6.0,4.0,support0);
+            Operators.makeDistributionFromFunction(G0ToDeath);
+            // G0->G1
+            FunctionStructure G0ToG1=Operators.createFunction(Numbers.CGN(0.0),support0,step,"G0ToG1.Density");  
+            G0ToG1.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,3.0,2.0,support0);
+            Operators.makeDistributionFromFunction(G0ToG1);
+            // G1->G0
+            FunctionStructure G1ToG0=Operators.createFunction(Numbers.CGN(0.0),support0,step,"G1ToG0.Density"); 
+            G1ToG0.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,30.0,31.0,support0);
+//            Operators.MapFunctionValues(G1ToG0,50.0,51.0,Operators.constant,1.0);
+            Operators.makeDistributionFromFunction(G1ToG0);
+             // G1->S
+            FunctionStructure G1ToS=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),step,"G1ToS.Density");
+//            Operators.MapFunctionValues(G1ToS,0.0,support0,Operators.continuousGeometricDistribution,15.0,pO2,C,B,m);
+            G1ToS.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,4.8,4.1,support0);
+            Operators.makeDistributionFromFunction(G1ToS);
+             // S->G2
+            FunctionStructure SToG2=Operators.createFunction(0.0,Numbers.CGN(support0),step,"SToG2.Density"); 
+            SToG2.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,3.3,4.8,support0);
+//            Operators.MapFunctionValues(SToG2,5.0,8.0,Operators.gaussian,6.0,2.0);
+            Operators.makeDistributionFromFunction(SToG2);
+             // G2->M
+//            Operators.plotFunction(SToG2);
+            FunctionStructure G2ToM=Operators.createFunction(0.0,Numbers.CGN(support0),step,"G2ToM.Density"); 
+//            Operators.MapFunctionValues(G2ToM,3.0,support2,Operators.continuousGeometricDistribution,3.0,pO2,C,B,m);
+            G2ToM.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,3.6,0.0,support0);
+            Operators.makeDistributionFromFunction(G2ToM);
+             // M->G1
+            FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),step,"MToG1.Density"); 
+            MToG1.SetFunctionValuesFromInterface(2.0-step,2.0,Operators.constant,1.0);
+//            Operators.MapFunctionValues(MToG1,0.0,2.0,Operators.gaussian,1.0,1.0);
+            Operators.makeDistributionFromFunction(MToG1);
+//  
 //        
 ////-------------- Creation de la population de cellules -------------------------
-//            CellPopulation pop=new CellPopulation();
-//            pop.timeStep=step;
-//            // Taille initiale
-//            pop.size=1.0;
-//            // Dynamique  
-//            pop.dynamics.phaseNb=5;
+            CellPopulation pop=new CellPopulation();
+            pop.timeStep=step;
+            // Taille initiale
+            pop.size=1.0;
+            // Dynamique  
+            pop.dynamics.phaseNb=5;
 //            pop.pO2=20.0;
-//            pop.dynamics.G0.density.put("Death",Operators.createFunctionCopy(G0ToDeath));
-//            pop.dynamics.G0.density.put("G1", Operators.createFunctionCopy(G0ToG1));
-//            pop.dynamics.G1.density.put("G0", Operators.createFunctionCopy(G1ToG0));
-//            pop.dynamics.G1.density.put("S", Operators.createFunctionCopy(G1ToS));
-//            pop.dynamics.S.density.put("G2", Operators.createFunctionCopy(SToG2));
-//            pop.dynamics.G2.density.put("M", Operators.createFunctionCopy(G2ToM));
-//            pop.dynamics.M.density.put("G1", Operators.createFunctionCopy(MToG1)); 
-//            // Complétions des différentes fonctions utiles pour la dynamique
-//            CellDynamicsOperators.DynamicsFilling(pop.dynamics);
+            pop.dynamics.G0.density.put("Death",Operators.createFunctionCopy(G0ToDeath));
+            pop.dynamics.G0.density.put("G1", Operators.createFunctionCopy(G0ToG1));
+            pop.dynamics.G1.density.put("G0", Operators.createFunctionCopy(G1ToG0));
+            pop.dynamics.G1.density.put("S", Operators.createFunctionCopy(G1ToS));
+            pop.dynamics.S.density.put("G2", Operators.createFunctionCopy(SToG2));
+            pop.dynamics.G2.density.put("M", Operators.createFunctionCopy(G2ToM));
+            pop.dynamics.M.density.put("G1", Operators.createFunctionCopy(MToG1)); 
+            // Complétions des différentes fonctions utiles pour la dynamique
+            CellDynamicsOperators.DynamicsFilling(pop.dynamics);
 //        
+
+    FunctionStructure test = new FunctionStructure();
+    test = SurvivalProbabilities.survivalProbabilities(1.0, 2, pop.dynamics, _survivalData);
+    Operators.plotFunction(test);
+    
 ////-------------- Premier jeux de fonctions theta -------------------------------
 //            ThetaStructure initTheta= new ThetaStructure();
 ////            initTheta.phaseNb=pop.dynamics.phaseNb;
 //            StableSolution.StableInitialCondition(initTheta,pop.dynamics);
 //            pop.theta.add(initTheta);
 //            pop.currentTheta=0;
-//            
-////            Operators.MapFunctionValues(pop.theta.get(0).G0,pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-////            Operators.MapFunctionValues(pop.theta.get(0).S,pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-////            Operators.MapFunctionValues(pop.theta.get(0).G2,pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-////            Operators.MapFunctionValues(pop.theta.get(0).M,pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-//        
+            
+//            pop.theta.get(0).G0.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            pop.theta.get(0).S.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            pop.theta.get(0).G2.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            pop.theta.get(0).M.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+        
 //        // Un traitement
 //        ArrayList<Double> results=new ArrayList<>();
 //        
 ////-------------- treatment -----------------------------------------------------
 //            double duration =200.0;
 //            int fractions=1;
-//            double totalDose =1.0;
+//            double totalDose =0.1;
 //            double fractionDose=totalDose/fractions;
 //            SimulationStructure simulation=new SimulationStructure();
 //            simulation.duration=duration;
@@ -204,23 +197,23 @@ public class ChronoCell {
 //            simulation.treat= new TreatmentStructure();
 //            simulation.treat.times= new double[fractions+1];
 //            simulation.treat.doses= new double[fractions+1];
-//            simulation.treat.times[0]=Double.NaN;
+//            simulation.treat.times[0]=100;
 ////            simulation.treat.times[1]=200;
 //            simulation.treat.doses[0]=fractionDose;
 ////            simulation.treat.doses[1]=fractionDose;
 //            simulation.treat.times[fractions]=Double.NaN;
 //            simulation.treat.doses[fractions]=0.0;        
 //            SimulationStructureOperators.run(simulation);
-////            SimulationStructureOperators.plotSimulation(simulation);
-////            for (int ii=0;ii<5;ii++){
-////            Operators.plotFunction(simulation.pop.theta.get(1).getPhase(ii),String.valueOf(ii));
-////            }
-////            FunctionStructure comp=Operators.createFunction(0.0,(double) results.size(), 1.0);
-////            for (int i=0;i<comp.maxIndex;i++){
-////                comp.values[i]=results.get(i);
-////            }
-////            comp=Operators.CropFunction(comp);
-////            Operators.plotFunction(comp);        
+//            SimulationStructureOperators.plotSimulation(simulation);
+//            for (int ii=0;ii<5;ii++){
+//            Operators.plotFunction(simulation.pop.theta.get(1).getPhase(ii),String.valueOf(ii));
+//            }
+//            FunctionStructure comp=Operators.createFunction(0.0,(double) results.size(), 1.0);
+//            for (int i=0;i<comp.maxIndex;i++){
+//                comp.values[i]=results.get(i);
+//            }
+//            comp=Operators.CropFunction(comp);
+//            Operators.plotFunction(comp);        
 //        
 //        
 /////////////-------------- Optimisation du traitement ------------------------------------
