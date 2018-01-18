@@ -8,7 +8,7 @@
 // Current:  cellpopOPerators apply treatment      
 
 // Todo :   * gérer la pO2 
-//          * généraliser l'utilisation de checkAndAdjustSupport dans les fonctions 
+//          * généraliser l'utilisation de checkAndAdjustSupport dans les fonctions (repérer le bug quand utilisé dans productFunction
 //          * espilon dans la transformée de laplace inverse est fixé
 //          * vérifier la pertinence de CGN
 //          * généraliser l'utilisation de setFunctionValue
@@ -109,7 +109,7 @@ public class ChronoCell {
 //  
 ////-------------- Dynamique initiale des phases ---------------------------------
             double support0=40.0,support2=15.0;
-            double step=0.1;
+            double step=0.01;
             // G0->Death
             FunctionStructure G0ToDeath=Operators.createFunction(Numbers.CGN(0.0),support0,step,"G0ToDeath.Density"); 
 //            Operators.MapFunctionValues(G0ToDeath,0.0,8.0,Operators.gaussian,7.0,1.0);
@@ -168,7 +168,12 @@ public class ChronoCell {
 
     FunctionStructure test = new FunctionStructure();
     test = SurvivalProbabilities.survivalProbabilities(1.0, 2, pop.dynamics, _survivalData);
-    Operators.plotFunction(test);
+//        Operators.plotFunction(test);
+//Operators.plotFunction(pop.dynamics.G1.density.get("S"));
+////Operators.plotFunction(pop.dynamics.G1.oneMinCumul.get("S"));
+////test=Operators.createCumulativeFunction(pop.dynamics.G1.density.get("S"));
+//Operators.plotFunction(Operators.createCumulativeFunction(pop.dynamics.G1.density.get("S")));
+
     
 ////-------------- Premier jeux de fonctions theta -------------------------------
 //            ThetaStructure initTheta= new ThetaStructure();
@@ -176,7 +181,7 @@ public class ChronoCell {
 //            StableSolution.StableInitialCondition(initTheta,pop.dynamics);
 //            pop.theta.add(initTheta);
 //            pop.currentTheta=0;
-            
+//            
 //            pop.theta.get(0).G0.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
 //            pop.theta.get(0).S.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
 //            pop.theta.get(0).G2.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);

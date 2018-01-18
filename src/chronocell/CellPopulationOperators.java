@@ -28,7 +28,7 @@ public class CellPopulationOperators {
             FunctionStructure survival = SurvivalProbabilities.survivalProbabilities(dose, i, pop.dynamics, data);
             survival.name="survival.phase"+i;
             Operators.plotFunction(survival);
-            Operators.plotFunction(pop.dynamics.getPhase(i).timeDensity);
+            Operators.plotFunction(pop.dynamics.getPhase(i).timeToNextPhaseDensity);
 //            if (i==3){
 //                Operators.plotFunction(survival,"surv before");
 //            }

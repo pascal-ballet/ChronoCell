@@ -23,8 +23,8 @@ public class SurvivalProbabilities {
 // que l'on va ensuite transformer en fonction du temps aléatoire passé dans la phase
        public static FunctionStructure survivalProbabilities(double dose,int phase,CellDynamics dynamics, SurvivalDataStructure data){
            // il faut ici utiliser la distribution de la durée de la phase, à définir dans dynamics
-           FunctionStructure duree= Operators.createFunctionCopy(dynamics.getPhase(phase).timeDensity); 
-           FunctionStructure OneMinCumulDuree= Operators.createFunctionCopy(dynamics.getPhase(phase).timeOneMinCumul); 
+           FunctionStructure timeToNextPhase= Operators.createFunctionCopy(dynamics.getPhase(phase).timeToNextPhaseDensity); 
+           FunctionStructure timeToNextPhaseOneMinCumul= Operators.createFunctionCopy(dynamics.getPhase(phase).timeToNextPhaseOneMinCumul); 
            // créer la piecewise issue des data 
            // On commence par situer le dosage dans le tableau
            int iDose=1;
@@ -39,39 +39,58 @@ public class SurvivalProbabilities {
                p[2*j]=data.getPhase(phase)[0][j+1];
                p[2*j+1]=data.getPhase(phase)[iDose][j+1];
            }
-           FunctionStructure pData=Operators.createFunction(0.0, 1.0, duree.step);
+           FunctionStructure pData=Operators.createFunction(0.0, 1.0, timeToNextPhase.step);
+           pData.name="donnéesSurviePhase."+phase;
            pData.SetFunctionValuesFromInterface(0.0, 1.0, Operators.piecewiseLinear, p);
            Operators.plotFunction(pData);
-           Operators.plotFunction(duree);
-           FunctionStructure survival=Operators.createFunction(duree.min,duree.max,duree.step);
+//           Operators.plotFunction(pData);
+//           Operators.plotFunction(timeToNextPhase);
+//           Operators.plotFunction(timeToNextPhaseOneMinCumul);
+//           Operators.PrintFunction(timeToNextPhase, true);
+           FunctionStructure survival=Operators.createFunction(timeToNextPhase.min,timeToNextPhase.max,timeToNextPhase.step);
+           survival.name="survival";
            FunctionStructure temp=new FunctionStructure();
-           // Il faut initialiser la valeur de la proba de survie pour t=0, car celle-ci ne peut pas se calculer par une intégrale, puisque quel que soit
-           // leur temps de passage, elles en sont au temps 0 de ce temps relatif. Après, on risque d'avoir un problème d'intégrale non unitaire 
-//           survival.values[0]=p[1];
-//           double t=survival.min+survival.step;
-           double t=survival.min;
+           double t=survival.min+100*survival.step;
            for (int i=survival.minIndex;i<=survival.maxIndex;i++){
+//               Operators.PrintFunction(survival, false);
                // Si la fonction de répartition vaut 1, 1-F vaut 0, mais alors la densité est aussi nulle et il suffit de renvoyer 0 tout de suite 
-               if (duree.GetFunctionValue(t)==0){
+               if (timeToNextPhase.GetFunctionValue(t)<=0.0){
                    survival.values[i]=0;
                }
+               else if (survival.max-t<=2*survival.step){
+                   survival.values[i]=pData.values[pData.values.length-1];
+               }
                else {
-               //System.out.println("division par"+Operators.GetFunctionValue(OneMinCumulDuree,t));
-//                temp=Operators.createAffineFunctionTransformation(1/OneMinCumulDuree.GetFunctionValue(t),0.0,duree);
-                // création de la fonction t/s (on pourrait créer 1/s et en prendre des trasnformation affine, mais le gain n'est pas clair
-                FunctionStructure homo=Operators.createFunction(t, duree.max, duree.step);
+//                FunctionStructure homo=Operators.createFunction(t, timeToNextPhase.max, Math.max((timeToNextPhase.max-t)/(timeToNextPhase.values.length),Numbers.minStep),"homo");
+                FunctionStructure homo=Operators.createFunction(t, timeToNextPhase.max, timeToNextPhase.step,"homo");
+//              problème ici de resize du support lors du setFunctionValue
                 homo.SetFunctionValuesFromInterface(homo.min,homo.max , Operators.homographie, 0.0,t,1.0,0.0);
                 temp=Operators.ComposeFunctionInterfaceWithFunction(Operators.piecewiseLinear,homo,p);
-//                if(t==survival.min) { 
-////                    Operators.PrintFunction("homog", homo, true);
-//                    Operators.plotFunction(homo);
-//                    Operators.plotFunction(temp);
-//                }
-                temp=Operators.createProductFunction(temp, homo);
-                survival.values[i]=Operators.IntegrateFunction(temp, t, duree.max)/OneMinCumulDuree.GetFunctionValue(t);
+//                   Operators.plotFunction(temp);
+        temp.name="temp";
+        FunctionStructure temp2=new FunctionStructure();
+                temp2=Operators.createProductFunction(temp, timeToNextPhase);
+        temp2.name="temp2";
+                Operators.PrintFunction(temp2, false);
+                survival.values[i]=Operators.IntegrateFunction(temp2, t, temp2.max)/timeToNextPhaseOneMinCumul.GetFunctionValue(t);
                 t+=survival.step;
                }
+//                else {
+//                FunctionStructure homo=Operators.createFunction(t/timeToNextPhase.max,1.0, (1.0-t/timeToNextPhase.max)/timeToNextPhase.values.length);
+//                homo.SetFunctionValuesFromInterface(homo.min,homo.max , Operators.homographie, 0.0,t,1.0,0.0);
+//                temp=Operators.ComposeFunctions(timeToNextPhase,homo);
+//                FunctionStructure x2=Operators.createFunction(temp.min, temp.max, temp.step);
+//                x2.SetFunctionValuesFromInterface(x2.min, x2.max, Operators.pow, 2);
+//                temp=Operators.createProductFunction(temp,x2); 
+//                temp=Operators.createProductFunction(temp,pData); 
+//                survival.values[i]=Operators.IntegrateFunction(temp,t/timeToNextPhase.max, 1.0)/timeToNextPhaseOneMinCumul.GetFunctionValue(t);
+//                t+=survival.step;
+//               }
+//break;
+                
            }
+           survival.name="survivalPhase."+phase;
+           Operators.plotFunction(survival);
            return survival;
        }
        

@@ -19,6 +19,6 @@ public class Phase {
     Hashtable<String,FunctionStructure> alpha = new Hashtable<String,FunctionStructure>();
     FunctionStructure solutionFilter = new FunctionStructure();
     FunctionStructure thetaConvolution = new FunctionStructure();
-    FunctionStructure timeDensity = new FunctionStructure();
-    FunctionStructure timeOneMinCumul = new FunctionStructure();
+    FunctionStructure timeToNextPhaseDensity = new FunctionStructure();
+    FunctionStructure timeToNextPhaseOneMinCumul = new FunctionStructure();
 }

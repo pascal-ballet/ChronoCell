@@ -90,8 +90,22 @@ public class Operators {
         }
         return comp;
     }
-    
-
+    /// f ° g
+    public static FunctionStructure ComposeFunctions(FunctionStructure f,FunctionStructure g){
+        FunctionStructure comp = createFunction(g.min, g.max, g.step);
+        comp.left=f.GetFunctionValue(g.left);
+        comp.right=f.GetFunctionValue(g.right);
+        for (int i=comp.minIndex;i<=comp.maxIndex;i++){
+            comp.values[i]=f.GetFunctionValue(g.values[i]);
+        }
+//        double x=fct.min;
+//        for (;;){
+//            comp.SetFunctionValue(x, g.op(fct.GetFunctionValue(x), p));
+//            x=fct.closestGridPoint(x+fct.step);
+//            if (x>fct.max) break;
+//        }
+        return comp;
+    }
     
     
     
@@ -105,8 +119,8 @@ public class Operators {
 //        }
         System.out.println("minVal = "+fct.getMinValue()+", maxVal = "+fct.getMaxValue());
         System.out.println("**** Integral = "+IntegrateFunction(fct, fct.min, fct.max));
+        System.out.println("left = "+fct.left+", right = "+fct.right+", values array length = "+fct.values.length);
         if (displayValues==true){
-            System.out.println("left = "+fct.left+", right = "+fct.right+", values array length = "+fct.values.length);
             double x;
             for (int i=fct.minIndex;i<=fct.maxIndex;i++){
                 x=Numbers.CGN(fct.min+(i-fct.minIndex)*fct.step);
@@ -177,9 +191,11 @@ public class Operators {
         cum.left=0.0;
         cum.right=1.0;
         cum.name=fct.name+".cumulative";
+        cum.values[cum.minIndex]=0.0;
         for (int i =cum.minIndex+1;i<=cum.maxIndex;i++){
-            cum.values[i]=cum.values[i-1]+(fct.GetFunctionValue( (i-1)*fct.step)+fct.GetFunctionValue((i)*fct.step))/2*cum.step;
+            cum.values[i]=cum.values[i-1]+(fct.GetFunctionValue(cum.pointWithIndex(i-1))+fct.GetFunctionValue(cum.pointWithIndex(i)))/2*cum.step;
         }
+        Operators.affineFunctionTransformation(cum, 1/cum.getMaxValue(), 0);
         /// normalization (crado ? rependre la boucle précédente pour être sûr de ne jamais dépasser 1 par le calcul ?)
 //        cum=AffineFunctionTransformation(1.0/cum.getMaxValue(),0, cum);
         return cum;
@@ -204,7 +220,8 @@ public class Operators {
     }  
     
     public static FunctionStructure createProductFunction(FunctionStructure f1,FunctionStructure f2){
-        FunctionStructure prod=createFunction(Math.min(f1.min,f2.min ), Math.max(f1.max,f2.max ), Numbers.LeastCommonStep(f1.step, f2.step));
+        // initialement le step est Numbers.LeastCommonStep, mais c'est trop gourmand, on prend donc le min 
+        FunctionStructure prod=createFunction(Math.min(f1.min,f2.min ), Math.max(f1.max,f2.max ), Math.min(f1.step, f2.step));
         prod.left=Numbers.CGN(f1.left*f2.left);
         prod.right=Numbers.CGN(f1.right*f2.right);
         double x;
@@ -468,6 +485,14 @@ public class Operators {
           }
       }
     };   
+
+    
+    public static FunctionInterface pow = new FunctionInterface(){
+      public double op(double x,double ... p){
+          // p[0] exposant
+          return Math.pow(x,p[0]);
+          }  
+    };
     
     public static FunctionInterface exp = new FunctionInterface(){
       public double op(double x,double ... p){

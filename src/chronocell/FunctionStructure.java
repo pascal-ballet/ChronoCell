@@ -48,7 +48,7 @@ public class FunctionStructure {
           
     public  double getMaxValue(){
         double maxVal=Math.max(left, right);
-        for (int i=minIndex+1;i<=maxIndex;i++){
+        for (int i=minIndex;i<=maxIndex;i++){
             if (values[i]>maxVal){
                 maxVal=values[i];
             }
@@ -97,18 +97,24 @@ public class FunctionStructure {
      
      public void SetFunctionValuesFromInterface(double start, double end, FunctionInterface g,double ... p){
        // laisser l'appelant ajuster à la grille ?
-        start=closestGridPoint(start);
-        end=closestGridPoint(end);
-        if (start<min) ResizeFunctionSupportLeft(start);
-        if (end>max) ResizeFunctionSupportRight(end);
+        double gstart=closestGridPoint(start);
+        double gend=closestGridPoint(end);
+        if (gstart<min){
+//            System.out.println("start="+start+", gstart="+gstart);
+            ResizeFunctionSupportLeft(start);
+        }
+        if (gend>max){
+//            System.out.println("end="+end+", gend="+gend);
+            ResizeFunctionSupportRight(end);
+        }
 //         System.out.println("start="+start+", end="+end);
         // la boucle sur les valeurs de x semble plus propre que de travailler avec le tableau des valeurs.
-        double x=start;
+        double x=gstart;
         for (;;){
 //            System.out.println("x="+x);
             SetFunctionValue(x, g.op( x, p));
             x=closestGridPoint(x+step);
-            if (x>end) return;
+            if (x>gend) return;
         }
     }
       public void ResizeFunctionSupportLeft(double newMin){
@@ -119,11 +125,11 @@ public class FunctionStructure {
             return;
         }
         int size=(int) Math.round(1+(max-newMin)/step);
-         System.out.println("newSize="+size);
+//         System.out.println("newSize of function "+name+" ="+size);
         double[] newValues=new double[size];
         for (int i=0;i<size;i++){
             newValues[i]=GetFunctionValue(newMin+ (i)*step);
-            System.out.println("newval= "+ newValues[i]);
+//            System.out.println("newval= "+ newValues[i]);
         }
         values=newValues;
         min=newMin;
@@ -141,11 +147,11 @@ public class FunctionStructure {
             return;
         }
         int size=(int) Math.round(1+(newMax-min)/step);
-         System.out.println("newSize="+size);
+//         System.out.println("newSize of function "+name+" ="+size);
         double[] newValues=new double[size];
         for (int i=0;i<size;i++){
             newValues[i]=GetFunctionValue(min+ (i)*step);
-            System.out.println("newval= "+ newValues[i]);
+//            System.out.println("newval= "+ newValues[i]);
         }
         values=newValues;
         minIndex=0;
