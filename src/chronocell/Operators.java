@@ -136,7 +136,20 @@ public class Operators {
     }
     
 
-    
+ public static double IntegrateFunction(FunctionStructure fct,double inf, double sup,double step){
+        double sum=0.0;
+        //        int start=(int) Numbers.CGN(Math.round(fct.minIndex+(Math.max(inf, fct.min)-fct.min)/fct.step));
+        //        int end=(int)  Numbers.CGN(Math.round(fct.minIndex+(Math.min(sup, fct.max)-fct.min)/fct.step));
+
+        //         System.err.format("start=%d, end=%d \n",start,end);
+//        System.out.println("inxinf="+fct.indexOfPoint(inf)+", inxsup="+fct.indexOfPoint(sup));
+        for (int i=fct.indexOfPoint(inf);i<fct.indexOfPoint(sup);i++){
+            // trapèzes
+            sum+=((fct.values[i]+fct.values[i+1])/2*fct.step);
+        }
+        return Numbers.CGN(sum);
+//        return sum;
+    }     
       
     
      public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
@@ -151,6 +164,7 @@ public class Operators {
             sum+=((fct.values[i]+fct.values[i+1])/2*fct.step);
         }
         return Numbers.CGN(sum);
+//        return sum;
     } 
      
     public static void makeDistributionFromFunction(FunctionStructure fct){
@@ -310,12 +324,19 @@ public class Operators {
     return transf;
     } 
     
-    public static FunctionStructure TranslateFunction(double t, FunctionStructure fct){
+    public static FunctionStructure createTranslatedFunction(double t, FunctionStructure fct){
 //        PrintFunction(fct);
         FunctionStructure transl=createFunctionCopy(fct);
         transl.min=transl.closestGridPoint(transl.min+t);
         transl.max=transl.closestGridPoint(transl.max+t);
     return transl;
+    } 
+    
+        
+    public static void translateFunction(double t, FunctionStructure fct){
+//        PrintFunction(fct);
+        fct.min=fct.closestGridPoint(fct.min+t);
+        fct.max=fct.closestGridPoint(fct.max+t);
     } 
     
     public static double LaplaceTransform(double lambda, FunctionStructure fct){

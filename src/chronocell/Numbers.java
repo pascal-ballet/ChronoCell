@@ -10,7 +10,7 @@ package chronocell;
  * @author goby
  */
 public class Numbers {
-    public static double minStep=0.0000001;
+    public static double minStep=0.00000001;
     
     private static double ClosestGridNumber(double number){
         long gridIndex=(long) Math.round(number/minStep);
@@ -34,7 +34,7 @@ public class Numbers {
         return CGN(lcs);
     }
     public static boolean IsZero(double x){
-        if (Math.abs(x)<0.00000001){
+        if (Math.abs(x)<0.000000001){
             return true;
         }
         else{

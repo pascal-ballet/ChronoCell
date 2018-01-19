@@ -64,6 +64,11 @@ public class FunctionStructure {
         }
         return minVal;
     }
+    
+    public  void setSideValues(){
+        left=values[0];
+        right=values[values.length-1];
+    }
       
      public void SetFunctionValue(double x, double y){
          y=Numbers.CGN(y);

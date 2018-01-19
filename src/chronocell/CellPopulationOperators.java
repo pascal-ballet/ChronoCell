@@ -26,28 +26,20 @@ public class CellPopulationOperators {
             //FunctionStructure survival = Operators.createFunction(temp.min, temp.max, temp.step);
             // Pour l'instant, on transmet le numero de la phase et toute la dynamique car certaines phases mènent à une phase, d'autre à deux
             FunctionStructure survival = SurvivalProbabilities.survivalProbabilities(dose, i, pop.dynamics, data);
+//            FunctionStructure survival=Operators.createFunction(0.0, 0.0, 0.1, "survie");
             survival.name="survival.phase"+i;
-            Operators.plotFunction(survival);
-            Operators.plotFunction(pop.dynamics.getPhase(i).timeToNextPhaseDensity);
-//            if (i==3){
-//                Operators.plotFunction(survival,"surv before");
+            Operators.translateFunction(-pop.time, survival);
+//            if (i==4){
+//              Operators.PrintFunction(temp,false);
+//            
 //            }
-            survival=Operators.TranslateFunction(-pop.time, survival);
-//            if (i==3){
-////                Operators.plotFunction(survival,"surv");
-////                Operators.PrintFunction(survival,"surv",true);
+            FunctionStructure temp2=Operators.createProductFunction(survival,temp);
+            temp2.name="temp2";
+//            if (i==4){
+//              Operators.PrintFunction(temp2,false);
+            Operators.plotFunction(survival);  
 //            }
-//            if (i==3){
-////                Operators.plotFunction(temp,"temp before");
-//                Operators.PrintFunction(temp,"temp before",false);
-//            }
-            temp=Operators.createProductFunction(survival,temp);
-//            temp=Operators.AffineFunctionTransformation(0.5, 0.0, temp);
-//            if (i==3){
-////                Operators.plotFunction(temp,temp.toString());
-////                Operators.PrintFunction(temp,"temp after",false);
-//            }
-            theta.setPhase(i,temp);
+            theta.setPhase(i,temp2);
         }
         pop.theta.add(theta);
         pop.currentTheta+=1;
