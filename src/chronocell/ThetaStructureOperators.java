@@ -30,7 +30,7 @@ public class ThetaStructureOperators {
         // phase G0
             tempConvolution=createTranslatedFunction(theta.G0.min, dyn.G0.thetaConvolution);
             nextVal=IntegrateFunction(createProductFunction(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
-            theta.G0.min=theta.G0.closestGridPoint(theta.G0.min-theta.G0.step);
+            theta.G0.min=theta.G0.roundPoint(theta.G0.min-theta.G0.step);
             theta.G0.minIndex-=1;
             theta.G0.values[theta.G0.minIndex]=nextVal;
 //            System.out.println("next =:"+theta.dyn.G1.weight.get("G0"));
@@ -42,7 +42,7 @@ public class ThetaStructureOperators {
             // from M
             tempConvolution=createTranslatedFunction(theta.G1.min, dyn.M.density.get("G1"));
             nextVal+=2*IntegrateFunction(createProductFunction(theta.M,tempConvolution),tempConvolution.min,tempConvolution.max);
-            theta.G1.min=theta.G1.closestGridPoint(theta.G1.min-theta.G1.step);
+            theta.G1.min=theta.G1.roundPoint(theta.G1.min-theta.G1.step);
             theta.G1.minIndex-=1;
             theta.G1.values[theta.G1.minIndex]=nextVal;
             
@@ -50,7 +50,7 @@ public class ThetaStructureOperators {
             tempConvolution=createTranslatedFunction(theta.S.min, dyn.S.thetaConvolution);
            
             nextVal=IntegrateFunction(createProductFunction(theta.G1,tempConvolution),tempConvolution.min,tempConvolution.max);
-            theta.S.min=theta.S.closestGridPoint(theta.S.min-theta.S.step);
+            theta.S.min=theta.S.roundPoint(theta.S.min-theta.S.step);
             theta.S.minIndex-=1;
             theta.S.values[theta.S.minIndex]=nextVal;
             
@@ -58,7 +58,7 @@ public class ThetaStructureOperators {
            tempConvolution=createTranslatedFunction(theta.G2.min, dyn.G2.thetaConvolution);
            
             nextVal=IntegrateFunction(createProductFunction(theta.S,tempConvolution),tempConvolution.min,tempConvolution.max);
-            theta.G2.min=theta.G2.closestGridPoint(theta.G2.min-theta.G2.step);
+            theta.G2.min=theta.G2.roundPoint(theta.G2.min-theta.G2.step);
             theta.G2.minIndex-=1;
             theta.G2.values[theta.G2.minIndex]=nextVal;
            
@@ -68,7 +68,7 @@ public class ThetaStructureOperators {
 //           nextVal=IntegrateFunction(MultiplyFunctions(theta.G2,tempConvolution),tempConvolution.min,tempConvolution.max);
            
            nextVal=IntegrateFunction(Operators.createProductFunction(theta.G2,tempConvolution),tempConvolution.min,tempConvolution.max);
-           theta.M.min=theta.M.closestGridPoint(theta.M.min-theta.M.step);
+           theta.M.min=theta.M.roundPoint(theta.M.min-theta.M.step);
             theta.M.minIndex-=1;
            theta.M.values[theta.M.minIndex]=nextVal;
     }

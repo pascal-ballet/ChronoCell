@@ -82,21 +82,24 @@ public class Operators {
         FunctionStructure comp = createFunction(fct.min, fct.max, fct.step);
         comp.left=g.op(fct.left,p);
         comp.right=g.op(fct.right,p);
-        double x=fct.min;
-        for (;;){
-            comp.SetFunctionValue(x, g.op(fct.GetFunctionValue(x), p));
-            x=fct.closestGridPoint(x+fct.step);
-            if (x>fct.max) break;
+        for (int i=0;i<comp.values.length;i++){
+            comp.values[i]=g.op(fct.GetFunctionValueInterpolate(comp.indexPoint(i),1), p);
         }
+//        double x=fct.min;
+//        for (;;){
+//            comp.SetFunctionValue(x, g.op(fct.GetFunctionValueInterpolate(x,1), p));
+//            x=fct.closestGridPoint(x+fct.step);
+//            if (x>fct.max) break;
+//        }
         return comp;
     }
     /// f ° g
     public static FunctionStructure ComposeFunctions(FunctionStructure f,FunctionStructure g){
         FunctionStructure comp = createFunction(g.min, g.max, g.step);
-        comp.left=f.GetFunctionValue(g.left);
-        comp.right=f.GetFunctionValue(g.right);
+        comp.left=f.getFunctionValueFromRoundPoint(g.left);
+        comp.right=f.getFunctionValueFromRoundPoint(g.right);
         for (int i=comp.minIndex;i<=comp.maxIndex;i++){
-            comp.values[i]=f.GetFunctionValue(g.values[i]);
+            comp.values[i]=f.getFunctionValueFromRoundPoint(g.values[i]);
         }
 //        double x=fct.min;
 //        for (;;){
@@ -162,15 +165,17 @@ public class Operators {
         //         System.err.format("start=%d, end=%d \n",start,end);
 //        System.out.println("inxinf="+fct.indexOfPoint(inf)+", inxsup="+fct.indexOfPoint(sup));
         double t=inf;
-        while (t<=sup){
+        while (t<sup){
+//            System.out.println("inf= "+inf+", t="+t);
             // trapèzes
-            sum=sum+(fct.GetFunctionValueInterpolate(t,1)+fct.GetFunctionValueInterpolate(t+step,1))/2*step;
-//            sum=sum+fct.GetFunctionValueInterpolate(t,1)*step;
+//            sum=sum+(fct.GetFunctionValueInterpolate(t,1)+fct.GetFunctionValueInterpolate(t+step,1))/2*step;
+            sum=sum+fct.GetFunctionValueInterpolate(t,1)*step;
             t=t+step;
         }
+        sum=sum+fct.GetFunctionValueInterpolate(fct.max,1)*(fct.max-t+step);
 //        return Numbers.CGN(sum);
-//        return sum;
-        return IntegrateFunction(fct,inf,sup);
+        return sum;
+//        return IntegrateFunction(fct,inf,sup);
     } 
      
           public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
@@ -180,7 +185,7 @@ public class Operators {
 //
 //        //         System.err.format("start=%d, end=%d \n",start,end);
 ////        System.out.println("inxinf="+fct.indexOfPoint(inf)+", inxsup="+fct.indexOfPoint(sup));
-        for (int i=fct.indexOfPoint(inf);i<fct.indexOfPoint(sup);i++){
+        for (int i=fct.pointIndexRound(inf);i<fct.pointIndexRound(sup);i++){
             // trapèzes
             sum+=((fct.values[i]+fct.values[i+1])/2*fct.step);
         }
@@ -229,7 +234,7 @@ public class Operators {
         cum.name=fct.name+".cumulative";
         cum.values[cum.minIndex]=0.0;
         for (int i =cum.minIndex+1;i<=cum.maxIndex;i++){
-            cum.values[i]=cum.values[i-1]+(fct.GetFunctionValue(cum.pointWithIndex(i-1))+fct.GetFunctionValue(cum.pointWithIndex(i)))/2*cum.step;
+            cum.values[i]=cum.values[i-1]+(fct.getFunctionValueFromRoundPoint(cum.indexPoint(i-1))+fct.getFunctionValueFromRoundPoint(cum.indexPoint(i)))/2*cum.step;
         }
 //        double t=fct.min;
 //        for (int i =cum.minIndex+1;i<=cum.maxIndex;i++){
@@ -262,13 +267,13 @@ public class Operators {
     
     public static FunctionStructure createProductFunction(FunctionStructure f1,FunctionStructure f2){
         // initialement le step est Numbers.LeastCommonStep, mais c'est trop gourmand, on prend donc le min 
-        FunctionStructure prod=createFunction(Math.min(f1.min,f2.min ), Math.max(f1.max,f2.max ), Math.min(f1.step, f2.step));
+        FunctionStructure prod=createFunction(Math.min(f1.min,f2.min ), Math.max(f1.max,f2.max ), Numbers.LeastCommonStep(f1.step, f2.step));
         prod.left=Numbers.CGN(f1.left*f2.left);
         prod.right=Numbers.CGN(f1.right*f2.right);
         double x;
         for (int i=prod.minIndex;i<=prod.maxIndex;i++){
-            x=prod.pointWithIndex(i);
-            prod.values[i]=f1.GetFunctionValue(x)*f2.GetFunctionValue(x);
+            x=prod.indexPoint(i);
+            prod.values[i]=f1.getFunctionValueFromRoundPoint(x)*f2.getFunctionValueFromRoundPoint(x);
         }
 //        prod.checkAndAdjustSupport();
     return prod;
@@ -319,8 +324,8 @@ public class Operators {
         sum.left=Numbers.CGN(f1.left+f2.left);
         sum.right=Numbers.CGN(f1.right+f2.right);
         for (int i=sum.minIndex;i<=sum.maxIndex;i++){
-            x=sum.pointWithIndex(i);
-            sum.values[i]=Numbers.CGN(f1.GetFunctionValue(x)+f2.GetFunctionValue(x));
+            x=sum.indexPoint(i);
+            sum.values[i]=Numbers.CGN(f1.getFunctionValueFromRoundPoint(x)+f2.getFunctionValueFromRoundPoint(x));
         }
         return sum;
     } 
@@ -354,16 +359,16 @@ public class Operators {
     public static FunctionStructure createTranslatedFunction(double t, FunctionStructure fct){
 //        PrintFunction(fct);
         FunctionStructure transl=createFunctionCopy(fct);
-        transl.min=transl.closestGridPoint(transl.min+t);
-        transl.max=transl.closestGridPoint(transl.max+t);
+        transl.min=transl.roundPoint(transl.min+t);
+        transl.max=transl.roundPoint(transl.max+t);
     return transl;
     } 
     
         
     public static void translateFunction(double t, FunctionStructure fct){
 //        PrintFunction(fct);
-        fct.min=fct.closestGridPoint(fct.min+t);
-        fct.max=fct.closestGridPoint(fct.max+t);
+        fct.min=fct.roundPoint(fct.min+t);
+        fct.max=fct.roundPoint(fct.max+t);
     } 
     
     public static double LaplaceTransform(double lambda, FunctionStructure fct){

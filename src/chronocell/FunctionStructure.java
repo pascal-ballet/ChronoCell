@@ -27,38 +27,60 @@ public class FunctionStructure {
     double left=0.0;
     double right=0.0;
     
-    public double closestGridPoint(double x){
+    public double roundPoint(double x){
         return Numbers.CGN((Math.round(x/step))*step);
     }
     
-        public int indexOfPoint(double x){
+    public double floorPoint(double x){
+        return Numbers.CGN((Math.floor(x/step))*step);
+    }
+    
+        public int pointIndexRound(double x){
         return minIndex+ (int) Numbers.CGN(Math.round((x-min)/step));
     }
         
-        public int indexUnderPoint(double x){
-        return minIndex+ (int) Numbers.CGN(Math.floor((x-min)/step));
+        public int pointIndexFloor(double x){
+            if (Math.floor((x-min)/step)>maxIndex)      {
+                System.out.println("index="+((x-min))+", min="+min+", max="+max+", x="+x+", name"+this.name+", minindex="+minIndex);
+                Operators.PrintFunction(this, false);
+            }
+        return minIndex+ (int) (Math.floor((x-min)/step));
     }
         
-        public double pointWithIndex(int i){
+        public double indexPoint(int i){
         return Numbers.CGN(min+ i*step);
     }
         
-          public double GetFunctionValue(double x){
+        public double getFunctionValueFromRoundPoint(double x){
         // On utilise les valeurs par défaut à gauche et à droite
-        if (x<min) return left;
-        if (x>max) return right;
-        return values[indexOfPoint(x)];
+        double s=roundPoint(x);
+        if (s<min) return left;
+        if (s>max) return right;
+//            System.out.println("index="+pointIndexRound(s)+", s="+s+", x="+x);
+        return values[pointIndexRound(s)];
     }
+        
+    public double getFunctionValueFromFloorPoint(double x){
+        // On utilise les valeurs par défaut à gauche et à droite
+       double s=floorPoint(x);
+        if (s<min) return left;
+        if (s>max) return right;
+        return values[pointIndexFloor(x)];
+    }    
         
           public double GetFunctionValueInterpolate(double x,int interpolate){
         // On utilise les valeurs par défaut à gauche et à droite
         if (x<min) return left;
         if (x>max) return right;
-        int i=indexUnderPoint(x);
-        if (i==values.length-1){
-            return values[i]+(right-values[i])*(x-pointWithIndex(i))/(pointWithIndex(i+1)-pointWithIndex(i));
+        if(pointIndexFloor(x)>values.length-1)             System.out.println("max="+max+"x="+x+", index= "+pointIndexRound(x)+", maxIndex="+maxIndex);
+        if (Numbers.IsZero(x-floorPoint(x))){
+            return values[pointIndexFloor(x)];
         }
-        else return values[i]+(values[i+1]-values[i])*(x-pointWithIndex(i))/(pointWithIndex(i+1)-pointWithIndex(i));
+        int i=pointIndexFloor(x);
+        if (i==values.length-1){
+            return values[i]+(right-values[i])*(x-indexPoint(i))/(max-indexPoint(i));
+        }
+        else return values[i]+(values[i+1]-values[i])*(x-indexPoint(i))/(indexPoint(i+1)-indexPoint(i));
 //        if((i>values.length-2)||(i<0)){
 //              System.out.println("x= "+x+", xgrid= "+pointWithIndex(i)+", i="+i+", function ="+name);
 //              Operators.PrintFunction(this, false);
@@ -95,10 +117,10 @@ public class FunctionStructure {
      public void SetFunctionValue(double x, double y){
          y=Numbers.CGN(y);
 //         System.out.println("setFunction value : x="+x+", y= "+y+", min= "+min+", max= "+max+", left= "+left+", right= "+right);
-        double xGrid=closestGridPoint(x);
+        double xGrid=roundPoint(x);
         // Si xGrid est dans le support, rien de spécial
         if ((xGrid>=min) && (xGrid<=max)){
-            values[indexOfPoint(x)]=y;
+            values[pointIndexRound(x)]=y;
 //            System.out.println("valeur");
             return;
             }
@@ -122,10 +144,21 @@ public class FunctionStructure {
         }
     } 
      
+     public void SetFunctionValuesFromInterface(FunctionInterface g,double ... p){
+       // laisser l'appelant ajuster à la grille ?
+        
+//         System.out.println("start="+start+", end="+end);
+        // la boucle sur les valeurs de x semble plus propre que de travailler avec le tableau des valeurs.
+        for (int i=0;i<values.length;i++){
+//            System.out.println("x="+x);
+            values[i]=g.op(indexPoint(i), p);
+        }
+    }
+     
      public void SetFunctionValuesFromInterface(double start, double end, FunctionInterface g,double ... p){
        // laisser l'appelant ajuster à la grille ?
-        double gstart=closestGridPoint(start);
-        double gend=closestGridPoint(end);
+        double gstart=roundPoint(start);
+        double gend=roundPoint(end);
         if (gstart<min){
 //            System.out.println("start="+start+", gstart="+gstart);
             ResizeFunctionSupportLeft(start);
@@ -140,13 +173,21 @@ public class FunctionStructure {
         for (;;){
 //            System.out.println("x="+x);
             SetFunctionValue(x, g.op( x, p));
-            x=closestGridPoint(x+step);
+            x=roundPoint(x+step);
             if (x>gend) return;
         }
     }
+     
+     public void regularize(){
+//         n=Math.max(n,1);
+         for (int i=1;i<values.length-1;i++){
+             values[i]=(values[i-1]+values[i]+values[i+1])/3;
+         }
+     }
+     
       public void ResizeFunctionSupportLeft(double newMin){
         // typiquement le type de fonction dont on pourra évaluer l'intérêt de la coder directement avec les tableau de valeurs
-        newMin=closestGridPoint(newMin);
+        newMin=roundPoint(newMin);
         if (newMin>=min){
             System.out.println("Erreur, resize left but newMin >=min");
             return;
@@ -155,7 +196,7 @@ public class FunctionStructure {
 //         System.out.println("newSize of function "+name+" ="+size);
         double[] newValues=new double[size];
         for (int i=0;i<size;i++){
-            newValues[i]=GetFunctionValue(newMin+ (i)*step);
+            newValues[i]=getFunctionValueFromRoundPoint(newMin+ (i)*step);
 //            System.out.println("newval= "+ newValues[i]);
         }
         values=newValues;
@@ -168,7 +209,7 @@ public class FunctionStructure {
       
          public void ResizeFunctionSupportRight(double newMax){
         // typiquement le type de fonction dont on pourra évaluer l'intérêt de la coder directement avec les tableau de valeurs
-        newMax=closestGridPoint(newMax);
+        newMax=roundPoint(newMax);
         if (newMax<=max){
             System.out.println("Error, resize right but newMax <= max");
             return;
@@ -177,7 +218,7 @@ public class FunctionStructure {
 //         System.out.println("newSize of function "+name+" ="+size);
         double[] newValues=new double[size];
         for (int i=0;i<size;i++){
-            newValues[i]=GetFunctionValue(min+ (i)*step);
+            newValues[i]=getFunctionValueFromRoundPoint(min+ (i)*step);
 //            System.out.println("newval= "+ newValues[i]);
         }
         values=newValues;

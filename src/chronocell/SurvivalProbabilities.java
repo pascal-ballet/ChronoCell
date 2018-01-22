@@ -39,24 +39,24 @@ public class SurvivalProbabilities {
             }
             FunctionStructure pData=Operators.createFunction(0.0, 1.0, timeToNextPhase.step);
             pData.name="donnéesSurviePhase."+phase;
-            pData.SetFunctionValuesFromInterface(0.0, 1.0, Operators.piecewiseLinear, p);
+            pData.SetFunctionValuesFromInterface(Operators.piecewiseLinear, p);
             pData.setSideValues();
 //            Operators.plotFunction(pData);
-            FunctionStructure survival=Operators.createFunction(0.0,timeToNextPhase.max,timeToNextPhase.step/10);
+            FunctionStructure survival=Operators.createFunction(0.0,timeToNextPhase.max,timeToNextPhase.step/2);
             survival.name="survival";
 //            A t=0 l'homographie n'est pas définie, mais la proba est p[0]
             survival.values[0]=pData.values[0];
             
-            double t=survival.closestGridPoint(survival.min+survival.step);
+            double t=survival.roundPoint(survival.min+survival.step);
             
             
             
-            FunctionStructure temp=new FunctionStructure();
+            FunctionStructure temp,temp2=new FunctionStructure();
             
                 
             for (int i=survival.minIndex+1;i<=survival.maxIndex;i++){
-            FunctionStructure homographie=Operators.createFunction(t, timeToNextPhase.max, timeToNextPhase.step,"homo");
-            homographie.SetFunctionValuesFromInterface(homographie.min,homographie.max , Operators.homographie, 0.0,t,1.0,0.0);
+            FunctionStructure homographie=Operators.createFunction(t, timeToNextPhase.max, timeToNextPhase.step/5,"homo");
+            homographie.SetFunctionValuesFromInterface(Operators.homographie, 0.0,t,1.0,0.0);
             homographie.setSideValues();
 //                
             temp=Operators.ComposeFunctionInterfaceWithFunction(Operators.piecewiseLinear,homographie,p);
@@ -64,17 +64,17 @@ public class SurvivalProbabilities {
             temp.name="temp";
 //            Operators.plotFunction(temp);
                 Operators.affineFunctionTransformation(temp, 1, -pData.values[pData.values.length-1]);
-            FunctionStructure temp2=Operators.createProductFunction(temp, timeToNextPhase);
+            temp2=Operators.createProductFunction(temp, timeToNextPhase);
             temp2.name="temp2";
-//              if ((i==20)||(i==50))  {
-////                  Operators.plotFunction(timeToNextPhase);
-//////                  Operators.plotFunction(pData);
-////                  Operators.plotFunction(temp);
-////                  Operators.plotFunction(temp2);
+//              if ((i==23)||(i==24)|(i==25))  {
+//                  Operators.plotFunction(timeToNextPhase);
+//                  Operators.plotFunction(pData);
+//                  Operators.plotFunction(temp);
+//                  Operators.plotFunction(temp2);
 //              }
 //                Operators.PrintFunction(temp2, false);
-                if (timeToNextPhaseOneMinCumul.GetFunctionValue(t)>=0.000001){
-            survival.values[i]=Operators.IntegrateFunction(temp2, t, timeToNextPhase.max,0.01)/timeToNextPhaseOneMinCumul.GetFunctionValue(t)+pData.values[pData.values.length-1];
+                if (timeToNextPhaseOneMinCumul.getFunctionValueFromRoundPoint(t)>=0.0001){
+            survival.values[i]=Operators.IntegrateFunction(temp2, t, timeToNextPhase.max,0.01)/timeToNextPhaseOneMinCumul.getFunctionValueFromRoundPoint(t)+pData.values[pData.values.length-1];
 //                System.out.println("survival[i]= "+survival.values[i]+", x="+survival.pointWithIndex(i));
 ////       
                 }
@@ -86,7 +86,7 @@ public class SurvivalProbabilities {
 //            survival.values[i]=pData.GetFunctionValue(t/timeToNextPhase.max);
 //                System.out.println("t/max="+t/timeToNextPhase.max+", pdata(t/max)="+pData.GetFunctionValue(t/timeToNextPhase.max));
 //                System.out.println("Indexunder="+pData.indexOfPoint(t/timeToNextPhase.max)+", point under="+pData.pointWithIndex(pData.indexOfPoint(t/timeToNextPhase.max)));
-            t=survival.closestGridPoint(t+survival.step);
+            t=survival.roundPoint(t+survival.step);
 //                   System.out.println("t= "+t+", 1-F(t)= "+timeToNextPhaseOneMinCumul.GetFunctionValue(t)+", integrale= "+Operators.IntegrateFunction(temp2, t, temp2.max));
 //               }
 //                else {
@@ -108,6 +108,7 @@ public class SurvivalProbabilities {
            survival.name="survivalPhase."+phase;
 //           survival.setSideValues();
 //           Operators.plotFunction(survival);
+survival.regularize();
            return survival;
            
        }

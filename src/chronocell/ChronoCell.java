@@ -115,38 +115,46 @@ public class ChronoCell {
             // G0->Death
             FunctionStructure G0ToDeath=Operators.createFunction(Numbers.CGN(0.0),support0,step,"G0ToDeath.Density"); 
 //            Operators.MapFunctionValues(G0ToDeath,0.0,8.0,Operators.gaussian,7.0,1.0);
-            G0ToDeath.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,6.0,4.0,support0);
+            G0ToDeath.SetFunctionValuesFromInterface(Operators.boundedExponentialDistribution,6.0,4.0,support0);
             Operators.makeDistributionFromFunction(G0ToDeath);
+            G0ToDeath.checkAndAdjustSupport();
             // G0->G1
             FunctionStructure G0ToG1=Operators.createFunction(Numbers.CGN(0.0),support0,step,"G0ToG1.Density");  
-            G0ToG1.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,3.0,2.0,support0);
+            G0ToG1.SetFunctionValuesFromInterface(Operators.boundedExponentialDistribution,3.0,2.0,support0);
             Operators.makeDistributionFromFunction(G0ToG1);
+            G0ToG1.checkAndAdjustSupport();
             // G1->G0
             FunctionStructure G1ToG0=Operators.createFunction(Numbers.CGN(0.0),support0,step,"G1ToG0.Density"); 
-            G1ToG0.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,30.0,31.0,support0);
+            G1ToG0.SetFunctionValuesFromInterface(Operators.boundedExponentialDistribution,30.0,31.0,support0);
 //            Operators.MapFunctionValues(G1ToG0,50.0,51.0,Operators.constant,1.0);
             Operators.makeDistributionFromFunction(G1ToG0);
+            G1ToG0.checkAndAdjustSupport();
              // G1->S
             FunctionStructure G1ToS=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(support0),step,"G1ToS.Density");
 //            Operators.MapFunctionValues(G1ToS,0.0,support0,Operators.continuousGeometricDistribution,15.0,pO2,C,B,m);
-            G1ToS.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,4.8,4.1,support0);
+            G1ToS.SetFunctionValuesFromInterface(Operators.boundedExponentialDistribution,4.8,4.1,support0);
             Operators.makeDistributionFromFunction(G1ToS);
+            G1ToS.checkAndAdjustSupport();
              // S->G2
             FunctionStructure SToG2=Operators.createFunction(0.0,Numbers.CGN(support0),step,"SToG2.Density"); 
-            SToG2.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,3.3,4.8,support0);
+            SToG2.SetFunctionValuesFromInterface(Operators.boundedExponentialDistribution,3.3,4.8,support0);
 //            Operators.MapFunctionValues(SToG2,5.0,8.0,Operators.gaussian,6.0,2.0);
             Operators.makeDistributionFromFunction(SToG2);
+            SToG2.checkAndAdjustSupport();
+            
              // G2->M
 //            Operators.plotFunction(SToG2);
             FunctionStructure G2ToM=Operators.createFunction(0.0,Numbers.CGN(support0),step,"G2ToM.Density"); 
 //            Operators.MapFunctionValues(G2ToM,3.0,support2,Operators.continuousGeometricDistribution,3.0,pO2,C,B,m);
-            G2ToM.SetFunctionValuesFromInterface(0.0,support0,Operators.boundedExponentialDistribution,3.6,0.0,support0);
+            G2ToM.SetFunctionValuesFromInterface(Operators.boundedExponentialDistribution,3.6,0.0,support0);
             Operators.makeDistributionFromFunction(G2ToM);
+            G2ToM.checkAndAdjustSupport();
              // M->G1
-            FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),step,"MToG1.Density"); 
+            FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),step/3,"MToG1.Density"); 
             MToG1.SetFunctionValuesFromInterface(2.0-step,2.0,Operators.constant,1.0);
 //            Operators.MapFunctionValues(MToG1,0.0,2.0,Operators.gaussian,1.0,1.0);
             Operators.makeDistributionFromFunction(MToG1);
+            MToG1.checkAndAdjustSupport();
 //  
 //        
 ////-------------- Creation de la population de cellules -------------------------
@@ -168,23 +176,27 @@ public class ChronoCell {
             CellDynamicsOperators.DynamicsFilling(pop.dynamics);
 //        
 
-    FunctionStructure test = new FunctionStructure();
-    test = SurvivalProbabilities.survivalProbabilities(1.0, 2, pop.dynamics, _survivalData);
-//        System.out.println(test.indexUnderPoint(1));
-//Operators.PrintFunction(pop.dynamics.S.density.get("G2"),false);
-//Operators.plotFunction(pop.dynamics.G1.oneMinCumul.get("S"));
-//test=Operators.createCumulativeFunction(pop.dynamics.G1.density.get("S"));
-test.name="test";
-        Operators.plotFunction(test);
+//    FunctionStructure test = new FunctionStructure();
+////    test =Operators.createFunction(0, 1, 0.1);
+////    test.SetFunctionValuesFromInterface(0, 1, Operators.pow, 2);
+////    test.setSideValues();
+////        System.out.println("f(0.05)="+test.GetFunctionValueInterpolate(0.51, 1));
+//    test = SurvivalProbabilities.survivalProbabilities(1.0, 4, pop.dynamics, _survivalData);
+////        System.out.println(test.indexUnderPoint(1));
+////Operators.PrintFunction(pop.dynamics.S.density.get("G2"),false);
+////Operators.plotFunction(pop.dynamics.G1.oneMinCumul.get("S"));
+////test=Operators.createCumulativeFunction(pop.dynamics.G1.density.get("S"));
+//test.name="test";
+//        Operators.plotFunction(test);
 //Operators.PrintFunction((pop.dynamics.S.cumul.get("G2")),true);
 
     
 ////-------------- Premier jeux de fonctions theta -------------------------------
-//            ThetaStructure initTheta= new ThetaStructure();
-////            initTheta.phaseNb=pop.dynamics.phaseNb;
-//            StableSolution.StableInitialCondition(initTheta,pop.dynamics);
-//            pop.theta.add(initTheta);
-//            pop.currentTheta=0;
+            ThetaStructure initTheta= new ThetaStructure();
+//            initTheta.phaseNb=pop.dynamics.phaseNb;
+            StableSolution.StableInitialCondition(initTheta,pop.dynamics);
+            pop.theta.add(initTheta);
+            pop.currentTheta=0;
             
 //            pop.theta.get(0).G0.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
 //            pop.theta.get(0).S.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
@@ -195,25 +207,25 @@ test.name="test";
 //        ArrayList<Double> results=new ArrayList<>();
 //        
 ////-------------- treatment -----------------------------------------------------
-//            double duration =20.0;
-//            int fractions=1;
-//            double totalDose =1;
-//            double fractionDose=totalDose/fractions;
-//            SimulationStructure simulation=new SimulationStructure();
-//            simulation.duration=duration;
-//            simulation.timeStep=step;
-//            simulation.pop=CellPopulationOperators.copyCellPopulation(pop);
-//            simulation.treat= new TreatmentStructure();
-//            simulation.treat.times= new double[fractions+1];
-//            simulation.treat.doses= new double[fractions+1];
-//            simulation.treat.times[0]=10;
-////            simulation.treat.times[1]=200;
-//            simulation.treat.doses[0]=fractionDose;
-////            simulation.treat.doses[1]=fractionDose;
-//            simulation.treat.times[fractions]=Double.NaN;
-//            simulation.treat.doses[fractions]=0.0;        
-//            SimulationStructureOperators.run(simulation);
-//            SimulationStructureOperators.plotSimulation(simulation);
+            double duration =20.0;
+            int fractions=1;
+            double totalDose =1;
+            double fractionDose=totalDose/fractions;
+            SimulationStructure simulation=new SimulationStructure();
+            simulation.duration=duration;
+            simulation.timeStep=step;
+            simulation.pop=CellPopulationOperators.copyCellPopulation(pop);
+            simulation.treat= new TreatmentStructure();
+            simulation.treat.times= new double[fractions+1];
+            simulation.treat.doses= new double[fractions+1];
+            simulation.treat.times[0]=10;
+//            simulation.treat.times[1]=200;
+            simulation.treat.doses[0]=fractionDose;
+//            simulation.treat.doses[1]=fractionDose;
+            simulation.treat.times[fractions]=Double.NaN;
+            simulation.treat.doses[fractions]=0.0;        
+            SimulationStructureOperators.run(simulation);
+            SimulationStructureOperators.plotSimulation(simulation);
 //            for (int ii=0;ii<5;ii++){
 //            Operators.plotFunction(simulation.pop.theta.get(1).getPhase(ii),String.valueOf(ii));
 //            }
