@@ -35,6 +35,10 @@ public class FunctionStructure {
         return minIndex+ (int) Numbers.CGN(Math.round((x-min)/step));
     }
         
+        public int indexUnderPoint(double x){
+        return minIndex+ (int) Numbers.CGN(Math.floor((x-min)/step));
+    }
+        
         public double pointWithIndex(int i){
         return Numbers.CGN(min+ i*step);
     }
@@ -45,6 +49,24 @@ public class FunctionStructure {
         if (x>max) return right;
         return values[indexOfPoint(x)];
     }
+        
+          public double GetFunctionValueInterpolate(double x,int interpolate){
+        // On utilise les valeurs par défaut à gauche et à droite
+        if (x<min) return left;
+        if (x>max) return right;
+        int i=indexUnderPoint(x);
+        if (i==values.length-1){
+            return values[i]+(right-values[i])*(x-pointWithIndex(i))/(pointWithIndex(i+1)-pointWithIndex(i));
+        }
+        else return values[i]+(values[i+1]-values[i])*(x-pointWithIndex(i))/(pointWithIndex(i+1)-pointWithIndex(i));
+//        if((i>values.length-2)||(i<0)){
+//              System.out.println("x= "+x+", xgrid= "+pointWithIndex(i)+", i="+i+", function ="+name);
+//              Operators.PrintFunction(this, false);
+//        }
+        
+    }
+          
+
           
     public  double getMaxValue(){
         double maxVal=Math.max(left, right);

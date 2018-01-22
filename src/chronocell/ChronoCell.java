@@ -7,7 +7,8 @@
 //          CellPopulation;
 // Current:  cellpopOPerators apply treatment      
 
-// Todo :   * généraliser l'utilisation de closestGridPoint pour eviter certains bugs
+// Todo :   * vérifier le calcul intégral avec l'utilisation de l'interpolation dans getFunctionValue
+//          * généraliser l'utilisation de closestGridPoint pour eviter certains bugs
 //          * gérer la pO2 
 //          * généraliser l'utilisation de checkAndAdjustSupport dans les fonctions (repérer le bug quand utilisé dans productFunction
 //          * espilon dans la transformée de laplace inverse est fixé
@@ -167,50 +168,52 @@ public class ChronoCell {
             CellDynamicsOperators.DynamicsFilling(pop.dynamics);
 //        
 
-//    FunctionStructure test = new FunctionStructure();
-//    test = SurvivalProbabilities.survivalProbabilities(1.0, 0, pop.dynamics, _survivalData);
-//        Operators.plotFunction(test);
-//Operators.plotFunction(pop.dynamics.G1.density.get("S"));
-////Operators.plotFunction(pop.dynamics.G1.oneMinCumul.get("S"));
-////test=Operators.createCumulativeFunction(pop.dynamics.G1.density.get("S"));
-//Operators.plotFunction(Operators.createCumulativeFunction(pop.dynamics.G1.density.get("S")));
+    FunctionStructure test = new FunctionStructure();
+    test = SurvivalProbabilities.survivalProbabilities(1.0, 2, pop.dynamics, _survivalData);
+//        System.out.println(test.indexUnderPoint(1));
+//Operators.PrintFunction(pop.dynamics.S.density.get("G2"),false);
+//Operators.plotFunction(pop.dynamics.G1.oneMinCumul.get("S"));
+//test=Operators.createCumulativeFunction(pop.dynamics.G1.density.get("S"));
+test.name="test";
+        Operators.plotFunction(test);
+//Operators.PrintFunction((pop.dynamics.S.cumul.get("G2")),true);
 
     
 ////-------------- Premier jeux de fonctions theta -------------------------------
-            ThetaStructure initTheta= new ThetaStructure();
-//            initTheta.phaseNb=pop.dynamics.phaseNb;
-            StableSolution.StableInitialCondition(initTheta,pop.dynamics);
-            pop.theta.add(initTheta);
-            pop.currentTheta=0;
+//            ThetaStructure initTheta= new ThetaStructure();
+////            initTheta.phaseNb=pop.dynamics.phaseNb;
+//            StableSolution.StableInitialCondition(initTheta,pop.dynamics);
+//            pop.theta.add(initTheta);
+//            pop.currentTheta=0;
             
-            pop.theta.get(0).G0.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-            pop.theta.get(0).S.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-            pop.theta.get(0).G2.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-            pop.theta.get(0).M.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            pop.theta.get(0).G0.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            pop.theta.get(0).S.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            pop.theta.get(0).G2.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            pop.theta.get(0).M.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
         
 //        // Un traitement
 //        ArrayList<Double> results=new ArrayList<>();
 //        
 ////-------------- treatment -----------------------------------------------------
-            double duration =20.0;
-            int fractions=1;
-            double totalDose =1;
-            double fractionDose=totalDose/fractions;
-            SimulationStructure simulation=new SimulationStructure();
-            simulation.duration=duration;
-            simulation.timeStep=step;
-            simulation.pop=CellPopulationOperators.copyCellPopulation(pop);
-            simulation.treat= new TreatmentStructure();
-            simulation.treat.times= new double[fractions+1];
-            simulation.treat.doses= new double[fractions+1];
-            simulation.treat.times[0]=10;
-//            simulation.treat.times[1]=200;
-            simulation.treat.doses[0]=fractionDose;
-//            simulation.treat.doses[1]=fractionDose;
-            simulation.treat.times[fractions]=Double.NaN;
-            simulation.treat.doses[fractions]=0.0;        
-            SimulationStructureOperators.run(simulation);
-            SimulationStructureOperators.plotSimulation(simulation);
+//            double duration =20.0;
+//            int fractions=1;
+//            double totalDose =1;
+//            double fractionDose=totalDose/fractions;
+//            SimulationStructure simulation=new SimulationStructure();
+//            simulation.duration=duration;
+//            simulation.timeStep=step;
+//            simulation.pop=CellPopulationOperators.copyCellPopulation(pop);
+//            simulation.treat= new TreatmentStructure();
+//            simulation.treat.times= new double[fractions+1];
+//            simulation.treat.doses= new double[fractions+1];
+//            simulation.treat.times[0]=10;
+////            simulation.treat.times[1]=200;
+//            simulation.treat.doses[0]=fractionDose;
+////            simulation.treat.doses[1]=fractionDose;
+//            simulation.treat.times[fractions]=Double.NaN;
+//            simulation.treat.doses[fractions]=0.0;        
+//            SimulationStructureOperators.run(simulation);
+//            SimulationStructureOperators.plotSimulation(simulation);
 //            for (int ii=0;ii<5;ii++){
 //            Operators.plotFunction(simulation.pop.theta.get(1).getPhase(ii),String.valueOf(ii));
 //            }

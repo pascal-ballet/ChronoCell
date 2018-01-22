@@ -39,7 +39,7 @@ public class Operators {
         return fct;
     }
     
-/// Creéation d'une copie exacte d'une fonction
+/// Création d'une copie exacte d'une fonction
     
     public static FunctionStructure createFunctionCopy(FunctionStructure fct){
         FunctionStructure cpy=new FunctionStructure();
@@ -136,34 +136,56 @@ public class Operators {
     }
     
 
- public static double IntegrateFunction(FunctionStructure fct,double inf, double sup,double step){
-        double sum=0.0;
-        //        int start=(int) Numbers.CGN(Math.round(fct.minIndex+(Math.max(inf, fct.min)-fct.min)/fct.step));
-        //        int end=(int)  Numbers.CGN(Math.round(fct.minIndex+(Math.min(sup, fct.max)-fct.min)/fct.step));
-
-        //         System.err.format("start=%d, end=%d \n",start,end);
-//        System.out.println("inxinf="+fct.indexOfPoint(inf)+", inxsup="+fct.indexOfPoint(sup));
-        for (int i=fct.indexOfPoint(inf);i<fct.indexOfPoint(sup);i++){
-            // trapèzes
-            sum+=((fct.values[i]+fct.values[i+1])/2*fct.step);
-        }
-        return Numbers.CGN(sum);
-//        return sum;
-    }     
+// public static double IntegrateFunction(FunctionStructure fct,double inf, double sup,double step){
+//        double sum=0.0;
+//        //        int start=(int) Numbers.CGN(Math.round(fct.minIndex+(Math.max(inf, fct.min)-fct.min)/fct.step));
+//        //        int end=(int)  Numbers.CGN(Math.round(fct.minIndex+(Math.min(sup, fct.max)-fct.min)/fct.step));
+//
+//        //         System.err.format("start=%d, end=%d \n",start,end);
+////        System.out.println("inxinf="+fct.indexOfPoint(inf)+", inxsup="+fct.indexOfPoint(sup));
+//        for (int i=fct.indexOfPoint(inf);i<fct.indexOfPoint(sup);i++){
+//            // trapèzes
+//            sum+=((fct.values[i]+fct.values[i+1])/2*fct.step);
+//        }
+//        return Numbers.CGN(sum);
+////        return sum;
+//    }     
       
     
-     public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
+
+     
+     public static double IntegrateFunction(FunctionStructure fct,double inf, double sup, double step){
         double sum=0.0;
         //        int start=(int) Numbers.CGN(Math.round(fct.minIndex+(Math.max(inf, fct.min)-fct.min)/fct.step));
         //        int end=(int)  Numbers.CGN(Math.round(fct.minIndex+(Math.min(sup, fct.max)-fct.min)/fct.step));
 
         //         System.err.format("start=%d, end=%d \n",start,end);
 //        System.out.println("inxinf="+fct.indexOfPoint(inf)+", inxsup="+fct.indexOfPoint(sup));
+        double t=inf;
+        while (t<=sup){
+            // trapèzes
+            sum=sum+(fct.GetFunctionValueInterpolate(t,1)+fct.GetFunctionValueInterpolate(t+step,1))/2*step;
+//            sum=sum+fct.GetFunctionValueInterpolate(t,1)*step;
+            t=t+step;
+        }
+//        return Numbers.CGN(sum);
+//        return sum;
+        return IntegrateFunction(fct,inf,sup);
+    } 
+     
+          public static double IntegrateFunction(FunctionStructure fct,double inf, double sup){
+        double sum=0.0;
+//        //        int start=(int) Numbers.CGN(Math.round(fct.minIndex+(Math.max(inf, fct.min)-fct.min)/fct.step));
+//        //        int end=(int)  Numbers.CGN(Math.round(fct.minIndex+(Math.min(sup, fct.max)-fct.min)/fct.step));
+//
+//        //         System.err.format("start=%d, end=%d \n",start,end);
+////        System.out.println("inxinf="+fct.indexOfPoint(inf)+", inxsup="+fct.indexOfPoint(sup));
         for (int i=fct.indexOfPoint(inf);i<fct.indexOfPoint(sup);i++){
             // trapèzes
             sum+=((fct.values[i]+fct.values[i+1])/2*fct.step);
         }
         return Numbers.CGN(sum);
+//        double sum=IntegrateFunction(fct, inf, sup,fct.step);
 //        return sum;
     } 
      
@@ -209,7 +231,12 @@ public class Operators {
         for (int i =cum.minIndex+1;i<=cum.maxIndex;i++){
             cum.values[i]=cum.values[i-1]+(fct.GetFunctionValue(cum.pointWithIndex(i-1))+fct.GetFunctionValue(cum.pointWithIndex(i)))/2*cum.step;
         }
-        Operators.affineFunctionTransformation(cum, 1/cum.getMaxValue(), 0);
+//        double t=fct.min;
+//        for (int i =cum.minIndex+1;i<=cum.maxIndex;i++){
+//            cum.values[i]=Operators.IntegrateFunction(fct, 0, t,0.001);
+//            t+=cum.step;
+//        }
+//        Operators.affineFunctionTransformation(cum, 1/cum.getMaxValue(), 0);
         /// normalization (crado ? rependre la boucle précédente pour être sûr de ne jamais dépasser 1 par le calcul ?)
 //        cum=AffineFunctionTransformation(1.0/cum.getMaxValue(),0, cum);
         return cum;
