@@ -40,10 +40,10 @@ public class FunctionStructure {
     }
         
         public int pointIndexFloor(double x){
-            if (Math.floor((x-min)/step)>maxIndex)      {
-                System.out.println("index="+((x-min))+", min="+min+", max="+max+", x="+x+", name"+this.name+", minindex="+minIndex);
-                Operators.PrintFunction(this, false);
-            }
+//            if (Math.floor((x-min)/step)>maxIndex)      {
+//                System.out.println("index="+((x-min))+", min="+min+", max="+max+", x="+x+", name"+this.name+", minindex="+minIndex);
+//                Operators.PrintFunction(this, false);
+//            }
         return minIndex+ (int) (Math.floor((x-min)/step));
     }
         
@@ -51,41 +51,16 @@ public class FunctionStructure {
         return Numbers.CGN(min+ i*step);
     }
         
-        public double getFunctionValueFromRoundPoint(double x){
+          public double getFunctionValue(double x){
         // On utilise les valeurs par défaut à gauche et à droite
-        double s=roundPoint(x);
-        if (s<min) return left;
-        if (s>max) return right;
-//            System.out.println("index="+pointIndexRound(s)+", s="+s+", x="+x);
-        return values[pointIndexRound(s)];
-    }
-        
-    public double getFunctionValueFromFloorPoint(double x){
-        // On utilise les valeurs par défaut à gauche et à droite
-       double s=floorPoint(x);
-        if (s<min) return left;
-        if (s>max) return right;
-        return values[pointIndexFloor(x)];
-    }    
-        
-          public double GetFunctionValueInterpolate(double x,int interpolate){
-        // On utilise les valeurs par défaut à gauche et à droite
-        if (x<min) return left;
-        if (x>max) return right;
-        if(pointIndexFloor(x)>values.length-1)             System.out.println("max="+max+"x="+x+", index= "+pointIndexRound(x)+", maxIndex="+maxIndex);
-        if (Numbers.IsZero(x-floorPoint(x))){
-            return values[pointIndexFloor(x)];
-        }
         int i=pointIndexFloor(x);
-        if (i==values.length-1){
-            return values[i]+(right-values[i])*(x-indexPoint(i))/(max-indexPoint(i));
-        }
-        else return values[i]+(values[i+1]-values[i])*(x-indexPoint(i))/(indexPoint(i+1)-indexPoint(i));
-//        if((i>values.length-2)||(i<0)){
-//              System.out.println("x= "+x+", xgrid= "+pointWithIndex(i)+", i="+i+", function ="+name);
-//              Operators.PrintFunction(this, false);
+        if (i<minIndex) return left;
+        if (i>=maxIndex) return right;
+//        if (i==maxIndex){
+//            System.out.println(indexPoint(pointIndexFloor(x)));
+//            Operators.PrintFunction(this, true);
 //        }
-        
+        return values[i]+(values[i+1]-values[i])*(x-indexPoint(i))/(indexPoint(i+1)-indexPoint(i));
     }
           
 
@@ -114,13 +89,24 @@ public class FunctionStructure {
         right=values[values.length-1];
     }
       
+    public void checkBounds(){
+//        if(min!=indexPoint(minIndex)) {
+//            System.out.println("pb min");
+//            Operators.PrintFunction(this, false);
+//        }
+        if(max!=indexPoint(maxIndex)) {
+            System.out.println("pb max");
+            Operators.PrintFunction(this, false);
+        }
+    }
+    
      public void SetFunctionValue(double x, double y){
          y=Numbers.CGN(y);
 //         System.out.println("setFunction value : x="+x+", y= "+y+", min= "+min+", max= "+max+", left= "+left+", right= "+right);
         double xGrid=roundPoint(x);
         // Si xGrid est dans le support, rien de spécial
         if ((xGrid>=min) && (xGrid<=max)){
-            values[pointIndexRound(x)]=y;
+            values[pointIndexRound(xGrid)]=y;
 //            System.out.println("valeur");
             return;
             }
@@ -134,12 +120,15 @@ public class FunctionStructure {
 //            System.out.println("gauche");
             ResizeFunctionSupportLeft(xGrid);
             values[0]=y;
+            
+            this.checkBounds();
             return;
         }
         if(xGrid>max){
 //            System.out.println("droite");
             ResizeFunctionSupportRight(xGrid);
             values[values.length-1]=y;
+            this.checkBounds();
             return;
         }
     } 
@@ -161,11 +150,11 @@ public class FunctionStructure {
         double gend=roundPoint(end);
         if (gstart<min){
 //            System.out.println("start="+start+", gstart="+gstart);
-            ResizeFunctionSupportLeft(start);
+            ResizeFunctionSupportLeft(gstart);
         }
         if (gend>max){
 //            System.out.println("end="+end+", gend="+gend);
-            ResizeFunctionSupportRight(end);
+            ResizeFunctionSupportRight(gend);
         }
 //         System.out.println("start="+start+", end="+end);
         // la boucle sur les valeurs de x semble plus propre que de travailler avec le tableau des valeurs.
@@ -196,7 +185,7 @@ public class FunctionStructure {
 //         System.out.println("newSize of function "+name+" ="+size);
         double[] newValues=new double[size];
         for (int i=0;i<size;i++){
-            newValues[i]=getFunctionValueFromRoundPoint(newMin+ (i)*step);
+            newValues[i]=getFunctionValue(newMin+ (i)*step);
 //            System.out.println("newval= "+ newValues[i]);
         }
         values=newValues;
@@ -218,7 +207,7 @@ public class FunctionStructure {
 //         System.out.println("newSize of function "+name+" ="+size);
         double[] newValues=new double[size];
         for (int i=0;i<size;i++){
-            newValues[i]=getFunctionValueFromRoundPoint(min+ (i)*step);
+            newValues[i]=getFunctionValue(min+ (i)*step);
 //            System.out.println("newval= "+ newValues[i]);
         }
         values=newValues;

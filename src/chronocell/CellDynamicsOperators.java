@@ -29,7 +29,8 @@ public class CellDynamicsOperators {
         Operators.createProductFunction(dyn.G0.density.get("Death"), dyn.G0.oneMinCumul.get("G1")));
         dyn.G0.timeToNextPhaseDensity.name="G0.timeDensity";
         dyn.G0.timeToNextPhaseOneMinCumul=Operators.createProductFunction(dyn.G0.oneMinCumul.get("Death"), dyn.G0.oneMinCumul.get("G1"));
-        
+//        Operators.plotFunction(dyn.G0.timeToNextPhaseOneMinCumul);
+                
         
        // G1
         dyn.G1.cumul.put("G0",Operators.createCumulativeFunction(dyn.G1.density.get("G0")));
@@ -71,6 +72,7 @@ public class CellDynamicsOperators {
         // Solutions filters
         dyn.G0.solutionFilter=Operators.createProductFunction(dyn.G0.oneMinCumul.get("Death"),dyn.G0.oneMinCumul.get("G1"));
         dyn.G0.solutionFilter.checkAndAdjustSupport();
+//        Operators.plotFunction(dyn.G0.solutionFilter);
         
         dyn.G1.solutionFilter=Operators.createProductFunction(dyn.G1.oneMinCumul.get("G0"),dyn.G1.oneMinCumul.get("S"));
         dyn.G1.solutionFilter.checkAndAdjustSupport();
@@ -87,6 +89,7 @@ public class CellDynamicsOperators {
 //      phase G0, to be convolved with theta1
         dyn.G0.thetaConvolution=Operators.createProductFunction(dyn.G1.density.get("G0"),dyn.G1.oneMinCumul.get("S"));
         dyn.G0.thetaConvolution.checkAndAdjustSupport();
+        
 //      phase G1, part to be convolved with theta0
         dyn.G1.thetaConvolution=Operators.createProductFunction(dyn.G0.density.get("G1"),dyn.G0.oneMinCumul.get("Death"));
         dyn.G1.thetaConvolution.checkAndAdjustSupport();
@@ -97,7 +100,7 @@ public class CellDynamicsOperators {
         dyn.G2.thetaConvolution=Operators.createFunctionCopy(dyn.S.density.get("G2"));
 //      phase M 
         dyn.M.thetaConvolution=Operators.createFunctionCopy(dyn.G2.density.get("M"));
-//      
+//      Operators.plotFunction(dyn.M.thetaConvolution);
         
         
     }

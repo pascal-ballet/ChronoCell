@@ -150,11 +150,13 @@ public class ChronoCell {
             Operators.makeDistributionFromFunction(G2ToM);
             G2ToM.checkAndAdjustSupport();
              // M->G1
-            FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),step/3,"MToG1.Density"); 
+            FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),step,"MToG1.Density"); 
             MToG1.SetFunctionValuesFromInterface(2.0-step,2.0,Operators.constant,1.0);
 //            Operators.MapFunctionValues(MToG1,0.0,2.0,Operators.gaussian,1.0,1.0);
             Operators.makeDistributionFromFunction(MToG1);
             MToG1.checkAndAdjustSupport();
+//            Operators.plotFunction(MToG1);
+//            System.out.println("chronocell.ChronoCell.main()"+Operators.LaplaceTransform(1, MToG1));
 //  
 //        
 ////-------------- Creation de la population de cellules -------------------------
@@ -197,6 +199,7 @@ public class ChronoCell {
             StableSolution.StableInitialCondition(initTheta,pop.dynamics);
             pop.theta.add(initTheta);
             pop.currentTheta=0;
+//            Operators.plotFunction(pop.dynamics.G1.thetaConvolution);
             
 //            pop.theta.get(0).G0.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
 //            pop.theta.get(0).S.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
@@ -207,7 +210,7 @@ public class ChronoCell {
 //        ArrayList<Double> results=new ArrayList<>();
 //        
 ////-------------- treatment -----------------------------------------------------
-            double duration =20.0;
+            double duration =50.0;
             int fractions=1;
             double totalDose =1;
             double fractionDose=totalDose/fractions;
@@ -218,17 +221,17 @@ public class ChronoCell {
             simulation.treat= new TreatmentStructure();
             simulation.treat.times= new double[fractions+1];
             simulation.treat.doses= new double[fractions+1];
-            simulation.treat.times[0]=10;
+            simulation.treat.times[0]=Double.NaN;
 //            simulation.treat.times[1]=200;
             simulation.treat.doses[0]=fractionDose;
 //            simulation.treat.doses[1]=fractionDose;
             simulation.treat.times[fractions]=Double.NaN;
-            simulation.treat.doses[fractions]=0.0;        
+            simulation.treat.doses[fractions]=0.0;
             SimulationStructureOperators.run(simulation);
             SimulationStructureOperators.plotSimulation(simulation);
-//            for (int ii=0;ii<5;ii++){
-//            Operators.plotFunction(simulation.pop.theta.get(1).getPhase(ii),String.valueOf(ii));
-//            }
+            for (int ii=0;ii<5;ii++){
+            Operators.plotFunction(simulation.pop.theta.get(0).getPhase(ii));
+            }
 //            FunctionStructure comp=Operators.createFunction(0.0,(double) results.size(), 1.0);
 //            for (int i=0;i<comp.maxIndex;i++){
 //                comp.values[i]=results.get(i);

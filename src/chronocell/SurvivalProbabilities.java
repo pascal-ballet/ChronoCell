@@ -73,8 +73,8 @@ public class SurvivalProbabilities {
 //                  Operators.plotFunction(temp2);
 //              }
 //                Operators.PrintFunction(temp2, false);
-                if (timeToNextPhaseOneMinCumul.getFunctionValueFromRoundPoint(t)>=0.0001){
-            survival.values[i]=Operators.IntegrateFunction(temp2, t, timeToNextPhase.max,0.01)/timeToNextPhaseOneMinCumul.getFunctionValueFromRoundPoint(t)+pData.values[pData.values.length-1];
+                if (timeToNextPhaseOneMinCumul.getFunctionValue(t)>=0.0001){
+            survival.values[i]=Operators.IntegrateFunction(temp2, t, timeToNextPhase.max,0.01)/timeToNextPhaseOneMinCumul.getFunctionValue(t)+pData.values[pData.values.length-1];
 //                System.out.println("survival[i]= "+survival.values[i]+", x="+survival.pointWithIndex(i));
 ////       
                 }
