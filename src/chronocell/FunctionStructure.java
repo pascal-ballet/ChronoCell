@@ -48,20 +48,39 @@ public class FunctionStructure {
     }
         
         public double indexPoint(int i){
-        return Numbers.CGN(min+ i*step);
+        return Numbers.CGN(min+ (i-minIndex)*step);
     }
         
-          public double getFunctionValue(double x){
+        public double getFunctionValue(double x){
         // On utilise les valeurs par défaut à gauche et à droite
+        
+        if (x<min) return left;
+        if (x>max) return right;
         int i=pointIndexFloor(x);
-        if (i<minIndex) return left;
-        if (i>=maxIndex) return right;
+        if (i==maxIndex)     return values[i];
+//        if (maxIndex>=values.length) System.out.println("ERROR");
 //        if (i==maxIndex){
-//            System.out.println(indexPoint(pointIndexFloor(x)));
+//            
 //            Operators.PrintFunction(this, true);
 //        }
+    if (i>=values.length-1) Operators.PrintFunction(this, false);
         return values[i]+(values[i+1]-values[i])*(x-indexPoint(i))/(indexPoint(i+1)-indexPoint(i));
     }
+//        
+//        public double getFunctionValue(double x) {
+//        // On utilise les valeurs par défaut à gauche et à droite
+//
+//        if (x < min) {
+//            return left;
+//        }
+//        if (x > max) {
+//            return right;
+//        }
+//        
+//            return values[pointIndexRound(x)];
+//
+////        
+//    }
           
 
           
@@ -85,8 +104,10 @@ public class FunctionStructure {
     }
     
     public  void setSideValues(){
+//        System.out.println("length="+values.length);
         left=values[0];
-        right=values[values.length-1];
+        if (values.length==1) right =values[0];
+        else right=values[values.length-1];
     }
       
     public void checkBounds(){

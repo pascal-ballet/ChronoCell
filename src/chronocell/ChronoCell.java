@@ -59,10 +59,21 @@ public class ChronoCell {
 //    public static Hashtable<String,double[][]> survivalData = new Hashtable<String,double[][]>(); 
     public static SurvivalDataStructure _survivalData = new SurvivalDataStructure();
     
+    public static double intergrationStep=0.0001;
+    
     public static void main(String[] args) {
         
 //        
-        
+//     FunctionStructure test = new FunctionStructure();
+//    test =Operators.createFunction(0, 1, 0.001);
+//    test.SetFunctionValuesFromInterface(test.min, test.max, Operators.pow, 2);
+//        System.out.println("int="+Operators.IntegrateFunction(test, 0.0, 1.0));
+////    Operators.PrintFunction(test, true);
+//    for (int i=0;i<=50;i++){
+//        System.out.println("f("+((double) i/50)+")="+test.getFunctionValue(((double) i/50)));
+//    }
+//    Operators.DoubleValuesArraySizeToLeft(test);
+//    Operators.plotFunction(test);    
     //-------------- Probabilités de survie (lecture dans un .csv)
     // Chaque ligne correspond à un dosage(sauf la première), chaque colonne à un temps dans le cycle
     // les temps sont des temps de références, mais on les normalise pour avoir une courbe définie sur [0,1] que l'on distribuera plus tard
@@ -108,8 +119,8 @@ public class ChronoCell {
             e.printStackTrace();
             return;
     }
-//  
-////-------------- Dynamique initiale des phases ---------------------------------
+////  
+//////-------------- Dynamique initiale des phases ---------------------------------
             double support0=40.0,support2=15.0;
             double step=0.1;
             // G0->Death
@@ -117,6 +128,7 @@ public class ChronoCell {
 //            Operators.MapFunctionValues(G0ToDeath,0.0,8.0,Operators.gaussian,7.0,1.0);
             G0ToDeath.SetFunctionValuesFromInterface(Operators.boundedExponentialDistribution,6.0,4.0,support0);
             Operators.makeDistributionFromFunction(G0ToDeath);
+            Operators.PrintFunction(G0ToDeath, false);
             G0ToDeath.checkAndAdjustSupport();
             // G0->G1
             FunctionStructure G0ToG1=Operators.createFunction(Numbers.CGN(0.0),support0,step,"G0ToG1.Density");  
@@ -150,18 +162,18 @@ public class ChronoCell {
             Operators.makeDistributionFromFunction(G2ToM);
             G2ToM.checkAndAdjustSupport();
              // M->G1
-            FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),step,"MToG1.Density"); 
-            MToG1.SetFunctionValuesFromInterface(2.0-step,2.0,Operators.constant,1.0);
+            FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),20,"MToG1.Density"); 
+            MToG1.SetFunctionValuesFromInterface(0,2.0,Operators.constant,1.0);
 //            Operators.MapFunctionValues(MToG1,0.0,2.0,Operators.gaussian,1.0,1.0);
             Operators.makeDistributionFromFunction(MToG1);
             MToG1.checkAndAdjustSupport();
 //            Operators.plotFunction(MToG1);
 //            System.out.println("chronocell.ChronoCell.main()"+Operators.LaplaceTransform(1, MToG1));
-//  
-//        
-////-------------- Creation de la population de cellules -------------------------
+////  
+////        
+//////-------------- Creation de la population de cellules -------------------------
             CellPopulation pop=new CellPopulation();
-            pop.timeStep=step;
+            pop.timeStep=0.1;
             // Taille initiale
             pop.size=1.0;
             // Dynamique  
@@ -176,47 +188,38 @@ public class ChronoCell {
             pop.dynamics.M.density.put("G1", Operators.createFunctionCopy(MToG1)); 
             // Complétions des différentes fonctions utiles pour la dynamique
             CellDynamicsOperators.DynamicsFilling(pop.dynamics);
-//        
-
-//    FunctionStructure test = new FunctionStructure();
-////    test =Operators.createFunction(0, 1, 0.1);
-////    test.SetFunctionValuesFromInterface(0, 1, Operators.pow, 2);
-////    test.setSideValues();
-////        System.out.println("f(0.05)="+test.GetFunctionValueInterpolate(0.51, 1));
-//    test = SurvivalProbabilities.survivalProbabilities(1.0, 4, pop.dynamics, _survivalData);
-////        System.out.println(test.indexUnderPoint(1));
-////Operators.PrintFunction(pop.dynamics.S.density.get("G2"),false);
-////Operators.plotFunction(pop.dynamics.G1.oneMinCumul.get("S"));
-////test=Operators.createCumulativeFunction(pop.dynamics.G1.density.get("S"));
-//test.name="test";
-//        Operators.plotFunction(test);
-//Operators.PrintFunction((pop.dynamics.S.cumul.get("G2")),true);
-
-    
-////-------------- Premier jeux de fonctions theta -------------------------------
+////        
+//
+//   
+//            
+//
+//
+//    
+//////-------------- Premier jeux de fonctions theta -------------------------------
             ThetaStructure initTheta= new ThetaStructure();
 //            initTheta.phaseNb=pop.dynamics.phaseNb;
             StableSolution.StableInitialCondition(initTheta,pop.dynamics);
             pop.theta.add(initTheta);
             pop.currentTheta=0;
-//            Operators.plotFunction(pop.dynamics.G1.thetaConvolution);
+//            
             
-//            pop.theta.get(0).G0.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-//            pop.theta.get(0).S.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-//            pop.theta.get(0).G2.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-//            pop.theta.get(0).M.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            pop.theta.get(0).G1.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            pop.theta.get(0).G0.SetFunctionValuesFromInterface(pop.theta.get(0).G0.min,pop.theta.get(0).G0.max,Operators.constant,0.0);
+//            pop.theta.get(0).S.SetFunctionValuesFromInterface(pop.theta.get(0).S.min,pop.theta.get(0).S.max,Operators.constant,0.0);
+//            pop.theta.get(0).G2.SetFunctionValuesFromInterface(pop.theta.get(0).G2.min,pop.theta.get(0).G2.max,Operators.constant,0.0);
+//            pop.theta.get(0).M.SetFunctionValuesFromInterface(pop.theta.get(0).M.min,pop.theta.get(0).M.max,Operators.constant,1.0);
         
-//        // Un traitement
-//        ArrayList<Double> results=new ArrayList<>();
-//        
-////-------------- treatment -----------------------------------------------------
-            double duration =50.0;
+////        // Un traitement
+////        ArrayList<Double> results=new ArrayList<>();
+////        
+//////-------------- treatment -----------------------------------------------------
+            double duration =50;
             int fractions=1;
             double totalDose =1;
             double fractionDose=totalDose/fractions;
             SimulationStructure simulation=new SimulationStructure();
             simulation.duration=duration;
-            simulation.timeStep=step;
+            simulation.timeStep=pop.timeStep;
             simulation.pop=CellPopulationOperators.copyCellPopulation(pop);
             simulation.treat= new TreatmentStructure();
             simulation.treat.times= new double[fractions+1];
@@ -227,11 +230,19 @@ public class ChronoCell {
 //            simulation.treat.doses[1]=fractionDose;
             simulation.treat.times[fractions]=Double.NaN;
             simulation.treat.doses[fractions]=0.0;
+//            SimulationStructureOperators.plotSimulation(simulation);
             SimulationStructureOperators.run(simulation);
             SimulationStructureOperators.plotSimulation(simulation);
-            for (int ii=0;ii<5;ii++){
-            Operators.plotFunction(simulation.pop.theta.get(0).getPhase(ii));
-            }
+            
+            
+            
+            
+            
+            
+//            for (int ii=)
+//            for (int ii=0;ii<5;ii++){
+//            Operators.plotFunction(simulation.pop.theta.get(0).getPhase(ii));
+//            }
 //            FunctionStructure comp=Operators.createFunction(0.0,(double) results.size(), 1.0);
 //            for (int i=0;i<comp.maxIndex;i++){
 //                comp.values[i]=results.get(i);

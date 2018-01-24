@@ -17,8 +17,8 @@ public class StableSolution {
         x*=Operators.LaplaceTransform(lambda, Operators.createProductFunction(dyn.G1.density.get("G0"), dyn.G1.oneMinCumul.get("S")));
         y=Operators.LaplaceTransform(lambda, dyn.S.density.get("G2"));
         y*=Operators.LaplaceTransform(lambda, dyn.G2.density.get("M"));
+//        System.out.println("y==== "+Operators.LaplaceTransform(lambda, dyn.M.density.get("G1")));
         y*=Operators.LaplaceTransform(lambda, dyn.M.density.get("G1"));
-//        System.out.println("y==== "+y);
         
 //        Operators.PrintFunction(dyn.M.density.get("G1"),true);
         y*=Operators.LaplaceTransform(lambda, Operators.createProductFunction(dyn.G1.density.get("S"), dyn.G1.oneMinCumul.get("G0")));
@@ -32,7 +32,7 @@ public class StableSolution {
         double s=LaplaceEquation(lambda,dyn);
 //        puisque l'on ne manipule que des fonctions positives, la transformée de laplace est décroissante
         if (s<1.0){
-            System.out.println("s="+s+", Pas de solution stable (la population s'éteint)");
+//            System.out.println("s="+s+", Pas de solution stable (la population s'éteint)");
             return -1.0;
         }
         boolean test=false;

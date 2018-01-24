@@ -54,8 +54,8 @@ public class SurvivalProbabilities {
             FunctionStructure temp,temp2=new FunctionStructure();
             
                 
-            for (int i=survival.minIndex+1;i<=survival.maxIndex;i++){
-            FunctionStructure homographie=Operators.createFunction(t, timeToNextPhase.max, timeToNextPhase.step/5,"homo");
+            for (int i=survival.minIndex+1;i<survival.maxIndex;i++){
+            FunctionStructure homographie=Operators.createFunction(t, timeToNextPhase.max, 10,"homo");
             homographie.SetFunctionValuesFromInterface(Operators.homographie, 0.0,t,1.0,0.0);
             homographie.setSideValues();
 //                
@@ -74,7 +74,7 @@ public class SurvivalProbabilities {
 //              }
 //                Operators.PrintFunction(temp2, false);
                 if (timeToNextPhaseOneMinCumul.getFunctionValue(t)>=0.0001){
-            survival.values[i]=Operators.IntegrateFunction(temp2, t, timeToNextPhase.max,0.01)/timeToNextPhaseOneMinCumul.getFunctionValue(t)+pData.values[pData.values.length-1];
+            survival.values[i]=Operators.IntegrateFunction(temp2, t, timeToNextPhase.max)/timeToNextPhaseOneMinCumul.getFunctionValue(t)+pData.values[pData.values.length-1];
 //                System.out.println("survival[i]= "+survival.values[i]+", x="+survival.pointWithIndex(i));
 ////       
                 }
