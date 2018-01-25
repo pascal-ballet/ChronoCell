@@ -140,7 +140,7 @@ public class FunctionStructure {
         if(xGrid<min) {
 //            System.out.println("gauche");
             ResizeFunctionSupportLeft(xGrid);
-            values[0]=y;
+            values[minIndex]=y;
             
             this.checkBounds();
             return;
@@ -148,7 +148,7 @@ public class FunctionStructure {
         if(xGrid>max){
 //            System.out.println("droite");
             ResizeFunctionSupportRight(xGrid);
-            values[values.length-1]=y;
+            values[maxIndex]=y;
             this.checkBounds();
             return;
         }

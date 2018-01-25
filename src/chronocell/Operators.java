@@ -59,6 +59,21 @@ public class Operators {
         return fct;
     }
     
+     public static FunctionStructure createDirac(double x, String name) {
+        FunctionStructure fct = new FunctionStructure();
+        fct.name = name;
+        fct.min = Numbers.CGN(x);
+        fct.max = Numbers.CGN(x);
+        fct.step=Double.NaN;
+        fct.values = new double[1];
+       fct.values[0]=Double.NaN;
+        fct.minIndex = 0;
+        fct.maxIndex = 0 ;
+        fct.left = 0.0;
+        fct.right = 0.0;
+        return fct;
+    }   
+    
     public static FunctionStructure createFunction(double min,double max,double step, String name){
         int n=(int) Math.floor((max-min)/step);
         FunctionStructure fct=createFunction(min, max, n, name);
@@ -334,12 +349,16 @@ public static double IntegrateFunction(FunctionStructure fct,double inf, double 
         FunctionStructure prod=createFunction(Math.min(f1.min,f2.min ), Math.max(f1.max,f2.max ), Math.min(f1.step, f2.step));
         prod.left=Numbers.CGN(f1.left*f2.left);
         prod.right=Numbers.CGN(f1.right*f2.right);
-        double x;
+//        double x;
 //        f1.checkBounds();
 //        f2.checkBounds();
-        for (int i=prod.minIndex;i<=prod.maxIndex;i++){
-            x=prod.indexPoint(i);
-            prod.values[i]=f1.getFunctionValue(x)*f2.getFunctionValue(x);
+//        for (int i=prod.minIndex;i<=prod.maxIndex;i++){
+//            x=prod.indexPoint(i);
+//            prod.values[i]=f1.getFunctionValue(x)*f2.getFunctionValue(x);
+//        }
+        for (double x = prod.min; x <= prod.max; x+=prod.step) {
+//            x = prod.indexPoint(i);
+            prod.SetFunctionValue(x, f1.getFunctionValue(x) * f2.getFunctionValue(x));
         }
 //        prod.checkAndAdjustSupport();
     return prod;
@@ -385,7 +404,7 @@ public static double IntegrateFunction(FunctionStructure fct,double inf, double 
 
     
     public static FunctionStructure createSumFunction(FunctionStructure f1,FunctionStructure f2){
-        FunctionStructure sum=Operators.createFunction(Math.min(f1.min, f2.min), Math.max(f1.max, f2.max), Numbers.LeastCommonStep(f1.step,f2.step));
+        FunctionStructure sum=Operators.createFunction(Math.min(f1.min, f2.min), Math.max(f1.max, f2.max), Math.min(f1.step,f2.step));
         double x;
         sum.left=Numbers.CGN(f1.left+f2.left);
         sum.right=Numbers.CGN(f1.right+f2.right);

@@ -13,9 +13,10 @@ public class Numbers {
     public static double minStep=0.00000001;
     
     private static double ClosestGridNumber(double number){
-        long gridIndex=(long) Math.round(number/minStep);
-        double gridNumber=gridIndex*minStep;
-        return gridNumber;
+//        long gridIndex=(long) Math.round(number/minStep);
+//        double gridNumber=gridIndex*minStep;
+//        return gridNumber;
+        return number;
     }
     public static double CGN(double number){
         return ClosestGridNumber(number);

@@ -162,6 +162,8 @@ public class ChronoCell {
             Operators.makeDistributionFromFunction(G2ToM);
             G2ToM.checkAndAdjustSupport();
              // M->G1
+             
+             /// modéliser les dirac comme min=max et 0 partout sauf Nan au point considéré, et ajouter partout des tests pour effectuer des calculs particuliers.
             FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),20,"MToG1.Density"); 
             MToG1.SetFunctionValuesFromInterface(0,2.0,Operators.constant,1.0);
 //            Operators.MapFunctionValues(MToG1,0.0,2.0,Operators.gaussian,1.0,1.0);
