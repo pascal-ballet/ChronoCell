@@ -7,7 +7,7 @@ package chronocell;
 
 import static chronocell.Operators.IntegrateFunction;
 import static chronocell.Operators.createProductFunction;
-import static chronocell.Operators.DoubleValuesArraySizeToLeft;
+//import static chronocell.Operators.DoubleValuesArraySizeToLeft;
 import static chronocell.Operators.createPowerOfFunction;
 import static chronocell.Operators.createTranslatedFunction;
 
@@ -102,7 +102,9 @@ public class ThetaStructureOperators {
         for (int i=0;i<dyn.phaseNb;i++){
             if (theta.getPhase(i).minIndex==0){
 //                Operators.PrintFunction(theta.getPhase(i), false);
-                DoubleValuesArraySizeToLeft(theta.getPhase(i));
+//                DoubleValuesArraySizeToLeft(theta.getPhase(i));
+                theta.getPhase(i).increaseValuesSizeLeft(theta.getPhase(i).values.length);
+//                Operators.PrintFunction(theta.getPhase(i), false);
 //                Operators.PrintFunction(theta.getPhase(i), false);
             }
 //            theta.getPhase(i).min=theta.getPhase(i).min-theta.getPhase(i).step;
@@ -113,10 +115,8 @@ public class ThetaStructureOperators {
         // phase G0
             tempConvolution=createTranslatedFunction(theta.G0.min, dyn.G0.thetaConvolution);
             nextVal=IntegrateFunction(createProductFunction(tempConvolution,theta.G1),tempConvolution.min,tempConvolution.max);
-            theta.G0.min=theta.G0.roundPoint(theta.G0.min-theta.G0.step);
-            theta.G0.minIndex-=1;
-//            theta.G0.min=theta.G0.indexPoint(theta.G0.minIndex);
-            theta.G0.values[theta.G0.minIndex]=nextVal;
+            theta.G0.SetFunctionValueRegardlessOfSidesValues(theta.G0.min-theta.G0.step, nextVal);
+//            Operators.plotFunction(tempConvolution);
             
         // phase G1
             // from G0
@@ -125,15 +125,22 @@ public class ThetaStructureOperators {
             // from M
             tempConvolution=createTranslatedFunction(theta.G1.min, dyn.M.density.get("G1"));
             FunctionStructure temp=createProductFunction(tempConvolution,theta.M);
+            
+            nextVal+=2*IntegrateFunction(temp,tempConvolution.min,tempConvolution.max);
+            
+//            System.out.println("point =:"+(theta.G1.min-theta.G1.step));
+//             System.out.println("setFunction value : x="+theta.G1.roundPoint(theta.G1.min-theta.G1.step));
+//             System.out.println("setFunction value : minindex="+theta.G1.minIndex+", idx= "+theta.G1.pointIndexRound(theta.G1.min-theta.G1.step));
+//                Operators.PrintFunction(theta.getPhase(1), false);
+
+            theta.G1.SetFunctionValueRegardlessOfSidesValues(theta.G1.min-theta.G1.step, nextVal);
+//            System.out.println("setFunction value : minindex="+theta.G1.minIndex+", idx= "+theta.G1.pointIndexRound(theta.G1.min-theta.G1.step));
 //           Operators.plotFunction(theta.M);
 //           Operators.plotFunction(tempConvolution);
 //           Operators.plotFunction(temp);
-            nextVal+=2*IntegrateFunction(temp,tempConvolution.min,tempConvolution.max);
-            theta.G1.min=theta.G1.roundPoint(theta.G1.min-theta.G1.step);
-            theta.G1.minIndex-=1;
-//            System.out.println("chronocell.ThetaStructureOperators.ComputeThetaNextValues()"+theta.G1.indexPoint(theta.G1.minIndex));
-            theta.G1.values[theta.G1.minIndex]=nextVal;
-            
+//            
+//            System.out.println("chronocell.ThetaStructureOperators.ComputeThetaNextValues()"+theta.G1.getFunctionValue(theta.G1.indexPoint(theta.G1.minIndex)));
+//          
 //            System.out.println("next =:"+nextVal);
             
         // phase S
@@ -143,17 +150,13 @@ public class ThetaStructureOperators {
 
 //           temp.checkBounds();
             nextVal=IntegrateFunction(createProductFunction(tempConvolution,theta.G1),tempConvolution.min,tempConvolution.max);
-            theta.S.min=theta.S.roundPoint(theta.S.min-theta.S.step);
-            theta.S.minIndex-=1;
-            theta.S.values[theta.S.minIndex]=nextVal;
+            theta.S.SetFunctionValueRegardlessOfSidesValues(theta.S.min-theta.S.step, nextVal);
             
         // phase G2
            tempConvolution=createTranslatedFunction(theta.G2.min, dyn.G2.thetaConvolution);
            
             nextVal=IntegrateFunction(createProductFunction(tempConvolution,theta.S),tempConvolution.min,tempConvolution.max);
-            theta.G2.min=theta.G2.roundPoint(theta.G2.min-theta.G2.step);
-            theta.G2.minIndex-=1;
-            theta.G2.values[theta.G2.minIndex]=nextVal;
+            theta.G2.SetFunctionValueRegardlessOfSidesValues(theta.G2.min-theta.G2.step, nextVal);
            
         // phase M
            tempConvolution=createTranslatedFunction(theta.M.min, dyn.M.thetaConvolution);
@@ -167,9 +170,7 @@ public class ThetaStructureOperators {
            
            nextVal=IntegrateFunction(temp,tempConvolution.min,tempConvolution.max);
 //           System.out.println("nextVal="+nextVal);
-           theta.M.min=theta.M.roundPoint(theta.M.min-theta.M.step);
-            theta.M.minIndex-=1;
-           theta.M.values[theta.M.minIndex]=nextVal;
+           theta.M.SetFunctionValueRegardlessOfSidesValues(theta.M.min-theta.M.step, nextVal);
 //           Operators.plotFunction(theta.M,"theta après");
                    
     }

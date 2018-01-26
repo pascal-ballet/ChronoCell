@@ -21,6 +21,7 @@ public class CellDynamicsOperators {
         double x=0.0;
         // G0
         dyn.G0.cumul.put("Death",Operators.createCumulativeFunction(dyn.G0.density.get("Death")));
+//        Operators.plotFunction(dyn.G0.cumul.get("Death"));
         dyn.G0.cumul.put("G1",Operators.createCumulativeFunction(dyn.G0.density.get("G1")) );
         dyn.G0.oneMinCumul.put("Death", Operators.createAffineFunctionTransformation(-1.0, 1.0,dyn.G0.cumul.get("Death")));
         dyn.G0.oneMinCumul.put("G1", Operators.createAffineFunctionTransformation(-1.0, 1.0,dyn.G0.cumul.get("G1")));
