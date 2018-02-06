@@ -7,7 +7,7 @@
 //          CellPopulation;
 // Current:  cellpopOPerators apply treatment      
 
-// Todo :   * différencier l'utilisation des différents pas de calculs (simu...)
+// Todo :   * différencier l'utilisation des différents pas de calculs (simu...) test
 //          * vérifier le calcul intégral avec l'utilisation de l'interpolation dans getFunctionValue
 //          * généraliser l'utilisation de closestGridPoint pour eviter certains bugs
 //          * gérer la pO2 
