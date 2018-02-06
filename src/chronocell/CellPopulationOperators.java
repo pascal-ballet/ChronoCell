@@ -22,9 +22,9 @@ public class CellPopulationOperators {
         theta.startingTime=pop.time;
         for (int i=0;i<pop.dynamics.phaseNb;i++){
             FunctionStructure survival = SurvivalProbabilities.survivalProbabilities(dose, i, pop.dynamics, data);
+            
             survival.name="survival.phase"+i;
-            Operators.translateFunction(-pop.time, survival);
-            theta.setPhase(i,Operators.createProductFunction(survival,pop.theta.get(pop.currentTheta).getPhase(i)));
+            theta.setPhase(i,Operators.createProductFunction(Operators.createTranslatedFunction(-pop.time, survival),pop.theta.get(pop.currentTheta).getPhase(i)));
         }
         pop.theta.add(theta);
         pop.currentTheta+=1;

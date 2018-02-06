@@ -136,6 +136,7 @@ public class GUI extends javax.swing.JFrame {
     FunctionStructure f;
     public void SetFunction(FunctionStructure fct){
         f=fct;
+//        System.out.println("chronocell.GUI.paint()"+f.min);
         
 //Operators.PrintFunction(fct, "fct", true);
 //        Operators.PrintFunction( f,"gui0", false);
@@ -170,6 +171,7 @@ public class GUI extends javax.swing.JFrame {
         ordinate1=(int) Math.round((jPanel1.getHeight()/(minVal-maxVal))*(f.values[f.maxIndex]-maxVal));
         ordinate2=(int) Math.round(jPanel1.getHeight()/(minVal-maxVal)*(f.right-maxVal));
         gp.drawLine(absciss1,ordinate1, absciss2,ordinate2);
+//        System.out.println("chronocell.GUI.paint()"+f.min);
         lblXMin.setText((new Double(f.min-f.step)).toString());
         lblXMax.setText((new Double(f.max+f.step)).toString());
         lblYMin.setText((new Double(minVal)).toString());

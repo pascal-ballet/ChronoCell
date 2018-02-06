@@ -228,7 +228,7 @@ public class ChronoCell {
 //////        ArrayList<Double> results=new ArrayList<>();
 //////        
 ////////-------------- treatment -----------------------------------------------------
-            double duration =10;
+            double duration =100;
             int fractions=1;
             double totalDose =1;
             double fractionDose=totalDose/fractions;

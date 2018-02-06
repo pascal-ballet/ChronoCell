@@ -93,8 +93,13 @@ public class Operators {
 /// Création d'une copie exacte d'une fonction
     
     public static FunctionStructure createFunctionCopy(FunctionStructure fct){
+        FunctionStructure cpy=Operators.createFunctionCopy(fct, fct.name);
+        return cpy;
+    }
+    
+        public static FunctionStructure createFunctionCopy(FunctionStructure fct,String name){
         FunctionStructure cpy=new FunctionStructure();
-        cpy.name=fct.name;
+        cpy.name=name;
         cpy.min=fct.min;
         cpy.max=fct.max;
         cpy.left=fct.left;
@@ -204,6 +209,8 @@ public class Operators {
 //        win.SetFunction(fct);
         win.setVisible(true);
     }
+        
+        
     
 
 // public static double IntegrateFunction(FunctionStructure fct,double inf, double sup,double step){
@@ -345,16 +352,7 @@ public static double IntegrateFunctionRectangles(FunctionStructure fct,double in
         affineFunctionTransformation(aff, norm, 0.0);
         return aff;
     }  
-//    public static FunctionStructure Primitive(FunctionStructure fct){
-//        // increase fct's support
-//        FunctionStructure prim=createFunction(0, fct.max, fct.step);
-//        for (int i =prim.minIndex+1;i<=prim.maxIndex;i++){
-//            prim.values[i]=prim.values[i-1]+fct.GetFunctionValue((i-1)*fct.step)*prim.step;
-//        }
-//        /// normalization (crado ? rependre la boucle précédente pour être sûr de ne jamais dépasser 1 par le calcul ?)
-////        cum=AffineFunctionTransformation(1.0/GetFunctionMaxValue(cum),0, cum);
-//        return prim;
-//    } 
+
      
     public static FunctionStructure createCumulativeFunction(FunctionStructure fct){
         if ((!Numbers.IsZero(fct.left))||(!Numbers.IsZero(fct.right))){
