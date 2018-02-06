@@ -47,9 +47,10 @@ public class SurvivalProbabilities {
             FunctionStructure stretchedProba,temp=new FunctionStructure();
             while (t<survival.max){
                 FunctionStructure homographie=Operators.createFunction(t, timeToNextPhase.max, 50,"homo"); // comment régler le pas ?
-                if ((t-survival.max)<0.01){
+                if ((t-survival.max)<0.00001){
                     survival.SetFunctionValue(t, pData.getFunctionValue(1));
-                    break;
+                    t+=survival.step;
+                    continue;
                 }
                 homographie.SetFunctionValuesFromInterface(Operators.homographie, 0.0,t,1.0,0.0);
                 homographie.setSideValues();

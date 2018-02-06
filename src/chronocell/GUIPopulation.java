@@ -341,8 +341,11 @@ public class GUIPopulation extends javax.swing.JFrame {
         FunctionStructure[] tempFunction=new FunctionStructure[5];
         for (int phase=1;phase<5;phase++){
             tempFunction[phase] =Operators.createFunction(0.0,pop.dynamics.getPhase(phase).solutionFilter.max,pop.timeStep);
+            double t=0;
             for (int i=0;i<tempFunction[phase].maxIndex;i++){
-                tempFunction[phase].values[i]=CellPopulationOperators.GetPhaseValue(pop, phase, jSlider1.getValue()*tempFunction[phase].step,i*tempFunction[phase].step);
+                tempFunction[phase].SetFunctionValue(t,CellPopulationOperators.GetPhaseValue(pop, phase, jSlider1.getValue()*tempFunction[phase].step,i*tempFunction[phase].step) );
+                t+=pop.timeStep;
+//                tempFunction[phase].values[i]=CellPopulationOperators.GetPhaseValue(pop, phase, jSlider1.getValue()*tempFunction[phase].step,i*tempFunction[phase].step);
             }
             FillPanelFunction(tempFunction[phase], phase);
         }

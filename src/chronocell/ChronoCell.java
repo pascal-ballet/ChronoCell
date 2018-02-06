@@ -132,7 +132,7 @@ public class ChronoCell {
     }
 //////  
 ////////-------------- Dynamique initiale des phases ---------------------------------
-            double support0=40.0,support2=15.0;
+            double support0=20.0,support2=15.0;
             double step=0.05;
             // G0->Death
             FunctionStructure G0ToDeath=Operators.createFunction(Numbers.CGN(0.0),support0,step,"G0ToDeath.Density"); 
@@ -146,8 +146,8 @@ public class ChronoCell {
             Operators.makeDistributionFromFunction(G0ToG1);
             G0ToG1.checkAndAdjustSupport();
             // G1->G0
-            FunctionStructure G1ToG0=Operators.createFunction(Numbers.CGN(0.0),support0,step,"G1ToG0.Density"); 
-            G1ToG0.SetFunctionValuesFromInterface(Operators.boundedExponentialDistribution,30.0,31.0,support0);
+            FunctionStructure G1ToG0=Operators.createFunction(Numbers.CGN(0.0),40,step,"G1ToG0.Density"); 
+            G1ToG0.SetFunctionValuesFromInterface(Operators.boundedExponentialDistribution,30.0,31.0,40);
 //            Operators.MapFunctionValues(G1ToG0,50.0,51.0,Operators.constant,1.0);
             Operators.makeDistributionFromFunction(G1ToG0);
             G1ToG0.checkAndAdjustSupport();
@@ -170,16 +170,14 @@ public class ChronoCell {
              // G2->M
 //            Operators.plotFunction(SToG2);
             FunctionStructure G2ToM=Operators.createFunction(0.0,Numbers.CGN(support0),step,"G2ToM.Density"); 
-//            Operators.MapFunctionValues(G2ToM,3.0,support2,Operators.continuousGeometricDistribution,3.0,pO2,C,B,m);
             G2ToM.SetFunctionValuesFromInterface(Operators.boundedExponentialDistribution,3.6,0.0,support0);
             Operators.makeDistributionFromFunction(G2ToM);
             G2ToM.checkAndAdjustSupport();
              // M->G1
-             
              /// modéliser les dirac comme min=max et 0 partout sauf Nan au point considéré, et ajouter partout des tests pour effectuer des calculs particuliers.
-            FunctionStructure MToG1=Operators.createFunction(Numbers.CGN(0.0),Numbers.CGN(2.0),20,"MToG1.Density"); 
-            MToG1.SetFunctionValuesFromInterface(0,2.0,Operators.constant,1.0);
-//            Operators.MapFunctionValues(MToG1,0.0,2.0,Operators.gaussian,1.0,1.0);
+            FunctionStructure MToG1=Operators.createFunction(0,Numbers.CGN(support0),step,"MToG1.Density"); 
+//            MToG1.SetFunctionValuesFromInterface(1.5,2.0,Operators.constant,1.0);
+            MToG1.SetFunctionValuesFromInterface(Operators.boundedExponentialDistribution,1.0,0.0,support0);
             Operators.makeDistributionFromFunction(MToG1);
             MToG1.checkAndAdjustSupport();
 //            Operators.plotFunction(MToG1);
@@ -188,7 +186,7 @@ public class ChronoCell {
 ////        
 //////-------------- Creation de la population de cellules -------------------------
             CellPopulation pop=new CellPopulation();
-            pop.timeStep=0.1;
+            pop.timeStep=0.05;
             // Taille initiale
             pop.size=1.0;
             // Dynamique  
@@ -240,13 +238,14 @@ public class ChronoCell {
             simulation.treat= new TreatmentStructure();
             simulation.treat.times= new double[fractions+1];
             simulation.treat.doses= new double[fractions+1];
-            simulation.treat.times[0]=5;
+            simulation.treat.times[0]=Double.NaN;
 //            simulation.treat.times[1]=200;
             simulation.treat.doses[0]=fractionDose;
 //            simulation.treat.doses[1]=fractionDose;
             simulation.treat.times[fractions]=Double.NaN;
             simulation.treat.doses[fractions]=0.0;
             SimulationStructureOperators.run(simulation);
+Operators.plotFunction(simulation.pop.theta.get(0).M);
 Operators.plotFunction(simulation.pop.theta.get(0).G1);
 Operators.PrintFunction(simulation.pop.theta.get(0).G1, false);
             SimulationStructureOperators.plotSimulation(simulation);
