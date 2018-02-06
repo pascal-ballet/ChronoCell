@@ -21,41 +21,16 @@ public class CellPopulationOperators {
         ThetaStructure theta=new ThetaStructure();
         theta.startingTime=pop.time;
         for (int i=0;i<pop.dynamics.phaseNb;i++){
-            FunctionStructure temp = Operators.createFunctionCopy(pop.theta.get(pop.currentTheta).getPhase(i));
-            // on crée la fonction de survie
-            //FunctionStructure survival = Operators.createFunction(temp.min, temp.max, temp.step);
-            // Pour l'instant, on transmet le numero de la phase et toute la dynamique car certaines phases mènent à une phase, d'autre à deux
             FunctionStructure survival = SurvivalProbabilities.survivalProbabilities(dose, i, pop.dynamics, data);
-//            FunctionStructure survival=Operators.createFunction(0.0, 0.0, 0.1, "survie");
             survival.name="survival.phase"+i;
             Operators.translateFunction(-pop.time, survival);
-//            if (i==4){
-//              Operators.PrintFunction(temp,false);
-//            
-//            }
-            FunctionStructure temp2=Operators.createProductFunction(survival,temp);
-            temp2.name="temp2";
-//            if (i==4){
-//              Operators.PrintFunction(temp2,false);
-            Operators.plotFunction(survival);  
-//            }
-            theta.setPhase(i,temp2);
+            theta.setPhase(i,Operators.createProductFunction(survival,pop.theta.get(pop.currentTheta).getPhase(i)));
         }
         pop.theta.add(theta);
         pop.currentTheta+=1;
     }
-    
-    public static void ComputeOneTimeStep(CellPopulation pop,TreatmentStructure treat){
-//        System.out.println("nextDOse="+treat.nextDose);
-            if (pop.time>=treat.times[treat.nextDose]){
-                ApplyTreatment(treat.doses[treat.nextDose],pop,ChronoCell._survivalData);
-                treat.nextDose+=1;
-            }
-        ThetaStructureOperators.ComputeThetaNextValues(pop.theta.get(pop.currentTheta),pop.dynamics);
-        // unifier les step entre toutes les phases
-        pop.time+=pop.timeStep;
-    }
-    
+
+//******************************************************************    
     public static double GetPhaseValue(CellPopulation pop, int phase, double T, double t){
         int thetaNumber=0;
 //        while (T>pop.theta.get(thetaNumber).startingTime){
@@ -86,13 +61,13 @@ public class CellPopulationOperators {
         return size;
     };
     
-    public static void simulateCellPopulation(CellPopulation pop,TreatmentStructure treat,double time){
-        for (int i=0;i<=(Math.round(time/pop.timeStep));i++){            
-            ComputeOneTimeStep(pop,treat);
-//            System.out.println("time="+i*pop.timeStep);
-//            population.values[i]=SimulationStructureOperators.GetSimulationPopulationSize(simulation, i*simulation.timeStep);
-        }
-    };
+//    public static void simulateCellPopulation(CellPopulation pop,TreatmentStructure treat,double time){
+//        for (int i=0;i<=(Math.round(time/pop.timeStep));i++){            
+//            ComputeOneTimeStep(pop,treat);
+////            System.out.println("time="+i*pop.timeStep);
+////            population.values[i]=SimulationStructureOperators.GetSimulationPopulationSize(simulation, i*simulation.timeStep);
+//        }
+//    };
     
     public static CellPopulation copyCellPopulation(CellPopulation pop){
         CellPopulation copy=new CellPopulation();

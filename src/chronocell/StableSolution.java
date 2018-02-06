@@ -54,34 +54,35 @@ public class StableSolution {
         }
         return lambda;
     }
-    public static void StableInitialCondition(ThetaStructure theta,CellDynamics dyn){
+    public static void StableInitialCondition(ThetaStructure theta,CellPopulation pop){
         FunctionStructure expo=null;
-        double lambda=SolveEquation(dyn);
-        System.out.println("sol="+LaplaceEquation(lambda, dyn)+", lambda="+lambda);
-        double[] LaplaceCoef = new double[dyn.phaseNb];
-        LaplaceCoef[0]=Operators.LaplaceTransform(lambda, Operators.createProductFunction(dyn.G1.density.get("G0"), dyn.G1.oneMinCumul.get("S")));
+        double lambda=SolveEquation(pop.dynamics);
+        System.out.println("sol="+LaplaceEquation(lambda, pop.dynamics)+", lambda="+lambda);
+        double[] LaplaceCoef = new double[pop.dynamics.phaseNb];
+        LaplaceCoef[0]=Operators.LaplaceTransform(lambda, Operators.createProductFunction(pop.dynamics.G1.density.get("G0"), pop.dynamics.G1.oneMinCumul.get("S")));
         LaplaceCoef[1]=1.0;
-        LaplaceCoef[2]=Operators.LaplaceTransform(lambda, Operators.createProductFunction(dyn.G1.density.get("S"), dyn.G1.oneMinCumul.get("G0")));
-        LaplaceCoef[3]=LaplaceCoef[2]*Operators.LaplaceTransform(lambda, dyn.S.density.get("G2"));
-        LaplaceCoef[4]=LaplaceCoef[3]*Operators.LaplaceTransform(lambda, dyn.G2.density.get("M"));
+        LaplaceCoef[2]=Operators.LaplaceTransform(lambda, Operators.createProductFunction(pop.dynamics.G1.density.get("S"), pop.dynamics.G1.oneMinCumul.get("G0")));
+        LaplaceCoef[3]=LaplaceCoef[2]*Operators.LaplaceTransform(lambda, pop.dynamics.S.density.get("G2"));
+        LaplaceCoef[4]=LaplaceCoef[3]*Operators.LaplaceTransform(lambda, pop.dynamics.G2.density.get("M"));
         double supportMax=0.0;
-        supportMax=dyn.G0.oneMinCumul.get("G1").max;
-         if (supportMax<dyn.G1.oneMinCumul.get("G0").max){
-            supportMax=dyn.G1.oneMinCumul.get("G0").max;
+        supportMax=pop.dynamics.G0.oneMinCumul.get("G1").max;
+         if (supportMax<pop.dynamics.G1.oneMinCumul.get("G0").max){
+            supportMax=pop.dynamics.G1.oneMinCumul.get("G0").max;
         }
-        if (supportMax<dyn.S.oneMinCumul.get("G2").max){
-            supportMax=dyn.S.oneMinCumul.get("G2").max;
+        if (supportMax<pop.dynamics.S.oneMinCumul.get("G2").max){
+            supportMax=pop.dynamics.S.oneMinCumul.get("G2").max;
         }
-        if (supportMax<dyn.G2.oneMinCumul.get("M").max){
-            supportMax=dyn.G2.oneMinCumul.get("M").max;
+        if (supportMax<pop.dynamics.G2.oneMinCumul.get("M").max){
+            supportMax=pop.dynamics.G2.oneMinCumul.get("M").max;
         }
-        if (supportMax<dyn.M.oneMinCumul.get("G1").max){
-            supportMax=dyn.M.oneMinCumul.get("G1").max;
+        if (supportMax<pop.dynamics.M.oneMinCumul.get("G1").max){
+            supportMax=pop.dynamics.M.oneMinCumul.get("G1").max;
         }
-        expo=Operators.createFunction(0.0, supportMax, dyn.G0.density.get("G1").step);
+//        expo=Operators.createFunction(0.0, supportMax, pop.dynamics.G0.density.get("G1").step);
+        expo=Operators.createFunction(0.0, supportMax, pop.timeStep);
         expo.SetFunctionValuesFromInterface(expo.min,expo.max,Operators.exp, -lambda);
         
-        for (int i=0;i<dyn.phaseNb;i++){
+        for (int i=0;i<pop.dynamics.phaseNb;i++){
 //             Operators.plotFunction(simulation.theta[0].getPhase(i));
             theta.setPhase(i,Operators.createAffineFunctionTransformation(LaplaceCoef[i],0.0,expo));
 //            Operators.plotFunction(theta.getPhase(i));

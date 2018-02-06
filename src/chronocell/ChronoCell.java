@@ -213,34 +213,34 @@ public class ChronoCell {
 ////////-------------- Premier jeux de fonctions theta -------------------------------
             ThetaStructure initTheta= new ThetaStructure();
 //            initTheta.phaseNb=pop.dynamics.phaseNb;
-            StableSolution.StableInitialCondition(initTheta,pop.dynamics);
+            StableSolution.StableInitialCondition(initTheta,pop);
             pop.theta.add(initTheta);
             pop.currentTheta=0;
 //            
             
-            pop.theta.get(0).G1.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
-            pop.theta.get(0).G0.SetFunctionValuesFromInterface(pop.theta.get(0).G0.min,pop.theta.get(0).G0.max,Operators.constant,0.0);
-            pop.theta.get(0).S.SetFunctionValuesFromInterface(pop.theta.get(0).S.min,pop.theta.get(0).S.max,Operators.constant,0.0);
-            pop.theta.get(0).G2.SetFunctionValuesFromInterface(pop.theta.get(0).G2.min,pop.theta.get(0).G2.max,Operators.constant,0.0);
-            pop.theta.get(0).M.SetFunctionValuesFromInterface(pop.theta.get(0).M.min,pop.theta.get(0).M.max,Operators.constant,1.0);
+//            pop.theta.get(0).G1.SetFunctionValuesFromInterface(pop.theta.get(0).G1.min,pop.theta.get(0).G1.max,Operators.constant,0.0);
+//            pop.theta.get(0).G0.SetFunctionValuesFromInterface(pop.theta.get(0).G0.min,pop.theta.get(0).G0.max,Operators.constant,0.0);
+//            pop.theta.get(0).S.SetFunctionValuesFromInterface(pop.theta.get(0).S.min,pop.theta.get(0).S.max,Operators.constant,0.0);
+//            pop.theta.get(0).G2.SetFunctionValuesFromInterface(pop.theta.get(0).G2.min,pop.theta.get(0).G2.max,Operators.constant,0.0);
+//            pop.theta.get(0).M.SetFunctionValuesFromInterface(pop.theta.get(0).M.min,pop.theta.get(0).M.max,Operators.constant,1.0);
 //        
 //////        // Un traitement
 //////        ArrayList<Double> results=new ArrayList<>();
 //////        
 ////////-------------- treatment -----------------------------------------------------
-            double duration =100;
+            double duration =10;
             int fractions=1;
             double totalDose =1;
             double fractionDose=totalDose/fractions;
             SimulationStructure simulation=new SimulationStructure();
             simulation.duration=duration;
-            simulation.timeStep=pop.timeStep;
-            simulation.duration=duration*2;
+            simulation.timeStep=0.5;
+            simulation.duration=duration;
             simulation.pop=CellPopulationOperators.copyCellPopulation(pop);
             simulation.treat= new TreatmentStructure();
             simulation.treat.times= new double[fractions+1];
             simulation.treat.doses= new double[fractions+1];
-            simulation.treat.times[0]=Double.NaN;
+            simulation.treat.times[0]=5;
 //            simulation.treat.times[1]=200;
             simulation.treat.doses[0]=fractionDose;
 //            simulation.treat.doses[1]=fractionDose;
